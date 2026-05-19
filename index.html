@@ -800,6 +800,47 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 .foot-bot p{font-size:.72rem;color:var(--muted)}
 .foot-bot a{color:var(--purple2)}
 
+/* Login / Auth button in nav */
+.btn-login-nav{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.78rem;
+  background:transparent;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.45);
+  padding:7px 15px;border-radius:6px;
+  display:flex;align-items:center;gap:6px;
+  transition:background .2s,border-color .2s,color .2s,transform .15s;
+  white-space:nowrap;cursor:pointer;text-decoration:none;
+}
+.btn-login-nav:hover{background:rgba(34,211,238,.1);border-color:var(--cyan);transform:translateY(-1px)}
+.btn-login-nav.signed-in{
+  color:var(--purple2);border-color:rgba(155,92,246,.45);
+}
+.btn-login-nav.signed-in:hover{background:rgba(124,60,232,.1);border-color:var(--purple2)}
+
+/* Firebase products loading skeleton */
+.pcard-skeleton{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;height:220px;
+  animation:shimmer 1.5s infinite;
+}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:.9}}
+.pcard-skeleton .sk-banner{height:130px;background:rgba(120,60,220,.06)}
+.pcard-skeleton .sk-line{height:13px;border-radius:4px;background:rgba(120,60,220,.08);margin:14px 16px 6px}
+.pcard-skeleton .sk-line.short{width:55%;margin-top:0}
+
+/* Firebase product badge */
+.firebase-badge{
+  position:absolute;bottom:8px;left:8px;z-index:2;
+  font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:600;
+  background:rgba(0,212,255,.12);color:var(--cyan);
+  border:1px solid rgba(0,212,255,.3);padding:2px 7px;border-radius:4px;letter-spacing:.5px;
+}
+.pcard-price{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;
+  color:var(--cyan);background:rgba(34,211,238,.08);
+  border:1px solid rgba(34,211,238,.2);border-radius:4px;
+  padding:2px 8px;display:inline-block;
+}
+
 /* Float WA */
 .fwa{
   position:fixed;bottom:22px;right:22px;z-index:600;
@@ -867,6 +908,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <a class="nav-a" href="#contact">Contact</a>
   </div>
   <div class="nav-right">
+    <a id="authNavBtn" class="btn-login-nav" href="login.html">🔑 Login</a>
     <a class="btn-wa-nav" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20enquire%20about%20an%20Elexys%20project%20kit." target="_blank">💬 WhatsApp</a>
     <button class="ham" onclick="toggleDraw()"><span></span><span></span><span></span></button>
   </div>
@@ -881,6 +923,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   <a href="#youtube" onclick="cd()">YouTube Channels</a>
   <a href="#order" onclick="cd()">How to Order</a>
   <a href="#contact" onclick="cd()">Contact</a>
+  <a id="authMobBtn" href="login.html" onclick="cd()" style="color:var(--cyan)">🔑 Login / My Account</a>
   <a class="mob-wa" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20order%20an%20Elexys%20project%20kit." target="_blank" onclick="cd()">💬 WhatsApp Us Now</a>
 </div>
 
@@ -1548,14 +1591,20 @@ render();
 initReveal();
 </script>
 <script type="module">
+// ═══════════════════════════════════════════════
+//  ELEXYS TECHNOLOGIES — Firebase Integration
+//  • Visitor counter
+//  • Auth state (login/logout button)
+//  • Auto-fetch products from Firestore
+// ═══════════════════════════════════════════════
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore,
-  doc,
-  updateDoc,
-  setDoc,
-  increment,
-  serverTimestamp
+  doc, collection,
+  getDocs,
+  updateDoc, setDoc,
+  increment, serverTimestamp,
+  query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth,
@@ -1577,37 +1626,173 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-// ── Count this visit ──────────────────────────────
-async function trackVisit(){
-  const ref = doc(db,'stats','visitors');
+// ─────────────────────────────────────────────
+// 1. VISITOR COUNTER
+// ─────────────────────────────────────────────
+(async function trackVisit(){
   try{
-    await updateDoc(ref,{ count: increment(1), lastVisit: serverTimestamp() });
-  }catch{
-    await setDoc(ref,{ count: 1, lastVisit: serverTimestamp() });
-  }
-}
-trackVisit();
+    const ref = doc(db,'stats','visitors');
+    await updateDoc(ref,{ count:increment(1), lastVisit:serverTimestamp() })
+      .catch(async()=>{ await setDoc(ref,{count:1,lastVisit:serverTimestamp()}); });
+  }catch(e){ console.warn('Visitor track:',e.message); }
+})();
 
-// ── Show login/user status in nav ─────────────────
-// Add an element with id="authNavBtn" anywhere in your <nav> or header
-// e.g.  <a id="authNavBtn" href="login.html">Login</a>
+// ─────────────────────────────────────────────
+// 2. AUTH STATE → LOGIN BUTTON
+// ─────────────────────────────────────────────
 onAuthStateChanged(auth, user=>{
+  // Desktop nav button
   const btn = document.getElementById('authNavBtn');
-  if(!btn) return;
+  // Mobile drawer button
+  const mob = document.getElementById('authMobBtn');
+
   if(user){
-    const name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
-    btn.textContent = '👤 '+name;
-    btn.href='#';
-    btn.title = 'Click to sign out';
-    btn.addEventListener('click', e=>{
-      e.preventDefault();
-      if(confirm('Sign out?')) signOut(auth);
-    });
+    const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Account';
+    if(btn){
+      btn.textContent = '👤 '+firstName;
+      btn.classList.add('signed-in');
+      btn.title = 'Signed in as '+user.email+'. Click to sign out.';
+      // replace link behaviour with sign-out
+      btn.removeAttribute('href');
+      btn.onclick = e=>{
+        e.preventDefault();
+        if(confirm('Sign out of your Elexys account?')) signOut(auth);
+      };
+    }
+    if(mob){
+      mob.textContent = '👤 '+firstName+' (Sign Out)';
+      mob.removeAttribute('href');
+      mob.onclick = e=>{
+        e.preventDefault();
+        document.getElementById('mob').classList.remove('open');
+        if(confirm('Sign out?')) signOut(auth);
+      };
+    }
   } else {
-    btn.textContent = '🔑 Login';
-    btn.href = 'login.html';
+    if(btn){
+      btn.textContent = '🔑 Login';
+      btn.classList.remove('signed-in');
+      btn.href = 'login.html';
+      btn.title = '';
+      btn.onclick = null;
+    }
+    if(mob){
+      mob.textContent = '🔑 Login / My Account';
+      mob.href = 'login.html';
+      mob.onclick = ()=>{ document.getElementById('mob').classList.remove('open'); };
+    }
   }
 });
+
+// ─────────────────────────────────────────────
+// 3. FETCH FIREBASE PRODUCTS & MERGE WITH STATIC
+// ─────────────────────────────────────────────
+const CAT_ICON_FB = {
+  'iot':'🌐','agriculture':'🌾','electrical':'⚡','gsm':'📡',
+  'solar':'☀️','rfid':'🪪','motor':'⚙️','wireless':'📶',
+  '8051':'🔬','transformer':'🔧','simulation':'🖥️','custom':'📦','other':'📦'
+};
+const CAT_GLOW_FB = {
+  'iot':'rgba(34,211,238,.15)','agriculture':'rgba(34,197,94,.15)',
+  'electrical':'rgba(250,204,21,.15)','gsm':'rgba(168,85,247,.15)',
+  'solar':'rgba(251,146,60,.15)','rfid':'rgba(99,102,241,.15)',
+  'motor':'rgba(34,211,238,.12)','wireless':'rgba(236,72,153,.15)',
+  '8051':'rgba(20,184,166,.15)','transformer':'rgba(239,68,68,.15)'
+};
+
+// Show skeleton cards while loading from Firebase
+function showSkeletons(n=4){
+  const grid = document.getElementById('grid');
+  // Only add skeletons if the grid hasn't rendered yet
+  if(grid && !grid.dataset.rendered){
+    const sk = Array(n).fill(0).map(()=>`
+      <div class="pcard-skeleton">
+        <div class="sk-banner"></div>
+        <div class="sk-line"></div>
+        <div class="sk-line short"></div>
+      </div>`).join('');
+    // Prepend skeletons before the existing static cards
+    grid.insertAdjacentHTML('afterbegin', sk);
+  }
+}
+
+// Build a Firebase product card HTML
+function buildFbCard(p, id){
+  const catKey = (p.category||'other').toLowerCase()
+    .replace(/\s+projects?/i,'').replace(/\s+/,'').replace(/\//,'').trim();
+  const ico  = CAT_ICON_FB[catKey] || '📦';
+  const glow = CAT_GLOW_FB[catKey] || 'rgba(120,60,220,.15)';
+  const yt   = p.youtubeId
+    ? `https://www.youtube.com/watch?v=${p.youtubeId}`
+    : 'https://www.youtube.com/@elexysbestproject';
+  const priceStr = p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : null;
+  const waText = encodeURIComponent(
+    `Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`
+  );
+  const waLink = `https://wa.me/918796168099?text=${waText}`;
+
+  return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}">
+    <div class="pcard-banner">
+      <span class="vid-tag">⚡ NEW</span>
+      <span class="pcard-emo">${ico}</span>
+      <span class="cat-tag">${(p.category||'').toUpperCase().slice(0,10)}</span>
+      <span class="firebase-badge">FIREBASE</span>
+    </div>
+    <div class="pcard-body">
+      <div class="pcard-title">${p.name||'Unnamed Project'}</div>
+      ${priceStr?`<span class="pcard-price">${priceStr}</span>`:''}
+      ${p.description?`<div style="font-size:.72rem;color:var(--muted2);line-height:1.55;margin-top:2px">${p.description.slice(0,80)}…</div>`:''}
+      <a class="pcard-yt" href="${yt}" target="_blank">▶ Watch on YouTube</a>
+    </div>
+    <div class="pcard-foot">
+      <button class="btn-ask" onclick="window.open('${waLink}','_blank')">💬 Ask Price on WhatsApp</button>
+      <a class="btn-yt" href="${yt}" target="_blank">▶ YT</a>
+    </div>
+  </div>`;
+}
+
+async function loadFirebaseProducts(){
+  try{
+    showSkeletons(3);
+    const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
+    const snap  = await getDocs(q);
+
+    // Remove skeletons
+    document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
+
+    if(snap.empty){
+      // No Firebase products — static ones already rendered, nothing to do
+      return;
+    }
+
+    const grid = document.getElementById('grid');
+    if(!grid) return;
+
+    // Build Firebase product cards
+    const fbCards = [];
+    snap.forEach(d=>{ fbCards.push(buildFbCard(d.data(), d.id)); });
+
+    // Prepend Firebase products (newest first) before static cards
+    grid.insertAdjacentHTML('afterbegin', fbCards.join(''));
+
+    // Update count badge in sidebar
+    const staticCount = PRODUCTS.length;
+    const fbCount     = fbCards.length;
+    const totalCount  = staticCount + fbCount;
+    document.querySelectorAll('.sb-count').forEach(el=>{
+      el.textContent = totalCount;
+    });
+
+    console.log(`✅ Loaded ${fbCount} Firebase products + ${staticCount} static products.`);
+  }catch(e){
+    // Remove skeletons silently — static products already show
+    document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
+    console.warn('Firebase products load error:', e.message);
+  }
+}
+
+// Kick off Firebase product load after static render
+loadFirebaseProducts();
 </script>
 
 </body>
