@@ -1547,27 +1547,68 @@ function initReveal(){
 render();
 initReveal();
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  setDoc,
+  increment,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  <!-- Firebase Code -->
-  <script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyC97I-QSoDqSLfUR3Vt6gYSM5VrXAJb2G4",
+  authDomain: "elexys-technologies.firebaseapp.com",
+  projectId: "elexys-technologies",
+  storageBucket: "elexys-technologies.firebasestorage.app",
+  messagingSenderId: "1002855081911",
+  appId: "1:1002855081911:web:6bafab1a4fea559ff9ea32",
+  measurementId: "G-JZCYP7XRPH"
+};
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC97I-QSoDqSLfUR3Vt6gYSM5VrXAJb2G4",
-    authDomain: "elexys-technologies.firebaseapp.com",
-    projectId: "elexys-technologies",
-    storageBucket: "elexys-technologies.firebasestorage.app",
-    messagingSenderId: "1002855081911",
-    appId: "1:1002855081911:web:6bafab1a4fea559ff9ea32",
-    measurementId: "G-JZCYP7XRPH"
-  };
+// ── Count this visit ──────────────────────────────
+async function trackVisit(){
+  const ref = doc(db,'stats','visitors');
+  try{
+    await updateDoc(ref,{ count: increment(1), lastVisit: serverTimestamp() });
+  }catch{
+    await setDoc(ref,{ count: 1, lastVisit: serverTimestamp() });
+  }
+}
+trackVisit();
 
-  const app = initializeApp(firebaseConfig);
-
-  console.log("Firebase Connected Successfully");
-
-  </script>
+// ── Show login/user status in nav ─────────────────
+// Add an element with id="authNavBtn" anywhere in your <nav> or header
+// e.g.  <a id="authNavBtn" href="login.html">Login</a>
+onAuthStateChanged(auth, user=>{
+  const btn = document.getElementById('authNavBtn');
+  if(!btn) return;
+  if(user){
+    const name = user.displayName ? user.displayName.split(' ')[0] : 'Account';
+    btn.textContent = '👤 '+name;
+    btn.href='#';
+    btn.title = 'Click to sign out';
+    btn.addEventListener('click', e=>{
+      e.preventDefault();
+      if(confirm('Sign out?')) signOut(auth);
+    });
+  } else {
+    btn.textContent = '🔑 Login';
+    btn.href = 'login.html';
+  }
+});
+</script>
 
 </body>
 </html>
