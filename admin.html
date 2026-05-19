@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+
+  <style>
+
+    body{
+      margin:0;
+      padding:0;
+      font-family:Arial;
+      background:#f5f5f5;
+    }
+
+    header{
+      background:#111;
+      color:white;
+      padding:15px;
+      text-align:center;
+      font-size:24px;
+    }
+
+    .container{
+      padding:20px;
+    }
+
+    .card{
+      background:white;
+      padding:20px;
+      margin-bottom:20px;
+      border-radius:10px;
+      box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
+
+    button{
+      padding:10px 20px;
+      border:none;
+      border-radius:5px;
+      background:red;
+      color:white;
+      cursor:pointer;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  Elexys Technologies Admin Panel
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Welcome Admin</h2>
+    <p id="adminEmail"></p>
+  </div>
+
+  <div class="card">
+    <h2>Website Status</h2>
+    <p>Firebase Connected Successfully ✅</p>
+  </div>
+
+  <div class="card">
+    <h2>Future Features</h2>
+
+    <ul>
+      <li>Student Orders</li>
+      <li>Visitor Counter</li>
+      <li>Project Management</li>
+      <li>Customer Details</li>
+      <li>Realtime Notifications</li>
+    </ul>
+
+  </div>
+
+  <div class="card">
+    <button onclick="logout()">
+      Logout
+    </button>
+  </div>
+
+</div>
+
+
+
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyC97I-QSoDqSLfUR3Vt6gYSM5VrXAJb2G4",
+  authDomain: "elexys-technologies.firebaseapp.com",
+  projectId: "elexys-technologies",
+  storageBucket: "elexys-technologies.firebasestorage.app",
+  messagingSenderId: "1002855081911",
+  appId: "1:1002855081911:web:6bafab1a4fea559ff9ea32"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+
+  if(user){
+
+    if(user.email === "YOUR_GMAIL@gmail.com"){
+
+      document.getElementById("adminEmail").innerHTML =
+      "Logged in as: " + user.email;
+
+    }
+    else{
+
+      alert("Access Denied");
+
+      window.location.href = "login.html";
+
+    }
+
+  }
+  else{
+
+    window.location.href = "login.html";
+
+  }
+
+});
+
+window.logout = function(){
+
+  signOut(auth)
+  .then(() => {
+
+    alert("Logged Out");
+
+    window.location.href = "login.html";
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
