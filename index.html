@@ -1547,5 +1547,28 @@ function initReveal(){
 render();
 initReveal();
 </script>
+
+  <!-- Firebase Code -->
+  <script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC97I-QSoDqSLfUR3Vt6gYSM5VrXAJb2G4",
+    authDomain: "elexys-technologies.firebaseapp.com",
+    projectId: "elexys-technologies",
+    storageBucket: "elexys-technologies.firebasestorage.app",
+    messagingSenderId: "1002855081911",
+    appId: "1:1002855081911:web:6bafab1a4fea559ff9ea32",
+    measurementId: "G-JZCYP7XRPH"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  console.log("Firebase Connected Successfully");
+
+  </script>
+
+
 </body>
 </html>
