@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Elexys Technologies — Embedded Systems | Robotics | IoT | Innovation</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — matching poster exactly
+═══════════════════════════════════════════ */
+:root{
+  /* Background layers from poster */
+  --bg:        #04061a;
+  --bg2:       #070a22;
+  --surface:   #080c28;
+  --card:      #0a0f2e;
+  --card2:     #0d1235;
+
+  /* Border / glow */
+  --border:        rgba(100,80,200,.25);
+  --border-bright: rgba(130,100,255,.5);
+  --glow-purple:   rgba(120,60,220,.35);
+  --glow-blue:     rgba(40,120,255,.25);
+
+  /* Brand colors from poster */
+  --purple:    #7c3ce8;
+  --purple2:   #9b5cf6;
+  --blue:      #2563eb;
+  --blue2:     #3b82f6;
+  --cyan:      #22d3ee;
+  --pink:      #c026d3;
+
+  /* Accent gradient — the X in ELEXYS */
+  --grad: linear-gradient(135deg, #7c3ce8 0%, #3b82f6 100%);
+
+  /* Text */
+  --white:  #ffffff;
+  --txt:    #c8d4f0;
+  --muted:  #6878a8;
+  --muted2: #8898c0;
+
+  /* Social / action */
+  --wa:     #25d366;
+  --yt-red: #e53030;
+  --ig:     #e1306c;
+  --fb:     #1877f2;
+
+  --nav-h: 64px;
+  --side-w: 230px;
+  --radius: 10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:15px}
+body{
+  font-family:'Exo 2',sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  overflow-x:hidden;
+  min-width:320px;
+}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--purple);border-radius:2px}
+
+/* ═══════════════════════════════════════════
+   CIRCUIT BOARD BACKGROUND TEXTURE
+═══════════════════════════════════════════ */
+.circuit-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.circuit-bg::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(100,80,200,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,80,200,.07) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+.circuit-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 80% 20%, rgba(120,60,220,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 10% 80%, rgba(40,100,255,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(120,60,220,.04) 0%, transparent 70%);
+}
+/* Animated glowing dots */
+.dot-grid{position:fixed;inset:0;z-index:0;pointer-events:none}
+.dot-grid::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(120,80,255,.25) 1px, transparent 1px);
+  background-size:40px 40px;
+  animation:dotPulse 4s ease-in-out infinite;
+}
+@keyframes dotPulse{0%,100%{opacity:.4}50%{opacity:.8}}
+
+/* Corner circuit decorations */
+.corner-tl,.corner-br{
+  position:fixed;z-index:0;pointer-events:none;
+  width:280px;height:280px;
+}
+.corner-tl{top:0;right:0;
+  background:radial-gradient(ellipse at top right,rgba(120,60,220,.18) 0%,transparent 65%)}
+.corner-br{bottom:0;left:0;
+  background:radial-gradient(ellipse at bottom left,rgba(40,120,255,.12) 0%,transparent 65%)}
+
+/* ═══════════════════════════════════════════
+   TOP NAV
+═══════════════════════════════════════════ */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:var(--nav-h);
+  background:rgba(4,6,26,.95);
+  border-bottom:1px solid var(--border-bright);
+  backdrop-filter:blur(20px);
+  display:flex;align-items:center;
+  padding:0 clamp(14px,3vw,40px);
+  gap:clamp(10px,2vw,28px);
+}
+/* ELEXYS brand logo matching poster style */
+.nav-logo{
+  display:flex;align-items:center;gap:3px;
+  flex-shrink:0;
+}
+.nav-logo .el{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--white);letter-spacing:2px;
+}
+.nav-logo .ex{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.1rem,2.5vw,1.5rem);letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-logo .ys{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--white);letter-spacing:2px;
+}
+.nav-logo .sub{
+  font-family:'Exo 2',sans-serif;font-size:.55rem;font-weight:600;
+  color:var(--muted2);letter-spacing:3px;text-transform:uppercase;
+  margin-left:6px;align-self:flex-end;margin-bottom:2px;
+}
+.nav-links{display:flex;gap:4px;flex:1}
+.nav-a{
+  font-family:'Exo 2',sans-serif;font-size:.8rem;font-weight:600;
+  color:var(--muted2);padding:6px 11px;border-radius:6px;
+  letter-spacing:.5px;white-space:nowrap;transition:color .2s,background .2s;
+}
+.nav-a:hover{color:var(--cyan);background:rgba(34,211,238,.07)}
+.nav-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.btn-wa-nav{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.78rem;
+  background:var(--wa);color:#fff;padding:7px 15px;border-radius:6px;
+  display:flex;align-items:center;gap:6px;
+  transition:filter .2s,transform .15s;white-space:nowrap;
+}
+.btn-wa-nav:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:4px;padding:6px;flex-shrink:0}
+.ham span{display:block;width:20px;height:1.8px;background:var(--txt);border-radius:2px;transition:.3s}
+
+/* Mobile drawer */
+.mob-draw{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+  background:rgba(4,6,26,.98);z-index:499;border-top:1px solid var(--border);
+  flex-direction:column;padding:20px;gap:4px;overflow-y:auto;
+}
+.mob-draw.open{display:flex}
+.mob-draw a,.mob-draw button{
+  font-family:'Exo 2',sans-serif;font-size:1rem;font-weight:600;
+  color:var(--muted2);padding:13px 8px;
+  border-bottom:1px solid var(--border);
+  background:none;text-align:left;transition:color .2s;
+}
+.mob-draw a:hover{color:var(--cyan)}
+.mob-wa{
+  margin-top:14px;background:var(--wa);color:#fff !important;
+  border-radius:8px;text-align:center !important;border:none !important;
+}
+
+/* ═══════════════════════════════════════════
+   APP SHELL — SIDEBAR + CONTENT
+═══════════════════════════════════════════ */
+.app{margin-top:var(--nav-h);display:flex;position:relative;z-index:1}
+
+/* Sidebar */
+.sidebar{
+  width:var(--side-w);flex-shrink:0;
+  position:sticky;top:var(--nav-h);
+  height:calc(100vh - var(--nav-h));
+  overflow-y:auto;
+  background:rgba(7,10,34,.95);
+  border-right:1px solid var(--border);
+  padding:20px 0 40px;
+}
+.sidebar::-webkit-scrollbar{width:2px}
+.sb-lbl{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  letter-spacing:2.5px;color:var(--muted);text-transform:uppercase;
+  padding:0 16px;margin:14px 0 5px;
+}
+.sb-a{
+  display:flex;align-items:center;gap:9px;
+  font-size:.8rem;font-weight:500;color:var(--muted2);
+  padding:8px 16px;border-left:2px solid transparent;
+  transition:all .2s;cursor:pointer;
+}
+.sb-a:hover,.sb-a.on{
+  color:var(--cyan);background:rgba(34,211,238,.06);
+  border-left-color:var(--cyan);
+}
+.sb-ico{font-size:.9rem;width:18px;text-align:center}
+.sb-count{
+  margin-left:auto;font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--purple2);
+  background:rgba(124,60,232,.12);border:1px solid rgba(124,60,232,.3);
+  padding:1px 6px;border-radius:10px;
+}
+.sb-div{height:1px;background:var(--border);margin:10px 16px}
+.sb-socials{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.sb-social-link{
+  display:flex;align-items:center;gap:8px;
+  font-size:.75rem;color:var(--muted2);
+  padding:7px 10px;border-radius:6px;border:1px solid var(--border);
+  transition:all .2s;
+}
+.sb-social-link:hover{border-color:var(--border-bright);color:var(--white)}
+.sb-social-link.yt:hover{border-color:var(--yt-red);color:var(--yt-red)}
+.sb-social-link.ig:hover{border-color:var(--ig);color:var(--ig)}
+.sb-social-link.fb:hover{border-color:var(--fb);color:var(--fb)}
+
+/* Main */
+.main{flex:1;min-width:0;position:relative}
+
+/* ═══════════════════════════════════════════
+   HERO — matching poster layout
+═══════════════════════════════════════════ */
+#hero{
+  min-height:calc(100vh - var(--nav-h));
+  display:flex;align-items:center;
+  padding:clamp(40px,6vh,80px) clamp(20px,5vw,72px);
+  position:relative;overflow:hidden;
+}
+/* Poster-style background glow */
+.hero-glow-r{
+  position:absolute;top:-10%;right:-5%;
+  width:500px;height:500px;
+  background:radial-gradient(ellipse,rgba(120,60,220,.22) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-glow-l{
+  position:absolute;bottom:5%;left:-5%;
+  width:400px;height:400px;
+  background:radial-gradient(ellipse,rgba(40,120,255,.12) 0%,transparent 65%);
+  pointer-events:none;
+}
+/* Scan line animation */
+.scan{
+  position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(120,60,220,.4),transparent);
+  animation:scanMove 8s linear infinite;pointer-events:none;
+}
+@keyframes scanMove{0%{top:0}100%{top:100%}}
+
+.hero-inner{
+  position:relative;z-index:1;width:100%;
+  display:grid;grid-template-columns:1fr 340px;
+  gap:clamp(24px,4vw,60px);align-items:center;max-width:1300px;
+}
+.hero-left{}
+
+/* Giant ELEXYS logo — poster style */
+.hero-logo-wrap{margin-bottom:6px}
+.hero-brand{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(3rem,8vw,6.5rem);
+  letter-spacing:clamp(4px,1vw,12px);
+  line-height:1;display:flex;align-items:center;gap:0;
+}
+.hero-brand .wh{color:var(--white)}
+.hero-brand .gr{
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  position:relative;display:inline-block;
+}
+/* Code bracket decoration */
+.hero-brand .gr::before{
+  content:'</>';position:absolute;top:-22px;left:0;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--purple2);font-weight:400;letter-spacing:1px;
+}
+.hero-sub-name{
+  font-family:'Orbitron',sans-serif;font-weight:600;
+  font-size:clamp(.9rem,2.5vw,1.35rem);
+  letter-spacing:clamp(6px,2vw,18px);
+  color:var(--muted2);text-transform:uppercase;
+  margin-top:4px;margin-bottom:20px;
+}
+/* Tag line from poster */
+.hero-tagline{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-style:italic;
+  font-size:clamp(1rem,2.2vw,1.4rem);
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.hero-tagline::before{
+  content:'</>';font-family:'JetBrains Mono',monospace;font-size:.9rem;
+  font-weight:400;font-style:normal;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-concept{
+  font-family:'Exo 2',sans-serif;font-size:clamp(.78rem,1.5vw,.92rem);
+  color:var(--muted2);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+/* Pillars from poster */
+.hero-pillars{
+  display:flex;gap:0;margin-bottom:28px;flex-wrap:wrap;
+}
+.pillar{
+  font-family:'Exo 2',sans-serif;font-size:.78rem;font-weight:700;
+  color:var(--muted2);letter-spacing:2px;text-transform:uppercase;
+  padding:0 clamp(8px,1.5vw,20px);
+  border-right:1px solid var(--border-bright);
+}
+.pillar:first-child{padding-left:0}
+.pillar:last-child{border-right:none}
+.pillar:hover{color:var(--cyan);transition:color .2s}
+
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.btn-primary{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.88rem;
+  letter-spacing:.5px;
+  background:var(--grad);color:var(--white);
+  padding:12px 26px;border-radius:7px;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:filter .2s,transform .15s;
+  box-shadow:0 4px 20px rgba(120,60,220,.35);
+}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.btn-wa-hero{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.88rem;
+  letter-spacing:.5px;background:var(--wa);color:#fff;
+  padding:12px 26px;border-radius:7px;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:filter .2s,transform .15s;
+  box-shadow:0 4px 20px rgba(37,211,102,.25);
+}
+.btn-wa-hero:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn-ghost-hero{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.88rem;
+  letter-spacing:.5px;background:transparent;color:var(--txt);
+  padding:11px 24px;border-radius:7px;
+  border:1px solid var(--border-bright);
+  display:inline-flex;align-items:center;gap:7px;
+  transition:border-color .2s,color .2s,transform .15s;
+}
+.btn-ghost-hero:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
+
+/* Service icons row — from poster */
+.hero-services{
+  display:flex;gap:clamp(12px,2vw,28px);flex-wrap:wrap;
+}
+.svc{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  min-width:80px;
+}
+.svc-icon{
+  width:54px;height:54px;border-radius:10px;
+  border:1px solid var(--border-bright);
+  background:rgba(120,60,220,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;
+  transition:border-color .25s,background .25s,transform .2s;
+  position:relative;overflow:hidden;
+}
+.svc-icon::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 120%,rgba(120,60,220,.2) 0%,transparent 70%);
+}
+.svc:hover .svc-icon{
+  border-color:var(--purple2);background:rgba(120,60,220,.2);transform:translateY(-3px);
+}
+.svc-label{
+  font-family:'Exo 2',sans-serif;font-size:.65rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--muted2);
+  text-align:center;line-height:1.3;
+}
+
+/* Hero right — stats + prof card */
+.hero-right{
+  background:rgba(10,15,46,.8);
+  border:1px solid var(--border-bright);border-radius:14px;
+  padding:24px;
+  backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
+}
+.hero-right::before{
+  content:'';position:absolute;top:0;right:0;left:0;height:2px;
+  background:var(--grad);
+}
+.hero-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.kpi{
+  background:rgba(120,60,220,.08);border:1px solid var(--border);
+  border-radius:8px;padding:12px;text-align:center;
+  transition:border-color .2s,background .2s;
+}
+.kpi:hover{border-color:var(--border-bright);background:rgba(120,60,220,.14)}
+.kpi-n{
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:1.6rem;color:var(--white);line-height:1;margin-bottom:4px;
+}
+.kpi-n.grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kpi-l{font-size:.65rem;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase}
+.prof-mini{
+  background:rgba(120,60,220,.07);border:1px solid var(--border);
+  border-radius:8px;padding:14px;
+  display:flex;gap:12px;align-items:center;margin-bottom:14px;
+}
+.prof-ava{
+  width:46px;height:46px;border-radius:50%;flex-shrink:0;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;
+  box-shadow:0 0 14px rgba(120,60,220,.4);
+}
+.prof-nm{font-family:'Exo 2',sans-serif;font-weight:700;font-size:.88rem;color:var(--white);margin-bottom:3px}
+.prof-rl{font-size:.7rem;color:var(--muted2);line-height:1.5}
+.branches-mini{display:flex;flex-direction:column;gap:5px}
+.br-row{display:flex;align-items:center;gap:7px;font-size:.72rem;color:var(--muted2)}
+.br-dot{width:5px;height:5px;border-radius:50%;background:var(--purple2);flex-shrink:0}
+
+/* Bottom strip from poster */
+.hero-strip{
+  display:flex;flex-wrap:wrap;gap:0;
+  background:rgba(10,15,46,.6);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;margin-top:32px;
+}
+.strip-item{
+  flex:1;min-width:100px;
+  display:flex;align-items:center;gap:8px;
+  padding:12px 16px;
+  border-right:1px solid var(--border);
+  font-size:.72rem;color:var(--muted2);
+  transition:background .2s,color .2s;
+}
+.strip-item:last-child{border-right:none}
+.strip-item:hover{background:rgba(120,60,220,.08);color:var(--txt)}
+.strip-ico{font-size:1rem;flex-shrink:0}
+
+/* ═══════════════════════════════════════════
+   SECTION COMMONS
+═══════════════════════════════════════════ */
+.section{padding:clamp(52px,7vw,88px) clamp(20px,5vw,72px)}
+.sec-eye{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  letter-spacing:2.5px;color:var(--purple2);text-transform:uppercase;margin-bottom:6px;
+}
+h2{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(1.5rem,3vw,2.3rem);
+  font-weight:700;color:var(--white);line-height:1.1;
+}
+h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sec-sub{margin-top:10px;font-size:clamp(.8rem,1.3vw,.92rem);color:var(--muted2);line-height:1.85;max-width:620px}
+.sec-head{margin-bottom:clamp(28px,4vw,44px)}
+.div{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+#about{background:rgba(7,10,34,.95)}
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+.about-quote{
+  font-style:italic;font-size:clamp(.9rem,1.5vw,1.08rem);font-weight:400;
+  color:var(--txt);line-height:1.88;
+  border-left:3px solid var(--purple2);padding-left:18px;margin-bottom:22px;
+  position:relative;
+}
+.about-body p{font-size:clamp(.8rem,1.2vw,.9rem);color:var(--muted2);line-height:1.88;margin-bottom:11px}
+.about-body strong{color:var(--txt)}
+/* Prof card matching poster brand */
+.prof-card{
+  background:rgba(10,15,46,.9);
+  border:1px solid var(--border-bright);border-radius:14px;padding:26px;
+  position:relative;overflow:hidden;
+}
+.prof-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
+.prof-card::after{
+  content:'E';
+  position:absolute;bottom:-20px;right:-10px;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:8rem;
+  color:rgba(120,60,220,.06);line-height:1;pointer-events:none;
+}
+.pc-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.pc-ava{
+  width:58px;height:58px;border-radius:50%;flex-shrink:0;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;
+  box-shadow:0 0 20px rgba(120,60,220,.45);
+}
+.pc-name{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:3px}
+.pc-role{font-size:.75rem;color:var(--muted2);line-height:1.55}
+.pc-creds{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.pcred{display:flex;gap:8px;font-size:.79rem;color:var(--txt);align-items:flex-start}
+.pcred-dot{color:var(--purple2);flex-shrink:0;margin-top:1px}
+.spec-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  background:rgba(120,60,220,.12);color:var(--purple2);
+  border:1px solid rgba(120,60,220,.3);padding:3px 9px;border-radius:4px;
+}
+
+/* ═══════════════════════════════════════════
+   PRODUCTS
+═══════════════════════════════════════════ */
+#products{background:var(--bg)}
+.filter-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.fbt{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.5px;
+  background:var(--card);color:var(--muted2);
+  border:1px solid var(--border);padding:6px 14px;border-radius:20px;
+  transition:all .2s;white-space:nowrap;cursor:pointer;
+}
+.fbt:hover,.fbt.on{background:var(--grad);color:#fff;border-color:transparent}
+.search-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.search-box{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--border);border-radius:7px;
+  padding:10px 14px;flex:1;max-width:400px;transition:border-color .2s;
+}
+.search-box:focus-within{border-color:var(--border-bright)}
+.search-box input{background:none;border:none;outline:none;color:var(--txt);font-size:.85rem;flex:1}
+.search-box input::placeholder{color:var(--muted)}
+.prod-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,265px),1fr));
+  gap:clamp(12px,1.8vw,18px);
+}
+/* Product card — poster-style dark with purple glow */
+.pcard{
+  background:var(--card);
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  position:relative;
+}
+.pcard::before{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:radial-gradient(ellipse at 50% 0%,var(--cat-glow,rgba(120,60,220,.08)) 0%,transparent 60%);
+  pointer-events:none;z-index:0;transition:opacity .25s;opacity:0;
+}
+.pcard:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 20px var(--cat-glow,rgba(120,60,220,.15));
+  border-color:var(--border-bright);
+}
+.pcard:hover::before{opacity:1}
+.pcard-banner{
+  height:130px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;z-index:1;
+  background:linear-gradient(135deg,rgba(12,18,50,.9) 0%,rgba(4,6,26,.98) 100%);
+}
+.pcard-banner::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 120%,var(--cat-glow,rgba(120,60,220,.2)) 0%,transparent 60%);
+}
+.pcard-emo{font-size:2.6rem;z-index:1;position:relative;filter:drop-shadow(0 0 8px rgba(120,60,220,.4))}
+.vid-tag{
+  position:absolute;top:8px;left:8px;z-index:2;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;
+  background:rgba(4,6,26,.9);color:var(--purple2);
+  border:1px solid rgba(120,60,220,.4);padding:3px 8px;border-radius:4px;letter-spacing:1px;
+}
+.cat-tag{
+  position:absolute;top:8px;right:8px;z-index:2;
+  font-family:'Exo 2',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.5px;
+  background:var(--grad);color:#fff;padding:2px 9px;border-radius:4px;
+}
+.pcard-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+.pcard-title{font-family:'Exo 2',sans-serif;font-size:.93rem;font-weight:700;color:var(--white);line-height:1.38}
+.pcard-yt{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  color:var(--muted);border:1px solid var(--border);
+  padding:4px 9px;border-radius:4px;width:fit-content;
+  transition:border-color .2s,color .2s;
+}
+.pcard-yt:hover{border-color:var(--yt-red);color:#ff5555}
+.pcard-foot{
+  padding:0 16px 16px;display:flex;gap:7px;position:relative;z-index:1;
+}
+.btn-ask{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.4px;
+  background:var(--wa);color:#fff;padding:9px 10px;border-radius:6px;
+  transition:filter .18s,transform .15s;white-space:nowrap;
+}
+.btn-ask:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-yt{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.78rem;
+  background:rgba(229,48,48,.1);color:#ff5555;
+  border:1px solid rgba(229,48,48,.25);padding:9px 12px;border-radius:6px;
+  transition:background .2s,transform .15s;white-space:nowrap;
+}
+.btn-yt:hover{background:rgba(229,48,48,.2);transform:translateY(-1px)}
+.empty-g{grid-column:1/-1;text-align:center;padding:50px;color:var(--muted2);font-size:.88rem}
+
+/* ═══════════════════════════════════════════
+   DOCS
+═══════════════════════════════════════════ */
+#docs{background:rgba(7,10,34,.95)}
+.docs-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px)}
+.doc-list{display:flex;flex-direction:column;gap:8px}
+.doc-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--border);border-radius:7px;
+  padding:12px 15px;transition:border-color .2s,transform .18s;
+}
+.doc-row:hover{border-color:var(--border-bright);transform:translateX(4px)}
+.doc-n{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--purple2);min-width:22px}
+.doc-i{font-size:1.1rem}
+.doc-t{font-size:.83rem;color:var(--txt)}
+.doc-panel{
+  background:var(--card);border:1px solid var(--border-bright);
+  border-radius:14px;padding:26px;position:relative;overflow:hidden;
+}
+.doc-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
+.dp-title{font-family:'Orbitron',sans-serif;font-size:.92rem;font-weight:700;
+  color:var(--white);margin-bottom:14px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.doc-panel p{font-size:.82rem;color:var(--muted2);line-height:1.85;margin-bottom:12px}
+
+/* ═══════════════════════════════════════════
+   SUPPORT
+═══════════════════════════════════════════ */
+#support{background:var(--bg)}
+.sup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sup-card{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:22px;transition:border-color .25s,transform .2s;position:relative;overflow:hidden;
+}
+.sup-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);opacity:0;transition:opacity .25s}
+.sup-card:hover{border-color:var(--border-bright);transform:translateY(-4px)}
+.sup-card:hover::before{opacity:1}
+.sup-ico{font-size:1.8rem;margin-bottom:12px}
+.sup-t{font-family:'Exo 2',sans-serif;font-size:.93rem;font-weight:700;color:var(--white);margin-bottom:7px}
+.sup-d{font-size:.78rem;color:var(--muted2);line-height:1.72}
+
+/* ═══════════════════════════════════════════
+   YOUTUBE
+═══════════════════════════════════════════ */
+#youtube{background:rgba(7,10,34,.95)}
+.yt-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(24px,4vw,52px);align-items:start}
+.yt-channels{display:flex;flex-direction:column;gap:14px}
+.yt-ch{
+  background:var(--card);border-radius:12px;padding:20px 22px;
+  display:flex;gap:16px;align-items:center;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.yt-ch::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);opacity:0;transition:opacity .2s}
+.yt-ch.main{border:1px solid rgba(229,48,48,.3)}
+.yt-ch.sim{border:1px solid var(--border)}
+.yt-ch:hover::before{opacity:1}
+.yt-ch.main:hover{transform:translateY(-2px);border-color:var(--yt-red);box-shadow:0 8px 28px rgba(229,48,48,.15)}
+.yt-ch.sim:hover{transform:translateY(-2px);border-color:var(--border-bright)}
+.yt-ci{font-size:2rem;flex-shrink:0}
+.yt-cn{font-family:'Exo 2',sans-serif;font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px}
+.yt-cd{font-size:.76rem;color:var(--muted2);line-height:1.55}
+.yt-bdg{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;
+  background:var(--yt-red);color:#fff;padding:2px 8px;border-radius:3px;
+  margin-top:7px;display:inline-block;letter-spacing:.5px;
+}
+.yt-bdg.b{background:var(--grad)}
+.tags-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
+.tg-lbl{font-family:'Exo 2',sans-serif;font-size:.78rem;font-weight:700;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tc{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  background:rgba(120,60,220,.08);color:var(--muted2);
+  border:1px solid var(--border);padding:4px 10px;border-radius:4px;
+  transition:background .2s,color .2s,border-color .2s;cursor:default;
+}
+.tc:hover{background:rgba(120,60,220,.18);color:var(--purple2);border-color:rgba(120,60,220,.4)}
+
+/* ═══════════════════════════════════════════
+   ORDER
+═══════════════════════════════════════════ */
+#order{background:var(--bg)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:36px}
+.stp{
+  padding:20px 16px;border-top:2px solid var(--border);
+  position:relative;transition:border-color .25s;
+}
+.stp:hover{border-color:var(--purple2)}
+.stp:not(:last-child)::after{
+  content:'→';position:absolute;right:-8px;top:28px;
+  color:rgba(120,60,220,.3);font-size:1.1rem;z-index:1;
+}
+.sn{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--purple2);letter-spacing:2px;margin-bottom:10px}
+.si{font-size:1.7rem;margin-bottom:10px}
+.st{font-family:'Exo 2',sans-serif;font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:6px}
+.sd{font-size:.75rem;color:var(--muted2);line-height:1.65}
+.courier-note{
+  margin-top:24px;
+  background:rgba(32,192,90,.07);border:1px solid rgba(32,192,90,.2);
+  border-radius:7px;padding:14px 18px;
+  display:flex;gap:10px;align-items:center;font-size:.84rem;color:var(--txt);
+}
+
+/* ═══════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════ */
+#contact{background:rgba(7,10,34,.95)}
+.contact-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:clamp(20px,4vw,52px)}
+.ci-list{display:flex;flex-direction:column;gap:11px}
+.ci{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:15px;
+  display:flex;gap:12px;align-items:flex-start;
+  transition:border-color .2s;
+}
+.ci:hover{border-color:var(--border-bright)}
+.ci-ico{
+  width:36px;height:36px;border-radius:7px;flex-shrink:0;
+  background:rgba(120,60,220,.12);border:1px solid rgba(120,60,220,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.ci-lbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted2);letter-spacing:1px;margin-bottom:3px}
+.ci-val{font-size:.82rem;color:var(--txt);line-height:1.55}
+.ci-val a{color:var(--purple2)}
+.ci-val a:hover{text-decoration:underline;color:var(--cyan)}
+.socials-row{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.soc-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Exo 2',sans-serif;font-size:.72rem;font-weight:600;
+  padding:7px 12px;border-radius:6px;border:1px solid var(--border);
+  transition:all .2s;
+}
+.soc-btn.yt{color:var(--yt-red);border-color:rgba(229,48,48,.3)}
+.soc-btn.yt:hover{background:rgba(229,48,48,.1);border-color:var(--yt-red)}
+.soc-btn.ig{color:var(--ig);border-color:rgba(225,48,108,.3)}
+.soc-btn.ig:hover{background:rgba(225,48,108,.1);border-color:var(--ig)}
+.soc-btn.fb{color:var(--fb);border-color:rgba(24,119,242,.3)}
+.soc-btn.fb:hover{background:rgba(24,119,242,.1);border-color:var(--fb)}
+form.cf{display:flex;flex-direction:column;gap:12px}
+.fr{display:flex;gap:11px}
+.fg{display:flex;flex-direction:column;gap:5px;flex:1}
+.fg label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted2);letter-spacing:1px;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  color:var(--txt);font-family:'Exo 2',sans-serif;font-size:.85rem;
+  padding:10px 13px;outline:none;transition:border-color .2s;width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--border-bright)}
+.fg textarea{resize:vertical;min-height:88px}
+.fg select option{background:var(--card)}
+.btn-sub{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.5px;
+  background:var(--grad);color:#fff;border:none;border-radius:7px;
+  padding:12px 26px;cursor:pointer;align-self:flex-start;
+  transition:filter .2s,transform .15s;
+  box-shadow:0 4px 16px rgba(120,60,220,.3);
+}
+.btn-sub:hover{filter:brightness(1.12);transform:translateY(-1px)}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{
+  background:rgba(2,4,16,.98);
+  border-top:1px solid var(--border-bright);
+  padding:clamp(32px,4vw,52px) clamp(20px,5vw,72px) 20px;
+  position:relative;
+}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad)}
+.footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:clamp(20px,3vw,40px);margin-bottom:32px}
+.fc-brand .flogo{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:1.3rem;letter-spacing:2px;color:var(--white);
+  display:flex;align-items:center;gap:2px;margin-bottom:4px;
+}
+.fc-brand .flogo .gr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.fc-brand .fsub{font-family:'Exo 2',sans-serif;font-size:.62rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.fc-brand p{font-size:.78rem;color:var(--muted2);line-height:1.8;max-width:250px}
+.fc h4{font-family:'Exo 2',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);margin-bottom:13px}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.fc ul a{font-size:.77rem;color:var(--muted2);transition:color .2s}
+.fc ul a:hover{color:var(--cyan)}
+.foot-bot{
+  border-top:1px solid var(--border);padding-top:18px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.foot-bot p{font-size:.72rem;color:var(--muted)}
+.foot-bot a{color:var(--purple2)}
+
+/* Float WA */
+.fwa{
+  position:fixed;bottom:22px;right:22px;z-index:600;
+  width:52px;height:52px;border-radius:50%;background:var(--wa);
+  display:flex;align-items:center;justify-content:center;font-size:1.45rem;
+  box-shadow:0 4px 18px rgba(37,211,102,.45);
+  transition:transform .2s,box-shadow .2s;
+}
+.fwa:hover{transform:scale(1.12);box-shadow:0 8px 28px rgba(37,211,102,.6)}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* Responsive */
+@media(max-width:1100px){
+  .sidebar{display:none}.nav-links{display:none}.ham{display:flex}
+  .hero-inner{grid-template-columns:1fr}.hero-right{display:none}
+  .about-grid,.docs-layout,.yt-layout,.contact-layout{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(3,1fr)}.stp::after{display:none}
+  .footer-cols{grid-template-columns:1fr 1fr}
+  .sup-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .steps{grid-template-columns:1fr 1fr}
+  .prod-grid{grid-template-columns:1fr 1fr}
+  .footer-cols{grid-template-columns:1fr}
+  .sup-grid{grid-template-columns:1fr}
+  .fr{flex-direction:column}
+  .hero-btns{flex-direction:column;align-items:flex-start}
+  .hero-services{gap:10px}
+  .svc-icon{width:46px;height:46px;font-size:1.3rem}
+}
+@media(max-width:400px){
+  .prod-grid{grid-template-columns:1fr}
+  .hero-brand{font-size:2.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Background FX -->
+<div class="circuit-bg"></div>
+<div class="dot-grid"></div>
+<div class="corner-tl"></div>
+<div class="corner-br"></div>
+
+<!-- Float WA -->
+<a class="fwa" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20enquire%20about%20a%20project%20kit." target="_blank" title="WhatsApp">💬</a>
+
+<!-- ═══ NAV ═══ -->
+<nav class="topnav">
+  <div class="nav-logo">
+    <span class="el">ELE</span><span class="ex">X</span><span class="ys">YS</span>
+    <span class="sub">Technologies</span>
+  </div>
+  <div class="nav-links">
+    <a class="nav-a" href="#about">About</a>
+    <a class="nav-a" href="#products">Products</a>
+    <a class="nav-a" href="#docs">Docs</a>
+    <a class="nav-a" href="#support">Support</a>
+    <a class="nav-a" href="#youtube">YouTube</a>
+    <a class="nav-a" href="#order">Order</a>
+    <a class="nav-a" href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn-wa-nav" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20enquire%20about%20an%20Elexys%20project%20kit." target="_blank">💬 WhatsApp</a>
+    <button class="ham" onclick="toggleDraw()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mob-draw" id="mob">
+  <a href="#about" onclick="cd()">About</a>
+  <a href="#products" onclick="cd()">Products / Projects</a>
+  <a href="#docs" onclick="cd()">Documentation</a>
+  <a href="#support" onclick="cd()">Support</a>
+  <a href="#youtube" onclick="cd()">YouTube Channels</a>
+  <a href="#order" onclick="cd()">How to Order</a>
+  <a href="#contact" onclick="cd()">Contact</a>
+  <a class="mob-wa" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20order%20an%20Elexys%20project%20kit." target="_blank" onclick="cd()">💬 WhatsApp Us Now</a>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-lbl">Navigation</div>
+    <a class="sb-a" href="#hero"><span class="sb-ico">🏠</span>Home</a>
+    <a class="sb-a" href="#about"><span class="sb-ico">👨‍🏫</span>About</a>
+    <a class="sb-a" href="#products"><span class="sb-ico">⚡</span>All Projects <span class="sb-count"></span></a>
+    <a class="sb-a" href="#docs"><span class="sb-ico">📄</span>Documentation</a>
+    <a class="sb-a" href="#support"><span class="sb-ico">🛠️</span>Support</a>
+    <a class="sb-a" href="#youtube"><span class="sb-ico">▶️</span>YouTube</a>
+    <a class="sb-a" href="#order"><span class="sb-ico">📦</span>How to Order</a>
+    <a class="sb-a" href="#contact"><span class="sb-ico">✉️</span>Contact</a>
+    <div class="sb-div"></div>
+    <div class="sb-lbl">Categories</div>
+    <button class="sb-a" onclick="sbFilter('all',this)"><span class="sb-ico">📂</span>All Videos</button>
+    <button class="sb-a" onclick="sbFilter('iot',this)"><span class="sb-ico">🌐</span>IoT</button>
+    <button class="sb-a" onclick="sbFilter('agriculture',this)"><span class="sb-ico">🌾</span>Agriculture</button>
+    <button class="sb-a" onclick="sbFilter('electrical',this)"><span class="sb-ico">⚡</span>Electrical</button>
+    <button class="sb-a" onclick="sbFilter('gsm',this)"><span class="sb-ico">📡</span>GSM</button>
+    <button class="sb-a" onclick="sbFilter('solar',this)"><span class="sb-ico">☀️</span>Solar</button>
+    <button class="sb-a" onclick="sbFilter('rfid',this)"><span class="sb-ico">🪪</span>RFID</button>
+    <button class="sb-a" onclick="sbFilter('motor',this)"><span class="sb-ico">⚙️</span>Motor</button>
+    <button class="sb-a" onclick="sbFilter('wireless',this)"><span class="sb-ico">📶</span>Wireless</button>
+    <button class="sb-a" onclick="sbFilter('8051',this)"><span class="sb-ico">🔬</span>8051</button>
+    <button class="sb-a" onclick="sbFilter('transformer',this)"><span class="sb-ico">🔧</span>Transformer</button>
+    <div class="sb-div"></div>
+    <div class="sb-lbl">Follow Us</div>
+    <div class="sb-socials">
+      <a class="sb-social-link yt" href="https://www.youtube.com/@elexysbestproject" target="_blank">▶️ youtube.com/@elexysbestproject</a>
+      <a class="sb-social-link ig" href="https://instagram.com/elexys.project" target="_blank">📷 instagram.com/elexys.project</a>
+      <a class="sb-social-link fb" href="https://facebook.com/elexys.project" target="_blank">🔵 facebook.com/elexys.project</a>
+    </div>
+    <div class="sb-div"></div>
+    <div class="sb-lbl">Contact</div>
+    <a class="sb-a" href="https://wa.me/918796168099" target="_blank"><span class="sb-ico">💬</span>+91 87961 68099</a>
+    <a class="sb-a" href="mailto:elexys.projects@gmail.com"><span class="sb-ico">✉️</span>elexys.projects@gmail.com</a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ═══ HERO ═══ -->
+    <section id="hero">
+      <div class="hero-glow-r"></div>
+      <div class="hero-glow-l"></div>
+      <div class="scan"></div>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-logo-wrap">
+            <div class="hero-brand">
+              <span class="wh">ELE</span><span class="gr">X</span><span class="wh">YS</span>
+            </div>
+            <div class="hero-sub-name">Technologies</div>
+          </div>
+          <div class="hero-pillars">
+            <span class="pillar">Embedded Systems</span>
+            <span class="pillar">Robotics</span>
+            <span class="pillar">IoT</span>
+            <span class="pillar">Innovation</span>
+          </div>
+          <div class="hero-tagline">WE CODE. WE BUILD. WE INNOVATE.</div>
+          <div class="hero-concept">Turning Concepts Into Intelligent Solutions.</div>
+          <div class="hero-btns">
+            <a class="btn-wa-hero" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20order%20a%20project%20kit.%20Please%20guide%20me." target="_blank">💬 Order on WhatsApp</a>
+            <a class="btn-primary" href="#products">▶ Browse All Projects</a>
+            <a class="btn-ghost-hero" href="#docs">📄 Documentation</a>
+          </div>
+          <!-- Service icons from poster -->
+          <div class="hero-services">
+            <div class="svc">
+              <div class="svc-icon">♾️</div>
+              <div class="svc-label">Arduino /<br/>ESP32 Based</div>
+            </div>
+            <div class="svc">
+              <div class="svc-icon">🖥️</div>
+              <div class="svc-label">Embedded<br/>Systems</div>
+            </div>
+            <div class="svc">
+              <div class="svc-icon">🤖</div>
+              <div class="svc-label">Robotics<br/>Projects</div>
+            </div>
+            <div class="svc">
+              <div class="svc-icon">🌐</div>
+              <div class="svc-label">IoT<br/>Projects</div>
+            </div>
+            <div class="svc">
+              <div class="svc-icon">🎓</div>
+              <div class="svc-label">College &<br/>Exhibition</div>
+            </div>
+          </div>
+          <!-- Bottom strip -->
+          <div class="hero-strip">
+            <div class="strip-item"><span class="strip-ico">💡</span>Innovative Solutions</div>
+            <div class="strip-item"><span class="strip-ico">✅</span>Quality Assured</div>
+            <div class="strip-item"><span class="strip-ico">⏱️</span>On-Time Delivery</div>
+            <div class="strip-item"><span class="strip-ico">🎧</span>End-to-End Support</div>
+            <div class="strip-item"><span class="strip-ico">🔬</span>Tested & Reliable</div>
+            <div class="strip-item"><span class="strip-ico">🌍</span>Global Reach</div>
+          </div>
+        </div>
+        <!-- Right panel -->
+        <div class="hero-right">
+          <div class="hero-kpis">
+            <div class="kpi"><div class="kpi-n grad">DEMO</div><div class="kpi-l">Project Videos</div></div>
+            <div class="kpi"><div class="kpi-n">100%</div><div class="kpi-l">Tested & Working</div></div>
+            <div class="kpi"><div class="kpi-n grad">Free</div><div class="kpi-l">All India Courier</div></div>
+            <div class="kpi"><div class="kpi-n">11+</div><div class="kpi-l">Docs Per Kit</div></div>
+          </div>
+          <div class="prof-mini">
+            <div class="prof-ava">MS</div>
+            <div>
+              <div class="prof-nm">Prof. M.D. Sk</div>
+              <div class="prof-rl">M.Tech — Embedded System Design<br/>IoT & Power Electronics</div>
+            </div>
+          </div>
+          <div class="branches-mini">
+            <div class="br-row"><span class="br-dot"></span>Electrical Engineering</div>
+            <div class="br-row"><span class="br-dot"></span>Electronics Engineering</div>
+            <div class="br-row"><span class="br-dot"></span>Mechatronics / Instrumentation</div>
+            <div class="br-row"><span class="br-dot"></span>B.Tech / M.Tech / Diploma</div>
+            <div class="br-row"><span class="br-dot"></span>BSc / MSc / M.E.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section class="section" id="about">
+      <div class="sec-head">
+        <div class="sec-eye">// ABOUT US</div>
+        <h2>Expert-Led <span class="grad">Engineering Solutions</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="reveal">
+          <div class="about-quote">"Dear friends, if you want to do a very well working, presentable project — you should give us a chance to serve you!"</div>
+          <div class="about-body">
+            <p><strong>Elexys Technologies</strong> is a dedicated electronics and engineering project kit service — turning concepts into intelligent solutions for students across India.</p>
+            <p>We serve students from Electrical, Electronics, Mechatronics, Instrumentation, and Telecommunication engineering — at Diploma, B.Tech, M.Tech, BSc, MSc, and M.E. levels.</p>
+            <p>Every project is fully assembled, tested, and delivered with professional documentation, YouTube tutorials, and real-time support via WhatsApp, email, and video call.</p>
+            <p>Our range: IoT, Arduino, ESP32, RFID, GSM, Solar, Motor Control, 8051, Wireless Energy, Embedded Systems, Robotics, Power Electronics, and more.</p>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="prof-card">
+            <div class="pc-top">
+              <div class="pc-ava">MS</div>
+              <div>
+                <div class="pc-name">Prof. M.D. Sk</div>
+                <div class="pc-role">Founder & Technical Lead — Elexys Technologies</div>
+              </div>
+            </div>
+            <div class="pc-creds">
+              <div class="pcred"><span class="pcred-dot">▸</span>More than 200 Courses done</div>
+              <div class="pcred"><span class="pcred-dot">▸</span>B.E. (Electronics & Telecommunication)</div>
+              <div class="pcred"><span class="pcred-dot">▸</span>M.Tech — Embedded System Design</div>
+              <div class="pcred"><span class="pcred-dot">▸</span>Malegaon, Dist. Nashik, Maharashtra, India</div>
+            </div>
+            <div class="spec-chips">
+              <span class="chip">IoT Engineering</span>
+              <span class="chip">Power Electronics</span>
+              <span class="chip">Embedded Software</span>
+              <span class="chip">Embedded Systems</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ PRODUCTS ═══ -->
+    <section class="section" id="products" style="padding-bottom:0">
+      <div class="sec-head">
+        <div class="sec-eye">// PROJECT CATALOG — EACH VIDEO = ONE PRODUCT</div>
+        <h2>All <span class="grad">Project Kits</span></h2>
+        <p class="sec-sub">Tap <strong style="color:var(--wa)">💬 Ask Price</strong> on any card — a ready WhatsApp message opens instantly with the video number and title.</p>
+      </div>
+    </section>
+    <div style="padding:0 clamp(20px,5vw,72px)">
+      <div class="filter-bar" id="fbar">
+        <button class="fbt on" onclick="fCat('all',this)">All</button>
+        <button class="fbt" onclick="fCat('iot',this)">🌐 IoT</button>
+        <button class="fbt" onclick="fCat('agriculture',this)">🌾 Agriculture</button>
+        <button class="fbt" onclick="fCat('electrical',this)">⚡ Electrical</button>
+        <button class="fbt" onclick="fCat('gsm',this)">📡 GSM</button>
+        <button class="fbt" onclick="fCat('solar',this)">☀️ Solar</button>
+        <button class="fbt" onclick="fCat('rfid',this)">🪪 RFID</button>
+        <button class="fbt" onclick="fCat('motor',this)">⚙️ Motor</button>
+        <button class="fbt" onclick="fCat('wireless',this)">📶 Wireless</button>
+        <button class="fbt" onclick="fCat('8051',this)">🔬 8051</button>
+        <button class="fbt" onclick="fCat('transformer',this)">🔧 Transformer</button>
+      </div>
+      <div class="search-row">
+        <div class="search-box">
+          <span style="color:var(--muted)">🔍</span>
+          <input type="text" id="srch" placeholder="Search by title or video number…" oninput="render()"/>
+        </div>
+      </div>
+      <div class="prod-grid" id="grid"></div>
+    </div>
+
+    <div class="div" style="margin-top:clamp(32px,4vw,52px)"></div>
+
+    <!-- ═══ DOCS ═══ -->
+    <section class="section" id="docs">
+      <div class="sec-head">
+        <div class="sec-eye">// WHAT YOU GET</div>
+        <h2>Complete <span class="grad">Documentation</span> with Every Kit</h2>
+        <p class="sec-sub">Professional, colourful, organised documentation — submission-ready on day one.</p>
+      </div>
+      <div class="docs-layout">
+        <div class="doc-list reveal">
+          <div class="doc-row"><span class="doc-n">01</span><span class="doc-i">📊</span><span class="doc-t">Power Point Presentation (PPT)</span></div>
+          <div class="doc-row"><span class="doc-n">02</span><span class="doc-i">🔌</span><span class="doc-t">Schematic Diagram</span></div>
+          <div class="doc-row"><span class="doc-n">03</span><span class="doc-i">🗂️</span><span class="doc-t">Block Diagram</span></div>
+          <div class="doc-row"><span class="doc-n">04</span><span class="doc-i">💰</span><span class="doc-t">Components Price List</span></div>
+          <div class="doc-row"><span class="doc-n">05</span><span class="doc-i">📋</span><span class="doc-t">Components Specification List</span></div>
+          <div class="doc-row"><span class="doc-n">06</span><span class="doc-i">📚</span><span class="doc-t">Code Compilation Libraries</span></div>
+          <div class="doc-row"><span class="doc-n">07</span><span class="doc-i">📄</span><span class="doc-t">Datasheet of All Components</span></div>
+          <div class="doc-row"><span class="doc-n">08</span><span class="doc-i">💾</span><span class="doc-t">Program / Code of Microcontroller</span></div>
+          <div class="doc-row"><span class="doc-n">09</span><span class="doc-i">💬</span><span class="doc-t">Online Support via WhatsApp / Gmail</span></div>
+          <div class="doc-row"><span class="doc-n">10</span><span class="doc-i">🛠️</span><span class="doc-t">Technical Assistance</span></div>
+          <div class="doc-row"><span class="doc-n">11</span><span class="doc-i">🌐</span><span class="doc-t">IoT Server Setup Support</span></div>
+        </div>
+        <div class="doc-panel reveal">
+          <div class="dp-title">📁 Professionally Designed Full Report</div>
+          <p>Very well organised, colourful, easy-to-understand documentation — block diagrams, circuit diagrams, components lists, and full PPT — available for all projects.</p>
+          <p>A professionally designed full project report file is included with every kit. Submission-ready from day one.</p>
+          <a class="btn-wa-hero" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20would%20like%20to%20know%20more%20about%20the%20project%20documentation%20you%20provide." target="_blank" style="display:inline-flex;margin-top:4px">💬 Ask About Docs</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ SUPPORT ═══ -->
+    <section class="section" id="support">
+      <div class="sec-head">
+        <div class="sec-eye">// TECHNICAL & VIVA SUPPORT</div>
+        <h2>Always Available <span class="grad">Support</span></h2>
+        <p class="sec-sub">Full technical and viva support before, during, and after delivery.</p>
+      </div>
+      <div class="sup-grid">
+        <div class="sup-card reveal"><div class="sup-ico">💬</div><div class="sup-t">WhatsApp Chat</div><p class="sup-d">Message us anytime — fast replies for queries, documentation, and troubleshooting.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">📹</div><div class="sup-t">Video Call Support</div><p class="sup-d">Live video call to help you understand and demonstrate your project to your guide.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">✉️</div><div class="sup-t">Gmail Support</div><p class="sup-d">Always available at elexys.projects@gmail.com for detailed queries and viva prep.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">🎓</div><div class="sup-t">Student Training</div><p class="sup-d">Online training content on specific topics — ideal for viva and deeper understanding.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">🌐</div><div class="sup-t">IoT Server Setup</div><p class="sup-d">Full assistance setting up IoT servers, cloud dashboards, and connectivity for IoT kits.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">📦</div><div class="sup-t">Free All India Courier</div><p class="sup-d">Order from any state — project kit couriered to your doorstep completely free.</p></div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ YOUTUBE ═══ -->
+    <section class="section" id="youtube">
+      <div class="sec-head">
+        <div class="sec-eye">// YOUTUBE CHANNELS</div>
+        <h2>Watch, Learn &amp; <span class="grad">Get Inspired</span></h2>
+        <p class="sec-sub">Two dedicated channels — live hardware demos and simulation projects.</p>
+      </div>
+      <div class="yt-layout">
+        <div class="yt-channels reveal">
+          <a class="yt-ch main" href="https://www.youtube.com/@elexysbestproject" target="_blank">
+            <div class="yt-ci">▶️</div>
+            <div>
+              <div class="yt-cn">Elexys Best Project</div>
+              <div class="yt-cd">Main channel — working demos, circuit explanations, tutorials for every kit we sell. projects and counting.</div>
+              <div class="yt-bdg">SUBSCRIBE NOW</div>
+            </div>
+          </a>
+          <a class="yt-ch sim" href="https://youtube.com/channel/UCfaCDlMpXMF0k1_aOpPr8Iw" target="_blank">
+            <div class="yt-ci">🖥️</div>
+            <div>
+              <div class="yt-cn">All Simulation Projects</div>
+              <div class="yt-cd">Dedicated channel for simulation-based engineering projects — Proteus, MATLAB & more.</div>
+              <div class="yt-bdg b">WATCH NOW</div>
+            </div>
+          </a>
+        </div>
+        <div class="tags-panel reveal">
+          <div class="tg-lbl">Technologies We Cover</div>
+          <div class="tag-cloud">
+            <span class="tc">#IoT</span><span class="tc">#Arduino</span><span class="tc">#ESP32</span>
+            <span class="tc">#ESP8266</span><span class="tc">#DIY</span><span class="tc">#Adafruit</span>
+            <span class="tc">#Automation</span><span class="tc">#Electrical</span><span class="tc">#3PhasePower</span>
+            <span class="tc">#RFID</span><span class="tc">#GSM</span><span class="tc">#Solar</span>
+            <span class="tc">#8051</span><span class="tc">#EmbeddedSystems</span><span class="tc">#Robotics</span>
+            <span class="tc">#WirelessEnergy</span><span class="tc">#MotorControl</span><span class="tc">#Mechatronics</span>
+            <span class="tc">#PowerElectronics</span><span class="tc">#Transformer</span><span class="tc">#Simulation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ ORDER ═══ -->
+    <section class="section" id="order">
+      <div class="sec-head">
+        <div class="sec-eye">// PURCHASE GUIDE</div>
+        <h2>How to <span class="grad">Order Your Kit</span></h2>
+        <p class="sec-sub">Simple 5-step process — order online, receive at your doorstep anywhere in India.</p>
+      </div>
+      <div class="steps">
+        <div class="stp reveal"><div class="sn">STEP 01</div><div class="si">📋</div><div class="st">Choose a Project</div><p class="sd">Find your project from our All-video catalog. Note the video number or title.</p></div>
+        <div class="stp reveal"><div class="sn">STEP 02</div><div class="si">💬</div><div class="st">Ask Price</div><p class="sd">Tap the green "Ask Price" button — WhatsApp opens with a ready message. Just send!</p></div>
+        <div class="stp reveal"><div class="sn">STEP 03</div><div class="si">💳</div><div class="st">Confirm & Pay</div><p class="sd">We confirm price. You pay — we begin assembly and testing immediately.</p></div>
+        <div class="stp reveal"><div class="sn">STEP 04</div><div class="si">📦</div><div class="st">Receive at Doorstep</div><p class="sd">Tested kit + 11-item docs couriered free to your address, all India.</p></div>
+        <div class="stp reveal"><div class="sn">STEP 05</div><div class="si">🎓</div><div class="st">Submit with Confidence</div><p class="sd">Use the PPT, report, and YouTube demo to present to your college panel.</p></div>
+      </div>
+      <div class="courier-note">
+        <span style="font-size:1.3rem">🚚</span>
+        <span><strong style="color:#fff">All India Free Courier</strong> — Students can order from any state. Project kits delivered to your doorstep at no extra charge.</span>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section class="section" id="contact">
+      <div class="sec-head">
+        <div class="sec-eye">// CONTACT US</div>
+        <h2>Get in Touch &amp; <span class="grad">Place Your Order</span></h2>
+        <p class="sec-sub">Reach us on WhatsApp, email, or fill the form below.</p>
+      </div>
+      <div class="contact-layout">
+        <div class="ci-list reveal">
+          <div class="ci">
+            <div class="ci-ico">💬</div>
+            <div>
+              <div class="ci-lbl">WhatsApp</div>
+              <div class="ci-val"><a href="https://wa.me/918796168099" target="_blank">+91 87961 68099</a><br/><span style="font-size:.72rem;color:var(--muted)">For project queries with video link</span></div>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-ico">✉️</div>
+            <div>
+              <div class="ci-lbl">Email</div>
+              <div class="ci-val"><a href="mailto:elexys.projects@gmail.com">elexys.projects@gmail.com</a></div>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-ico">👨‍🏫</div>
+            <div>
+              <div class="ci-lbl">Expert</div>
+              <div class="ci-val">Prof. M.D. Sk<br/><span style="font-size:.72rem;color:var(--muted)">M.Tech Embedded System Design</span></div>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-ico">📍</div>
+            <div>
+              <div class="ci-lbl">Address</div>
+              <div class="ci-val">Malegaon, Dist. Nashik, Maharashtra, India</div>
+            </div>
+          </div>
+          <!-- Social links from poster -->
+          <div class="ci">
+            <div class="ci-ico">📱</div>
+            <div>
+              <div class="ci-lbl">Follow Us</div>
+              <div class="socials-row">
+                <a class="soc-btn yt" href="https://www.youtube.com/@elexysbestproject" target="_blank">▶ YouTube</a>
+                <a class="soc-btn ig" href="https://instagram.com/elexys.project" target="_blank">📷 Instagram</a>
+                <a class="soc-btn fb" href="https://facebook.com/elexys.project" target="_blank">🔵 Facebook</a>
+              </div>
+            </div>
+          </div>
+          <a class="btn-wa-hero" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20order%20a%20project%20kit." target="_blank" style="justify-content:center;margin-top:2px">💬 Open WhatsApp Now</a>
+        </div>
+        <div class="reveal">
+          <form class="cf" onsubmit="subForm(event)">
+            <div class="fr">
+              <div class="fg"><label>Your Name</label><input type="text" placeholder="Full name" required/></div>
+              <div class="fg"><label>WhatsApp / Phone</label><input type="tel" placeholder="+91 XXXXX XXXXX" required/></div>
+            </div>
+            <div class="fg"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
+            <div class="fr">
+              <div class="fg">
+                <label>Branch</label>
+                <select>
+                  <option value="">-- Select --</option>
+                  <option>Electrical Engineering</option>
+                  <option>Electronics Engineering</option>
+                  <option>Mechatronics Engineering</option>
+                  <option>Instrumentation Engineering</option>
+                  <option>Telecommunication Engineering</option>
+                  <option>B.Tech / M.Tech / M.E.</option>
+                  <option>Diploma (Electronics)</option>
+                  <option>Diploma (Electrical)</option>
+                  <option>BSc / MSc</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Project Category</label>
+                <select>
+                  <option value="">-- Select --</option>
+                  <option>IoT Projects</option>
+                  <option>Agriculture Projects</option>
+                  <option>Electrical Projects</option>
+                  <option>GSM Projects</option>
+                  <option>Solar Projects</option>
+                  <option>8051 Projects</option>
+                  <option>RFID Projects</option>
+                  <option>Wireless Energy</option>
+                  <option>Motor / Robotics Projects</option>
+                  <option>Transformer Projects</option>
+                  <option>Simulation Projects</option>
+                  <option>Custom / Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg"><label>Message / Project Details</label><textarea placeholder="Describe your requirement, submission deadline, YouTube video link, or any details…"></textarea></div>
+            <button type="submit" class="btn-sub">SEND ENQUIRY →</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+      <div class="footer-cols">
+        <div class="fc-brand">
+          <div class="flogo">ELE<span class="gr">X</span>YS</div>
+          <div class="fsub">Technologies</div>
+          <p>Embedded Systems · Robotics · IoT · Innovation<br/>Ready-made, tested engineering project kits for students across India.</p>
+          <p style="margin-top:10px;font-size:.72rem;color:var(--muted)">📍 Malegaon, Dist. Nashik, Maharashtra, India</p>
+        </div>
+        <div class="fc">
+          <h4>Project Playlists</h4>
+          <ul>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTMopYUgXZsC9ey-_Vbh9r7n" target="_blank">IoT Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTP5cYFKslyu8iTFXrt8U3C3" target="_blank">Agriculture Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTOcG6WagSKUtitl8akw0n5M" target="_blank">Electrical Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTOZ8U7jzmRJa-JwF2XS0HL3" target="_blank">GSM Projects</a></li>
+            <li><a href="https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz" target="_blank">All Projects</a></li>
+          </ul>
+        </div>
+        <div class="fc">
+          <h4>More Playlists</h4>
+          <ul>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTOqrBhQ97S8WdcggfF5QUFg" target="_blank">Solar Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTOy9lwMRrz6xZotZIvt2Qyn" target="_blank">8051 Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTMtEfrS5FryQyjbdraUrdIe" target="_blank">RFID Projects</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTNEzS9C8ENsFgl68aFeZQjC" target="_blank">Wireless Energy</a></li>
+            <li><a href="https://www.youtube.com/playlist?list=PLUOZuetJJhTPkzbPHBKOTT_ogsUfeK9cp" target="_blank">Motor Projects</a></li>
+          </ul>
+        </div>
+        <div class="fc">
+          <h4>Connect With Us</h4>
+          <ul>
+            <li><a href="https://wa.me/918796168099" target="_blank">💬 +91 87961 68099</a></li>
+            <li><a href="mailto:elexys.projects@gmail.com">✉️ elexys.projects@gmail.com</a></li>
+            <li><a href="https://www.youtube.com/@elexysbestproject" target="_blank">▶️ youtube.com/@elexysbestproject</a></li>
+            <li><a href="https://instagram.com/elexys.project" target="_blank">📷 instagram.com/elexys.project</a></li>
+            <li><a href="https://facebook.com/elexys.project" target="_blank">🔵 facebook.com/elexys.project</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bot">
+        <p>© 2024 Elexys Technologies · Prof. M.D. Sk · Malegaon, Dist. Nashik, Maharashtra, India</p>
+        <p>⚡ We Code. We Build. We Innovate.</p>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+/* ── DATA ── */
+const WA = '918796168099';
+const PLAYLISTS = {
+  iot:'https://www.youtube.com/playlist?list=PLUOZuetJJhTMopYUgXZsC9ey-_Vbh9r7n',
+  agriculture:'https://www.youtube.com/playlist?list=PLUOZuetJJhTP5cYFKslyu8iTFXrt8U3C3',
+  electrical:'https://www.youtube.com/playlist?list=PLUOZuetJJhTOcG6WagSKUtitl8akw0n5M',
+  gsm:'https://www.youtube.com/playlist?list=PLUOZuetJJhTOZ8U7jzmRJa-JwF2XS0HL3',
+  solar:'https://www.youtube.com/playlist?list=PLUOZuetJJhTOqrBhQ97S8WdcggfF5QUFg',
+  rfid:'https://www.youtube.com/playlist?list=PLUOZuetJJhTMtEfrS5FryQyjbdraUrdIe',
+  motor:'https://www.youtube.com/playlist?list=PLUOZuetJJhTPkzbPHBKOTT_ogsUfeK9cp',
+  wireless:'https://www.youtube.com/playlist?list=PLUOZuetJJhTNEzS9C8ENsFgl68aFeZQjC',
+  '8051':'https://www.youtube.com/playlist?list=PLUOZuetJJhTOy9lwMRrz6xZotZIvt2Qyn',
+  transformer:'https://www.youtube.com/playlist?list=PLUOZuetJJhTOyXBVIVHCqrtZwn0ztnlqa',
+};
+const CAT_ICON={iot:'🌐',agriculture:'🌾',electrical:'⚡',gsm:'📡',solar:'☀️',rfid:'🪪',motor:'⚙️',wireless:'📶','8051':'🔬',transformer:'🔧'};
+const CAT_GLOW={iot:'rgba(0,194,168,.18)',agriculture:'rgba(80,200,60,.15)',electrical:'rgba(220,160,30,.18)',gsm:'rgba(0,140,220,.15)',solar:'rgba(255,200,0,.15)',rfid:'rgba(180,60,255,.18)',motor:'rgba(255,120,40,.16)',wireless:'rgba(0,200,255,.15)','8051':'rgba(255,60,60,.15)',transformer:'rgba(160,140,255,.15)'};
+
+const PRODUCTS=[
+  {n:1,cat:'gsm',title:'GSM Based Transformer Fault Detection & Monitoring System'},
+  {n:2,cat:'iot',title:'IoT Based Home Automation System Using ESP8266'},
+  {n:3,cat:'solar',title:'Dual Axis Solar Tracker Using LDR Sensor'},
+  {n:4,cat:'rfid',title:'RFID Based Attendance System Using Arduino'},
+  {n:5,cat:'agriculture',title:'Automatic Irrigation System Using Soil Moisture Sensor'},
+  {n:6,cat:'iot',title:'IoT Based Temperature & Humidity Monitoring System'},
+  {n:7,cat:'motor',title:'Stepper Motor Speed & Direction Control Using Arduino'},
+  {n:8,cat:'electrical',title:'Single Phase Energy Meter With LCD Display'},
+  {n:9,cat:'gsm',title:'GSM Based Vehicle Tracking System Using GPS'},
+  {n:10,cat:'rfid',title:'RFID Smart Door Lock System'},
+  {n:11,cat:'solar',title:'Solar Panel Based Battery Charging System'},
+  {n:12,cat:'iot',title:'IoT Smart Water Level Monitoring System'},
+  {n:13,cat:'agriculture',title:'Smart Greenhouse Monitoring & Control System'},
+  {n:14,cat:'electrical',title:'Auto Intensity Control of Street Lights'},
+  {n:15,cat:'gsm',title:'GSM Based Home Security Alert System'},
+  {n:16,cat:'8051',title:'8051 Based Digital Thermometer Using LM35'},
+  {n:17,cat:'motor',title:'BLDC Motor Speed Controller Using Arduino'},
+  {n:18,cat:'wireless',title:'Wireless Power Transfer Using Inductive Coupling'},
+  {n:19,cat:'transformer',title:'Flyback Transformer Driver Circuit'},
+  {n:20,cat:'iot',title:'IoT Based Air Quality Monitoring System'},
+  {n:21,cat:'rfid',title:'RFID Based Library Management System'},
+  {n:22,cat:'solar',title:'Solar Powered IoT Weather Station'},
+  {n:23,cat:'electrical',title:'Three Phase Power Monitor & Load Control System'},
+  {n:24,cat:'agriculture',title:'IoT Based Crop Disease Detection System'},
+  {n:25,cat:'8051',title:'8051 Microcontroller Traffic Light Controller'},
+  {n:26,cat:'motor',title:'DC Motor Bidirectional Speed Control with PWM'},
+  {n:27,cat:'iot',title:'ESP32 Based Smart Home Security System'},
+  {n:28,cat:'gsm',title:'GSM Remote Industrial Equipment Monitoring'},
+  {n:29,cat:'wireless',title:'Wireless Energy Meter Reading via GSM'},
+  {n:30,cat:'transformer',title:'Step Up Step Down Transformer Testing Project'},
+  {n:31,cat:'rfid',title:'RFID Based Toll Collection System'},
+  {n:32,cat:'solar',title:'Single Axis Solar Tracker Using Servo Motor'},
+  {n:33,cat:'electrical',title:'Underground Cable Fault Distance Detection System'},
+  {n:34,cat:'agriculture',title:'Automatic Plant Watering System with Moisture Sensor'},
+  {n:35,cat:'iot',title:'IoT Based Industrial Automation with ESP32'},
+  {n:36,cat:'8051',title:'8051 Based Frequency Counter'},
+  {n:37,cat:'motor',title:'Servo Motor Closed Loop Position Control'},
+  {n:38,cat:'gsm',title:'GSM Based Smart Electricity Bill System'},
+  {n:39,cat:'wireless',title:'Resonant Wireless Battery Charging System'},
+  {n:40,cat:'iot',title:'IoT Based Health Monitoring System'},
+  {n:41,cat:'electrical',title:'Power Factor Correction System Using Capacitor Bank'},
+  {n:42,cat:'rfid',title:'RFID Based Vehicle Entry Parking System'},
+  {n:43,cat:'agriculture',title:'Solar Powered Drip Irrigation System'},
+  {n:44,cat:'8051',title:'8051 Based Digital Voltmeter'},
+  {n:45,cat:'motor',title:'Three Phase Induction Motor Speed Controller'},
+  {n:46,cat:'gsm',title:'GSM Based Patient Health Monitoring System'},
+  {n:47,cat:'solar',title:'Solar Street Light with Auto ON/OFF Control'},
+  {n:48,cat:'iot',title:'IoT Smart Energy Meter with Cloud Dashboard'},
+  {n:49,cat:'transformer',title:'High Frequency Inverter Transformer Design'},
+  {n:50,cat:'wireless',title:'Wireless Notice Board Using ESP8266'},
+  {n:51,cat:'electrical',title:'Automatic Changeover Switch for Power Supply'},
+  {n:52,cat:'rfid',title:'RFID Based Secure Access Control System'},
+  {n:53,cat:'agriculture',title:'IoT Based Poultry Farm Monitoring System'},
+  {n:54,cat:'8051',title:'8051 Based Digital Clock with RTC'},
+  {n:55,cat:'motor',title:'Arduino Based Robotic Arm Control System'},
+  {n:56,cat:'gsm',title:'GSM Based LPG Gas Leakage Detector & Alert'},
+  {n:57,cat:'solar',title:'MPPT Solar Charge Controller with LCD'},
+  {n:58,cat:'iot',title:'IoT Based Vehicle Speed Monitoring System'},
+  {n:59,cat:'transformer',title:'Isolation Transformer Safety Testing Project'},
+  {n:60,cat:'wireless',title:'RF Based Home Automation System'},
+  {n:61,cat:'electrical',title:'Smart Grid Load Balancing System'},
+  {n:62,cat:'rfid',title:'RFID Based Blood Bank Management System'},
+  {n:63,cat:'agriculture',title:'Automated Hydroponic Farming Control System'},
+  {n:64,cat:'8051',title:'8051 Based Password Protected Door Lock'},
+  {n:65,cat:'motor',title:'Solar Powered Water Pumping System'},
+  {n:66,cat:'gsm',title:'GSM Based Remote Load Control System'},
+  {n:67,cat:'solar',title:'Solar Panel Output Monitoring System with IoT'},
+  {n:68,cat:'iot',title:'IoT Based Flood Detection & Alert System'},
+  {n:69,cat:'transformer',title:'Centre Tap Transformer Full Wave Rectifier'},
+  {n:70,cat:'wireless',title:'Bluetooth Controlled Home Automation'},
+  {n:71,cat:'electrical',title:'Reactive Power Compensation System'},
+  {n:72,cat:'rfid',title:'RFID Based Material Tracking in Warehouse'},
+  {n:73,cat:'agriculture',title:'Precision Agriculture Using IoT Sensors'},
+  {n:74,cat:'iot',title:'ESP8266 NodeMCU WiFi Based Automation'},
+];
+
+let curCat='all', curQ='';
+
+function waMsg(n,title){
+  return encodeURIComponent(`Hi Prof. M.D. Sk,\n\nWhat is the price for:\n*Video ${String(n).padStart(3,'0')} — ${title}*\n\nPlease share kit price and availability. Thank you! 🙏`);
+}
+
+function render(){
+  curQ = document.getElementById('srch').value.toLowerCase();
+  const filtered = PRODUCTS.filter(p=>{
+    const cok = curCat==='all'||p.cat===curCat;
+    const qok = !curQ||p.title.toLowerCase().includes(curQ)||String(p.n).includes(curQ)||String(p.n).padStart(3,'0').includes(curQ);
+    return cok&&qok;
+  });
+  const grid = document.getElementById('grid');
+  if(!filtered.length){
+    grid.innerHTML='<div class="empty-g">No projects found. Try a different search or category.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map((p,i)=>{
+    const pad = String(p.n).padStart(3,'0');
+    const ico = CAT_ICON[p.cat]||'🔧';
+    const glow = CAT_GLOW[p.cat]||'rgba(120,60,220,.15)';
+    const pl = PLAYLISTS[p.cat]||'https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz';
+    const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.title)}`;
+    return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both">
+      <div class="pcard-banner">
+        <span class="vid-tag">VIDEO ${pad}</span>
+        <span class="pcard-emo">${ico}</span>
+        <span class="cat-tag">${p.cat.toUpperCase()}</span>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-title">${p.title}</div>
+        <a class="pcard-yt" href="${pl}" target="_blank">▶ Watch on YouTube</a>
+      </div>
+      <div class="pcard-foot">
+        <button class="btn-ask" onclick="window.open('${wl}','_blank')">💬 Ask Price on WhatsApp</button>
+        <a class="btn-yt" href="${pl}" target="_blank">▶ YT</a>
+      </div>
+    </div>`;
+  }).join('');
+  initReveal();
+}
+
+function fCat(cat,btn){
+  curCat=cat;
+  document.querySelectorAll('.fbt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+function sbFilter(cat,btn){
+  curCat=cat;
+  document.querySelectorAll('.sb-a').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.fbt').forEach(b=>{
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${cat}'`))b.classList.add('on');
+    else b.classList.remove('on');
+  });
+  render();
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleDraw(){document.getElementById('mob').classList.toggle('open')}
+function cd(){document.getElementById('mob').classList.remove('open')}
+
+function subForm(e){
+  e.preventDefault();
+  alert('✅ Enquiry sent!\n\nWe will contact you on WhatsApp shortly.\n\nOr message us directly:\n+91 87961 68099');
+  e.target.reset();
+}
+
+/* Reveal */
+function initReveal(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}});
+  },{threshold:.07});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}
+
+/* Scroll spy */
+(()=>{
+  const ids=['hero','about','products','docs','support','youtube','order','contact'];
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id=e.target.id;
+        document.querySelectorAll('.nav-a,.sb-a[href]').forEach(a=>a.classList.toggle('on',a.getAttribute('href')===`#${id}`));
+      }
+    });
+  },{threshold:.35});
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
+})();
+
+render();
+initReveal();
+</script>
+</body>
+</html>
