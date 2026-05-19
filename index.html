@@ -1375,7 +1375,103 @@ const PLAYLISTS = {
 const CAT_ICON={iot:'🌐',agriculture:'🌾',electrical:'⚡',gsm:'📡',solar:'☀️',rfid:'🪪',motor:'⚙️',wireless:'📶','8051':'🔬',transformer:'🔧'};
 const CAT_GLOW={iot:'rgba(0,194,168,.18)',agriculture:'rgba(80,200,60,.15)',electrical:'rgba(220,160,30,.18)',gsm:'rgba(0,140,220,.15)',solar:'rgba(255,200,0,.15)',rfid:'rgba(180,60,255,.18)',motor:'rgba(255,120,40,.16)',wireless:'rgba(0,200,255,.15)','8051':'rgba(255,60,60,.15)',transformer:'rgba(160,140,255,.15)'};
 
-const PRODUCTS=[
+
+
+   <script type="module">
+
+// Firebase imports
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+// Firebase config
+const firebaseConfig = {
+
+  apiKey: "AIzaSyC97I-QSoDqSLfUR3Vt6gYSM5VrXAJb2G4",
+
+  authDomain: "elexys-technologies.firebaseapp.com",
+
+  projectId: "elexys-technologies",
+
+  storageBucket: "elexys-technologies.appspot.com",
+
+  messagingSenderId: "1002855081911",
+
+  appId: "1:1002855081911:web:6bafab1a4fea559ff9ea32"
+
+};
+
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+
+// Products array
+let PRODUCTS = [];
+
+
+
+// Load products function
+async function loadFirebaseProducts(){
+
+  try{
+
+    const querySnapshot =
+    await getDocs(collection(db, "products"));
+
+    PRODUCTS = [];
+
+    let count = 1;
+
+    querySnapshot.forEach((doc)=>{
+
+      const data = doc.data();
+
+      PRODUCTS.push({
+
+        n: count++,
+
+        cat: data.category || "iot",
+
+        title: data.name || "Unnamed Product",
+
+        price: data.price || "Contact",
+
+        image: data.image || "",
+
+        description: data.description || ""
+
+      });
+
+    });
+
+  loadFirebaseProducts();
+
+  }
+
+  catch(error){
+
+    console.log(error);
+
+  }
+
+}
+
+
+   
+let PRODUCTS = [];
   {n:1,cat:'gsm',title:'GSM Based Transformer Fault Detection & Monitoring System'},
   {n:2,cat:'iot',title:'IoT Based Home Automation System Using ESP8266'},
   {n:3,cat:'solar',title:'Dual Axis Solar Tracker Using LDR Sensor'},
@@ -1544,7 +1640,7 @@ function initReveal(){
   ids.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
 })();
 
-render();
+loadFirebaseProducts();
 initReveal();
 </script>
 
