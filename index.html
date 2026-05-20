@@ -10,42 +10,30 @@
    DESIGN TOKENS — matching poster exactly
 ═══════════════════════════════════════════ */
 :root{
-  /* Background layers from poster */
   --bg:        #04061a;
   --bg2:       #070a22;
   --surface:   #080c28;
   --card:      #0a0f2e;
   --card2:     #0d1235;
-
-  /* Border / glow */
   --border:        rgba(100,80,200,.25);
   --border-bright: rgba(130,100,255,.5);
   --glow-purple:   rgba(120,60,220,.35);
   --glow-blue:     rgba(40,120,255,.25);
-
-  /* Brand colors from poster */
   --purple:    #7c3ce8;
   --purple2:   #9b5cf6;
   --blue:      #2563eb;
   --blue2:     #3b82f6;
   --cyan:      #22d3ee;
   --pink:      #c026d3;
-
-  /* Accent gradient — the X in ELEXYS */
   --grad: linear-gradient(135deg, #7c3ce8 0%, #3b82f6 100%);
-
-  /* Text */
   --white:  #ffffff;
   --txt:    #c8d4f0;
   --muted:  #6878a8;
   --muted2: #8898c0;
-
-  /* Social / action */
   --wa:     #25d366;
   --yt-red: #e53030;
   --ig:     #e1306c;
   --fb:     #1877f2;
-
   --nav-h: 64px;
   --side-w: 230px;
   --radius: 10px;
@@ -60,17 +48,14 @@ body.light{
   --surface:   #e2e6f6;
   --card:      #ffffff;
   --card2:     #f5f6ff;
-
   --border:        rgba(100,80,200,.18);
   --border-bright: rgba(100,80,200,.35);
   --glow-purple:   rgba(120,60,220,.12);
   --glow-blue:     rgba(40,120,255,.10);
-
-  --white:  #0d0f2e;
+  --white:  #242b85;
   --txt:    #1e2245;
   --muted:  #7075a0;
   --muted2: #5560a0;
-
   --grad: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
 }
 body.light .topnav{
@@ -78,7 +63,14 @@ body.light .topnav{
   border-bottom:1px solid rgba(100,80,200,.2);
 }
 body.light .nav-logo .el,
-body.light .nav-logo .ys{color:#0d0f2e}
+body.light .nav-logo .ys{color:#141846}
+/* Fix all dark sections in light mode */
+body.light #about,
+body.light #docs,
+body.light #youtube,
+body.light #contact{
+  background: #eceffe;
+}
 body.light .section{background:transparent}
 body.light .sidebar{background:rgba(235,238,252,.97);border-right:1px solid rgba(100,80,200,.15)}
 body.light .sb-a{color:#3040a0}
@@ -86,39 +78,84 @@ body.light .sb-a:hover,body.light .sb-a.on{background:rgba(100,80,200,.1);color:
 body.light .pcard{background:var(--card);border-color:rgba(100,80,200,.2);box-shadow:0 4px 18px rgba(80,60,180,.08)}
 body.light .pcard:hover{box-shadow:0 8px 30px rgba(80,60,180,.18)}
 body.light .pcard-banner{background:linear-gradient(135deg,#ede9fe 0%,#dde4ff 100%)}
-body.light .pcard-title{color:#0d0f2e}
+body.light .pcard-title{color:#171b4e}
 body.light .pcard-price{background:rgba(34,211,238,.1);color:#0e7490}
 body.light .btn-ask{background:rgba(37,211,102,.15);color:#15803d;border-color:rgba(37,211,102,.35)}
 body.light .btn-ask:hover{background:rgba(37,211,102,.25)}
 body.light .kpi-n{color:#5533cc}
 body.light .kpi-l{color:#5560a0}
 body.light .sec-eye{color:#6d28d9}
-body.light h1,body.light h2,body.light h3{color:#0d0f2e}
+body.light h1,body.light h2,body.light h3{color:#191d54}
 body.light .sec-sub{color:#5560a0}
-body.light .sup-card{background:#fff;border-color:rgba(100,80,200,.18)}
+/* Support cards in light mode */
+body.light .sup-card{background:#fff;border-color:rgba(100,80,200,.18);box-shadow:0 2px 12px rgba(80,60,180,.07)}
 body.light .sup-t{color:#0d0f2e}
 body.light .sup-d{color:#5560a0}
 body.light .sup-ico{background:rgba(100,80,200,.1)}
-body.light .stp{background:#fff;border-color:rgba(100,80,200,.18)}
+/* Steps in light mode */
+body.light .stp{background:#fff;border-color:rgba(100,80,200,.18);border-top-color:rgba(100,80,200,.3)}
 body.light .st{color:#0d0f2e}
 body.light .sd{color:#5560a0}
 body.light .sn{color:#7c3ce8}
 body.light .courier-note{background:rgba(100,80,200,.06);border-color:rgba(100,80,200,.2)}
-body.light .doc-panel{background:#fff;border-color:rgba(100,80,200,.18)}
+/* Doc panel light mode */
+body.light .doc-panel{background:#fff;border-color:rgba(100,80,200,.3);box-shadow:0 4px 20px rgba(80,60,180,.1)}
+body.light .doc-row{background:#fff;border-color:rgba(100,80,200,.15)}
+body.light .doc-row:hover{border-color:rgba(100,80,200,.4)}
 body.light .dp-title{color:#0d0f2e}
+body.light .doc-panel p{color:#5560a0}
+body.light .doc-n{color:#7c3ce8}
+body.light .doc-t{color:#1e2245}
+/* YT section light */
 body.light .yt-ch{background:#fff;border-color:rgba(100,80,200,.18)}
 body.light .yt-ch:hover{border-color:var(--yt-red);box-shadow:0 4px 18px rgba(229,48,48,.1)}
+body.light .yt-cn{color:#0d0f2e}
+body.light .yt-cd{color:#5560a0}
+body.light .tags-panel{background:#fff;border-color:rgba(100,80,200,.15)}
+body.light .tc{background:rgba(100,80,200,.06);color:#5560a0;border-color:rgba(100,80,200,.2)}
+body.light .tc:hover{background:rgba(100,80,200,.14);color:#7c3ce8;border-color:rgba(100,80,200,.4)}
+/* Contact section light */
+body.light .ci{background:#fff;border-color:rgba(100,80,200,.15)}
+body.light .ci:hover{border-color:rgba(100,80,200,.35)}
+body.light .ci-ico{background:rgba(100,80,200,.1);border-color:rgba(100,80,200,.2)}
+body.light .ci-lbl{color:#7075a0}
+body.light .ci-val{color:#1e2245}
+/* Form fields */
 body.light .form-group input,
 body.light .form-group textarea,
 body.light .form-group select{background:#f5f6ff;border-color:rgba(100,80,200,.25);color:#0d0f2e}
 body.light .form-group input:focus,
 body.light .form-group textarea:focus{border-color:#7c3ce8;background:#fff}
+body.light .fg input,body.light .fg select,body.light .fg textarea{
+  background:#f5f6ff;border-color:rgba(100,80,200,.25);color:#0d0f2e
+}
+body.light .fg label{color:#7075a0}
+/* About section light */
+body.light .about-quote{color:#1e2245;border-left-color:#7c3ce8}
+body.light .about-body p{color:#5560a0}
+body.light .prof-card{background:#fff;border-color:rgba(100,80,200,.25)}
+body.light .pc-name{color:#0d0f2e}
+body.light .pc-role{color:#5560a0}
+body.light .pcred{color:#1e2245}
+body.light .chip{background:rgba(100,80,200,.08);color:#7c3ce8;border-color:rgba(100,80,200,.25)}
+/* Footer */
 body.light .ftr{background:#e2e6f6;border-top:1px solid rgba(100,80,200,.15)}
-body.light .ftr-copy{color:#7075a0}
+body.light footer{background:#dde0f0;border-top-color:rgba(100,80,200,.2)}
+body.light .foot-bot{border-top-color:rgba(100,80,200,.15)}
+body.light .foot-bot p{color:#7075a0}
+body.light .fc h4{color:#5560a0}
+body.light .fc ul a{color:#5560a0}
+body.light .fc ul a:hover{color:var(--purple)}
+body.light .fc-brand p{color:#5560a0}
+/* Mobile drawer */
 body.light .mob-draw{background:rgba(240,242,252,.99)}
 body.light .mob-draw a{color:#1e2245;border-bottom-color:rgba(100,80,200,.1)}
+/* Filter pills */
 body.light .cat-pill{background:#fff;border-color:rgba(100,80,200,.2);color:#3040a0}
 body.light .cat-pill.active,body.light .cat-pill:hover{background:rgba(100,80,200,.12);border-color:#7c3ce8;color:#5533cc}
+body.light .fbt{background:#fff;border-color:rgba(100,80,200,.2);color:#3040a0}
+body.light .fbt.on,body.light .fbt:hover{color:#fff;border-color:transparent}
+/* Product detail modal */
 body.light .pd-box{background:#fff;border-color:rgba(100,80,200,.25)}
 body.light .pd-close{background:#fff}
 body.light .pd-title{color:#0d0f2e}
@@ -128,6 +165,13 @@ body.light .pd-feature{color:#1e2245}
 body.light .pd-info-chip{background:rgba(100,80,200,.07);color:#5560a0}
 body.light .pd-overlay{background:rgba(200,205,240,.7)}
 body.light .circuit-bg,.light .dot-grid{opacity:.06}
+/* Hero strip and panels */
+body.light .hero-strip{background:rgba(220,225,250,.8);border-color:rgba(100,80,200,.2)}
+body.light .strip-item{color:#5560a0;border-right-color:rgba(100,80,200,.15)}
+body.light .strip-item:hover{background:rgba(100,80,200,.06);color:#1e2245}
+body.light .hero-right{background:rgba(230,235,255,.9);border-color:rgba(100,80,200,.3)}
+body.light .kpi{background:rgba(100,80,200,.06);border-color:rgba(100,80,200,.15)}
+body.light .prof-mini{background:rgba(100,80,200,.06);border-color:rgba(100,80,200,.15)}
 
 /* Theme toggle button */
 #themeToggle{
@@ -177,7 +221,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
     radial-gradient(ellipse 60% 60% at 10% 80%, rgba(40,100,255,.08) 0%, transparent 60%),
     radial-gradient(ellipse 50% 40% at 50% 50%, rgba(120,60,220,.04) 0%, transparent 70%);
 }
-/* Animated glowing dots */
 .dot-grid{position:fixed;inset:0;z-index:0;pointer-events:none}
 .dot-grid::before{
   content:'';position:absolute;inset:0;
@@ -186,8 +229,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   animation:dotPulse 4s ease-in-out infinite;
 }
 @keyframes dotPulse{0%,100%{opacity:.4}50%{opacity:.8}}
-
-/* Corner circuit decorations */
 .corner-tl,.corner-br{
   position:fixed;z-index:0;pointer-events:none;
   width:280px;height:280px;
@@ -210,7 +251,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   padding:0 clamp(14px,3vw,40px);
   gap:clamp(10px,2vw,28px);
 }
-/* ELEXYS brand logo matching poster style */
 .nav-logo{
   display:flex;align-items:center;gap:3px;
   flex-shrink:0;
@@ -325,7 +365,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .main{flex:1;min-width:0;position:relative}
 
 /* ═══════════════════════════════════════════
-   HERO — matching poster layout
+   HERO
 ═══════════════════════════════════════════ */
 #hero{
   min-height:calc(100vh - var(--nav-h));
@@ -333,7 +373,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   padding:clamp(40px,6vh,80px) clamp(20px,5vw,72px);
   position:relative;overflow:hidden;
 }
-/* Poster-style background glow */
 .hero-glow-r{
   position:absolute;top:-10%;right:-5%;
   width:500px;height:500px;
@@ -346,7 +385,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   background:radial-gradient(ellipse,rgba(40,120,255,.12) 0%,transparent 65%);
   pointer-events:none;
 }
-/* Scan line animation */
 .scan{
   position:absolute;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(120,60,220,.4),transparent);
@@ -359,10 +397,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   display:grid;grid-template-columns:1fr 340px;
   gap:clamp(24px,4vw,60px);align-items:center;max-width:1300px;
 }
-.hero-left{}
-
-/* Giant ELEXYS logo — poster style */
-.hero-logo-wrap{margin-bottom:6px}
 .hero-brand{
   font-family:'Orbitron',sans-serif;font-weight:900;
   font-size:clamp(3rem,8vw,6.5rem);
@@ -375,7 +409,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   position:relative;display:inline-block;
 }
-/* Code bracket decoration */
 .hero-brand .gr::before{
   content:'</>';position:absolute;top:-22px;left:0;
   font-family:'JetBrains Mono',monospace;font-size:.65rem;
@@ -388,7 +421,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   color:var(--muted2);text-transform:uppercase;
   margin-top:4px;margin-bottom:20px;
 }
-/* Tag line from poster */
 .hero-tagline{
   font-family:'Exo 2',sans-serif;font-weight:700;font-style:italic;
   font-size:clamp(1rem,2.2vw,1.4rem);
@@ -406,7 +438,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   color:var(--muted2);letter-spacing:2px;text-transform:uppercase;
   margin-bottom:24px;
 }
-/* Pillars from poster */
 .hero-pillars{
   display:flex;gap:0;margin-bottom:28px;flex-wrap:wrap;
 }
@@ -450,7 +481,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 }
 .btn-ghost-hero:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
 
-/* Service icons row — from poster */
 .hero-services{
   display:flex;gap:clamp(12px,2vw,28px);flex-wrap:wrap;
 }
@@ -480,7 +510,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   text-align:center;line-height:1.3;
 }
 
-/* Hero right — stats + prof card */
 .hero-right{
   background:rgba(10,15,46,.8);
   border:1px solid var(--border-bright);border-radius:14px;
@@ -523,7 +552,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .br-row{display:flex;align-items:center;gap:7px;font-size:.72rem;color:var(--muted2)}
 .br-dot{width:5px;height:5px;border-radius:50%;background:var(--purple2);flex-shrink:0}
 
-/* Bottom strip from poster */
 .hero-strip{
   display:flex;flex-wrap:wrap;gap:0;
   background:rgba(10,15,46,.6);border:1px solid var(--border);
@@ -572,7 +600,6 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
 }
 .about-body p{font-size:clamp(.8rem,1.2vw,.9rem);color:var(--muted2);line-height:1.88;margin-bottom:11px}
 .about-body strong{color:var(--txt)}
-/* Prof card matching poster brand */
 .prof-card{
   background:rgba(10,15,46,.9);
   border:1px solid var(--border-bright);border-radius:14px;padding:26px;
@@ -631,7 +658,8 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
   grid-template-columns:repeat(auto-fill,minmax(min(100%,265px),1fr));
   gap:clamp(12px,1.8vw,18px);
 }
-/* Product card — poster-style dark with purple glow */
+
+/* ── Product card ─────────────────────────── */
 .pcard{
   background:var(--card);
   border:1px solid var(--border);border-radius:12px;overflow:hidden;
@@ -666,18 +694,30 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
   background:radial-gradient(ellipse at 50% 120%,var(--cat-glow,rgba(120,60,220,.2)) 0%,transparent 60%);
 }
 .pcard-emo{font-size:2.6rem;z-index:1;position:relative;filter:drop-shadow(0 0 8px rgba(120,60,220,.4))}
-.vid-tag{
-  position:absolute;top:8px;left:8px;z-index:2;
-  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;
-  background:rgba(4,6,26,.9);color:var(--purple2);
-  border:1px solid rgba(120,60,220,.4);padding:3px 8px;border-radius:4px;letter-spacing:1px;
-}
+
+/* ── Category tag: bottom-right corner ─── */
 .cat-tag{
-  position:absolute;top:8px;right:8px;z-index:2;
+  position:absolute;bottom:8px;right:8px;z-index:2;
   font-family:'Exo 2',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.5px;
   background:var(--grad);color:#fff;padding:2px 9px;border-radius:4px;
 }
-.pcard-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+/* Tags row: shown as clickable pills at bottom of card body */
+.pcard-tags{
+  display:flex;flex-wrap:wrap;gap:4px;padding:0 16px 0;
+}
+.ptag{
+  font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.3px;
+  background:rgba(120,60,220,.1);color:var(--purple2);
+  border:1px solid rgba(120,60,220,.25);
+  padding:2px 8px;border-radius:3px;
+  cursor:pointer;transition:background .18s,color .18s,border-color .18s;
+  white-space:nowrap;
+}
+.ptag:hover{background:rgba(120,60,220,.25);color:#fff;border-color:rgba(120,60,220,.5)}
+body.light .ptag{background:rgba(100,80,200,.08);color:#7c3ce8;border-color:rgba(100,80,200,.2)}
+body.light .ptag:hover{background:rgba(100,80,200,.2);color:#5533cc;border-color:#7c3ce8}
+
+.pcard-body{padding:14px 16px 8px;flex:1;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
 .pcard-title{font-family:'Exo 2',sans-serif;font-size:.93rem;font-weight:700;color:var(--white);line-height:1.38}
 .pcard-yt{
   display:inline-flex;align-items:center;gap:5px;
@@ -688,7 +728,7 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
 }
 .pcard-yt:hover{border-color:var(--yt-red);color:#ff5555}
 .pcard-foot{
-  padding:0 16px 16px;display:flex;gap:7px;position:relative;z-index:1;
+  padding:10px 16px 16px;display:flex;gap:7px;position:relative;z-index:1;
 }
 .btn-ask{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
@@ -710,7 +750,7 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
 /* ═══════════════════════════════════════════
    DOCS
 ═══════════════════════════════════════════ */
-#docs{background:rgba(7,10,34,.95)}
+#docs{background:rgba(19,28,94,.95)}
 .docs-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px)}
 .doc-list{display:flex;flex-direction:column;gap:8px}
 .doc-row{
@@ -914,7 +954,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 }
 .btn-login-nav.signed-in:hover{background:rgba(124,60,232,.1);border-color:var(--purple2)}
 
-/* Firebase products loading skeleton */
+/* Skeleton cards */
 .pcard-skeleton{
   background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;
   display:flex;flex-direction:column;height:220px;
@@ -1162,30 +1202,13 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
             <a class="btn-primary" href="#products">▶ Browse All Projects</a>
             <a class="btn-ghost-hero" href="#docs">📄 Documentation</a>
           </div>
-          <!-- Service icons from poster -->
           <div class="hero-services">
-            <div class="svc">
-              <div class="svc-icon">♾️</div>
-              <div class="svc-label">Arduino /<br/>ESP32 Based</div>
-            </div>
-            <div class="svc">
-              <div class="svc-icon">🖥️</div>
-              <div class="svc-label">Embedded<br/>Systems</div>
-            </div>
-            <div class="svc">
-              <div class="svc-icon">🤖</div>
-              <div class="svc-label">Robotics<br/>Projects</div>
-            </div>
-            <div class="svc">
-              <div class="svc-icon">🌐</div>
-              <div class="svc-label">IoT<br/>Projects</div>
-            </div>
-            <div class="svc">
-              <div class="svc-icon">🎓</div>
-              <div class="svc-label">College &<br/>Exhibition</div>
-            </div>
+            <div class="svc"><div class="svc-icon">♾️</div><div class="svc-label">Arduino /<br/>ESP32 Based</div></div>
+            <div class="svc"><div class="svc-icon">🖥️</div><div class="svc-label">Embedded<br/>Systems</div></div>
+            <div class="svc"><div class="svc-icon">🤖</div><div class="svc-label">Robotics<br/>Projects</div></div>
+            <div class="svc"><div class="svc-icon">🌐</div><div class="svc-label">IoT<br/>Projects</div></div>
+            <div class="svc"><div class="svc-icon">🎓</div><div class="svc-label">College &<br/>Exhibition</div></div>
           </div>
-          <!-- Bottom strip -->
           <div class="hero-strip">
             <div class="strip-item"><span class="strip-ico">💡</span>Innovative Solutions</div>
             <div class="strip-item"><span class="strip-ico">✅</span>Quality Assured</div>
@@ -1195,7 +1218,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
             <div class="strip-item"><span class="strip-ico">🌍</span>Global Reach</div>
           </div>
         </div>
-        <!-- Right panel -->
         <div class="hero-right">
           <div class="hero-kpis">
             <div class="kpi"><div class="kpi-n grad">DEMO</div><div class="kpi-l">Project Videos</div></div>
@@ -1292,7 +1314,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div class="search-row">
         <div class="search-box">
           <span style="color:var(--muted)">🔍</span>
-          <input type="text" id="srch" placeholder="Search by title or video number…" oninput="render()"/>
+          <input type="text" id="srch" placeholder="Search by title, tag, or video number…" oninput="render()"/>
         </div>
       </div>
       <div class="prod-grid" id="grid"></div>
@@ -1470,7 +1492,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
               <div class="ci-val">Malegaon, Dist. Nashik, Maharashtra, India</div>
             </div>
           </div>
-          <!-- Social links from poster -->
           <div class="ci">
             <div class="ci-ico">📱</div>
             <div>
@@ -1602,7 +1623,80 @@ const CAT_ICON={iot:'🌐',agriculture:'🌾',electrical:'⚡',gsm:'📡',solar:
 const CAT_GLOW={iot:'rgba(0,194,168,.18)',agriculture:'rgba(80,200,60,.15)',electrical:'rgba(220,160,30,.18)',gsm:'rgba(0,140,220,.15)',solar:'rgba(255,200,0,.15)',rfid:'rgba(180,60,255,.18)',motor:'rgba(255,120,40,.16)',wireless:'rgba(0,200,255,.15)','8051':'rgba(255,60,60,.15)',transformer:'rgba(160,140,255,.15)'};
 
 const PRODUCTS=[
-  {n:1,cat:'gsm',title:'GSM Based Transformer Fault Detection & Monitoring System'},
+  {n:1,cat:'gsm',tags:['GSM','Transformer','Monitoring','Fault Detection'],title:'GSM Based Transformer Fault Detection & Monitoring System'},
+  {n:2,cat:'iot',tags:['IoT','ESP8266','Home Automation','WiFi'],title:'IoT Based Home Automation System Using ESP8266'},
+  {n:3,cat:'solar',tags:['Solar','LDR','Servo','Tracker'],title:'Dual Axis Solar Tracker Using LDR Sensor'},
+  {n:4,cat:'rfid',tags:['RFID','Arduino','Attendance'],title:'RFID Based Attendance System Using Arduino'},
+  {n:5,cat:'agriculture',tags:['Agriculture','Soil Sensor','Irrigation','Automation'],title:'Automatic Irrigation System Using Soil Moisture Sensor'},
+  {n:6,cat:'iot',tags:['IoT','Temperature','Humidity','ESP8266'],title:'IoT Based Temperature & Humidity Monitoring System'},
+  {n:7,cat:'motor',tags:['Stepper Motor','Arduino','Speed Control'],title:'Stepper Motor Speed & Direction Control Using Arduino'},
+  {n:8,cat:'electrical',tags:['Energy Meter','LCD','Single Phase'],title:'Single Phase Energy Meter With LCD Display'},
+  {n:9,cat:'gsm',tags:['GSM','GPS','Vehicle Tracking'],title:'GSM Based Vehicle Tracking System Using GPS'},
+  {n:10,cat:'rfid',tags:['RFID','Smart Lock','Security'],title:'RFID Smart Door Lock System'},
+  {n:11,cat:'solar',tags:['Solar','Battery Charging','Charger'],title:'Solar Panel Based Battery Charging System'},
+  {n:12,cat:'iot',tags:['IoT','Water Level','Monitoring'],title:'IoT Smart Water Level Monitoring System'},
+  {n:13,cat:'agriculture',tags:['Agriculture','Greenhouse','Monitoring','Control'],title:'Smart Greenhouse Monitoring & Control System'},
+  {n:14,cat:'electrical',tags:['Street Light','Auto Control','LDR'],title:'Auto Intensity Control of Street Lights'},
+  {n:15,cat:'gsm',tags:['GSM','Home Security','Alert'],title:'GSM Based Home Security Alert System'},
+  {n:16,cat:'8051',tags:['8051','LM35','Thermometer','Temperature'],title:'8051 Based Digital Thermometer Using LM35'},
+  {n:17,cat:'motor',tags:['BLDC','Motor','Arduino','Speed'],title:'BLDC Motor Speed Controller Using Arduino'},
+  {n:18,cat:'wireless',tags:['Wireless','Inductive','Power Transfer'],title:'Wireless Power Transfer Using Inductive Coupling'},
+  {n:19,cat:'transformer',tags:['Transformer','Flyback','Driver'],title:'Flyback Transformer Driver Circuit'},
+  {n:20,cat:'iot',tags:['IoT','Air Quality','Monitoring'],title:'IoT Based Air Quality Monitoring System'},
+  {n:21,cat:'rfid',tags:['RFID','Library','Management'],title:'RFID Based Library Management System'},
+  {n:22,cat:'solar',tags:['Solar','IoT','Weather Station'],title:'Solar Powered IoT Weather Station'},
+  {n:23,cat:'electrical',tags:['3 Phase','Power Monitor','Load Control'],title:'Three Phase Power Monitor & Load Control System'},
+  {n:24,cat:'agriculture',tags:['IoT','Agriculture','Crop Disease','Detection'],title:'IoT Based Crop Disease Detection System'},
+  {n:25,cat:'8051',tags:['8051','Traffic Light','Controller'],title:'8051 Microcontroller Traffic Light Controller'},
+  {n:26,cat:'motor',tags:['DC Motor','PWM','Bidirectional','Speed'],title:'DC Motor Bidirectional Speed Control with PWM'},
+  {n:27,cat:'iot',tags:['ESP32','Smart Home','Security'],title:'ESP32 Based Smart Home Security System'},
+  {n:28,cat:'gsm',tags:['GSM','Industrial','Monitoring'],title:'GSM Remote Industrial Equipment Monitoring'},
+  {n:29,cat:'wireless',tags:['Wireless','Energy Meter','GSM'],title:'Wireless Energy Meter Reading via GSM'},
+  {n:30,cat:'transformer',tags:['Transformer','Step Up','Step Down','Testing'],title:'Step Up Step Down Transformer Testing Project'},
+  {n:31,cat:'rfid',tags:['RFID','Toll','Collection'],title:'RFID Based Toll Collection System'},
+  {n:32,cat:'solar',tags:['Solar','Single Axis','Servo','Tracker'],title:'Single Axis Solar Tracker Using Servo Motor'},
+  {n:33,cat:'electrical',tags:['Underground','Cable Fault','Distance Detection'],title:'Underground Cable Fault Distance Detection System'},
+  {n:34,cat:'agriculture',tags:['Agriculture','Irrigation','Soil Sensor','Automatic'],title:'Automatic Plant Watering System with Moisture Sensor'},
+  {n:35,cat:'iot',tags:['IoT','ESP32','Industrial','Automation'],title:'IoT Based Industrial Automation with ESP32'},
+  {n:36,cat:'8051',tags:['8051','Frequency Counter'],title:'8051 Based Frequency Counter'},
+  {n:37,cat:'motor',tags:['Servo','Motor','Position Control','Closed Loop'],title:'Servo Motor Closed Loop Position Control'},
+  {n:38,cat:'gsm',tags:['GSM','Electricity Bill','Smart'],title:'GSM Based Smart Electricity Bill System'},
+  {n:39,cat:'wireless',tags:['Wireless','Battery Charging','Resonant'],title:'Resonant Wireless Battery Charging System'},
+  {n:40,cat:'iot',tags:['IoT','Health Monitoring'],title:'IoT Based Health Monitoring System'},
+  {n:41,cat:'electrical',tags:['Power Factor','Correction','Capacitor'],title:'Power Factor Correction System Using Capacitor Bank'},
+  {n:42,cat:'rfid',tags:['RFID','Vehicle','Parking'],title:'RFID Based Vehicle Entry Parking System'},
+  {n:43,cat:'agriculture',tags:['Solar','Drip Irrigation','Agriculture'],title:'Solar Powered Drip Irrigation System'},
+  {n:44,cat:'8051',tags:['8051','Voltmeter','Digital'],title:'8051 Based Digital Voltmeter'},
+  {n:45,cat:'motor',tags:['3 Phase','Induction Motor','Speed Controller'],title:'Three Phase Induction Motor Speed Controller'},
+  {n:46,cat:'gsm',tags:['GSM','Patient','Health Monitoring'],title:'GSM Based Patient Health Monitoring System'},
+  {n:47,cat:'solar',tags:['Solar','Street Light','Auto ON/OFF'],title:'Solar Street Light with Auto ON/OFF Control'},
+  {n:48,cat:'iot',tags:['IoT','Energy Meter','Cloud Dashboard'],title:'IoT Smart Energy Meter with Cloud Dashboard'},
+  {n:49,cat:'transformer',tags:['Transformer','Inverter','High Frequency'],title:'High Frequency Inverter Transformer Design'},
+  {n:50,cat:'wireless',tags:['Wireless','Notice Board','ESP8266'],title:'Wireless Notice Board Using ESP8266'},
+  {n:51,cat:'electrical',tags:['Changeover','Power Supply','Automatic'],title:'Automatic Changeover Switch for Power Supply'},
+  {n:52,cat:'rfid',tags:['RFID','Access Control','Secure'],title:'RFID Based Secure Access Control System'},
+  {n:53,cat:'agriculture',tags:['IoT','Poultry Farm','Agriculture','Monitoring'],title:'IoT Based Poultry Farm Monitoring System'},
+  {n:54,cat:'8051',tags:['8051','RTC','Digital Clock'],title:'8051 Based Digital Clock with RTC'},
+  {n:55,cat:'motor',tags:['Arduino','Robotic Arm','Control'],title:'Arduino Based Robotic Arm Control System'},
+  {n:56,cat:'gsm',tags:['GSM','LPG','Gas Leakage','Alert'],title:'GSM Based LPG Gas Leakage Detector & Alert'},
+  {n:57,cat:'solar',tags:['Solar','MPPT','Charge Controller','LCD'],title:'MPPT Solar Charge Controller with LCD'},
+  {n:58,cat:'iot',tags:['IoT','Vehicle Speed','Monitoring'],title:'IoT Based Vehicle Speed Monitoring System'},
+  {n:59,cat:'transformer',tags:['Transformer','Isolation','Safety','Testing'],title:'Isolation Transformer Safety Testing Project'},
+  {n:60,cat:'wireless',tags:['RF','Home Automation','Wireless'],title:'RF Based Home Automation System'},
+  {n:61,cat:'electrical',tags:['Smart Grid','Load Balancing'],title:'Smart Grid Load Balancing System'},
+  {n:62,cat:'rfid',tags:['RFID','Blood Bank','Management'],title:'RFID Based Blood Bank Management System'},
+  {n:63,cat:'agriculture',tags:['Hydroponic','Agriculture','Control','Automated'],title:'Automated Hydroponic Farming Control System'},
+  {n:64,cat:'8051',tags:['8051','Password','Door Lock'],title:'8051 Based Password Protected Door Lock'},
+  {n:65,cat:'motor',tags:['Solar','Water Pump','Motor'],title:'Solar Powered Water Pumping System'},
+  {n:66,cat:'gsm',tags:['GSM','Remote Load','Control'],title:'GSM Based Remote Load Control System'},
+  {n:67,cat:'solar',tags:['Solar','IoT','Monitoring'],title:'Solar Panel Output Monitoring System with IoT'},
+  {n:68,cat:'iot',tags:['IoT','Flood Detection','Alert'],title:'IoT Based Flood Detection & Alert System'},
+  {n:69,cat:'transformer',tags:['Transformer','Centre Tap','Rectifier'],title:'Centre Tap Transformer Full Wave Rectifier'},
+  {n:70,cat:'wireless',tags:['Bluetooth','Home Automation','Wireless'],title:'Bluetooth Controlled Home Automation'},
+  {n:71,cat:'electrical',tags:['Reactive Power','Compensation'],title:'Reactive Power Compensation System'},
+  {n:72,cat:'rfid',tags:['RFID','Warehouse','Tracking'],title:'RFID Based Material Tracking in Warehouse'},
+  {n:73,cat:'agriculture',tags:['IoT','Precision Agriculture','Sensors'],title:'Precision Agriculture Using IoT Sensors'},
+  {n:74,cat:'iot',tags:['ESP8266','NodeMCU','WiFi','Automation'],title:'ESP8266 NodeMCU WiFi Based Automation'},
 ];
 
 let curCat='all', curQ='';
@@ -1611,22 +1705,37 @@ function waMsg(n,title){
   return encodeURIComponent(`Hi Prof. M.D. Sk,\n\nWhat is the price for:\n*Video ${String(n).padStart(3,'0')} — ${title}*\n\nPlease share kit price and availability. Thank you! 🙏`);
 }
 
+/* ── Tag click: filter by tag text in search ── */
+function filterByTag(tag, e){
+  if(e) e.stopPropagation();
+  const srch = document.getElementById('srch');
+  srch.value = tag;
+  curQ = tag.toLowerCase();
+  // scroll to products section
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+  render();
+}
+window.filterByTag = filterByTag;
+
 function openProductDetail(el){
   const raw = el.getAttribute('data-product');
   if(!raw) return;
   const p = JSON.parse(decodeURIComponent(raw));
 
-  // Build features list
   const featsHtml = (p.features && p.features.length)
     ? `<div class="pd-features">${p.features.map(f=>`<div class="pd-feature"><span class="pd-feature-dot">▸</span>${f}</div>`).join('')}</div>`
     : '';
 
-  // Build chips
   const chips = [
     p.platform && `Platform: ${p.platform}`,
     p.delivery && `Delivery: ${p.delivery}`,
     p.stock && `Stock: ${p.stock==='available'?'In Stock':p.stock==='limited'?'Limited Stock':'Out of Stock'}`
   ].filter(Boolean).map(c=>`<span class="pd-info-chip">${c}</span>`).join('');
+
+  // Tags in modal
+  const tagsHtml = (p.tags && p.tags.length)
+    ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">${p.tags.map(t=>`<span style="font-family:'JetBrains Mono',monospace;font-size:.62rem;background:rgba(120,60,220,.12);color:#9b5cf6;border:1px solid rgba(120,60,220,.3);padding:2px 8px;border-radius:3px">${t}</span>`).join('')}</div>`
+    : '';
 
   const yt = p.youtubeId
     ? `https://www.youtube.com/watch?v=${p.youtubeId}`
@@ -1647,6 +1756,7 @@ function openProductDetail(el){
         <div class="pd-cat">${p.category}</div>
         <div class="pd-title">${p.name}</div>
         ${priceHtml}
+        ${tagsHtml}
         ${p.description ? `<div class="pd-desc">${p.description}</div>` : ''}
         ${featsHtml}
         ${chips ? `<div class="pd-info-row">${chips}</div>` : ''}
@@ -1662,10 +1772,16 @@ function openProductDetail(el){
 window.openProductDetail = openProductDetail;
 
 function render(){
-  curQ = document.getElementById('srch').value.toLowerCase();
+  curQ = document.getElementById('srch').value.toLowerCase().trim();
   const filtered = PRODUCTS.filter(p=>{
     const cok = curCat==='all'||p.cat===curCat;
-    const qok = !curQ||p.title.toLowerCase().includes(curQ)||String(p.n).includes(curQ)||String(p.n).padStart(3,'0').includes(curQ);
+    const tagMatch = p.tags && p.tags.some(t=>t.toLowerCase().includes(curQ));
+    const qok = !curQ
+      || p.title.toLowerCase().includes(curQ)
+      || String(p.n).includes(curQ)
+      || String(p.n).padStart(3,'0').includes(curQ)
+      || (p.cat && p.cat.toLowerCase().includes(curQ))
+      || tagMatch;
     return cok&&qok;
   });
   const grid = document.getElementById('grid');
@@ -1674,25 +1790,30 @@ function render(){
     return;
   }
   grid.innerHTML = filtered.map((p,i)=>{
-    const pad = String(p.n).padStart(3,'0');
     const ico = CAT_ICON[p.cat]||'🔧';
     const glow = CAT_GLOW[p.cat]||'rgba(120,60,220,.15)';
     const pl = PLAYLISTS[p.cat]||'https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz';
     const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.title)}`;
+    // Tags HTML — max 3 shown on card
+    const shownTags = (p.tags||[]).slice(0,3);
+    const tagsHtml = shownTags.length
+      ? `<div class="pcard-tags">${shownTags.map(t=>`<span class="ptag" onclick="filterByTag('${t}',event)" title="Filter by ${t}">${t}</span>`).join('')}</div>`
+      : '';
     const dataProduct = encodeURIComponent(JSON.stringify({
       name: p.title, category: p.cat, price:'', description:'',
       features:[], platform:'', delivery:'Free All India Courier', stock:'available',
-      youtubeId:'', imageUrl:'', whatsappMessage:'', waLink: wl
+      youtubeId:'', imageUrl:'', whatsappMessage:'', waLink: wl,
+      tags: p.tags||[]
     }));
     return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both" onclick="openProductDetail(this)" data-product="${dataProduct}">
       <div class="pcard-banner">
-        <span class="vid-tag">VIDEO ${pad}</span>
         <span class="pcard-emo">${ico}</span>
         <span class="cat-tag">${p.cat.toUpperCase()}</span>
       </div>
       <div class="pcard-body">
         <div class="pcard-title">${p.title}</div>
       </div>
+      ${tagsHtml}
       <div class="pcard-foot">
         <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')">💬 Ask Price on WhatsApp</button>
         <a class="btn-yt" href="${pl}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
@@ -1705,13 +1826,13 @@ function render(){
 function fCat(cat,btn){
   curCat=cat;
   document.querySelectorAll('.fbt').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
+  if(btn) btn.classList.add('on');
   render();
 }
 function sbFilter(cat,btn){
   curCat=cat;
   document.querySelectorAll('.sb-a').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
+  if(btn) btn.classList.add('on');
   document.querySelectorAll('.fbt').forEach(b=>{
     if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${cat}'`))b.classList.add('on');
     else b.classList.remove('on');
@@ -1722,7 +1843,7 @@ function sbFilter(cat,btn){
 
 function toggleDraw(){document.getElementById('mob').classList.toggle('open')}
 
-// ── THEME TOGGLE ──────────────────────────────────
+/* ── THEME TOGGLE ── */
 function applyTheme(mode){
   const isLight = mode === 'light';
   document.body.classList.toggle('light', isLight);
@@ -1733,7 +1854,6 @@ function applyTheme(mode){
 function toggleTheme(){
   applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
 }
-// Apply saved theme on load
 (function(){ applyTheme(localStorage.getItem('elexys-theme') || 'dark'); })();
 function cd(){document.getElementById('mob').classList.remove('open')}
 
@@ -1769,12 +1889,6 @@ render();
 initReveal();
 </script>
 <script type="module">
-// ═══════════════════════════════════════════════
-//  ELEXYS TECHNOLOGIES — Firebase Integration
-//  • Visitor counter
-//  • Auth state (login/logout button)
-//  • Auto-fetch products from Firestore
-// ═══════════════════════════════════════════════
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore,
@@ -1804,9 +1918,6 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-// ─────────────────────────────────────────────
-// 1. VISITOR COUNTER
-// ─────────────────────────────────────────────
 (async function trackVisit(){
   try{
     const ref = doc(db,'stats','visitors');
@@ -1815,22 +1926,15 @@ const auth = getAuth(app);
   }catch(e){ console.warn('Visitor track:',e.message); }
 })();
 
-// ─────────────────────────────────────────────
-// 2. AUTH STATE → LOGIN BUTTON
-// ─────────────────────────────────────────────
 onAuthStateChanged(auth, user=>{
-  // Desktop nav button
   const btn = document.getElementById('authNavBtn');
-  // Mobile drawer button
   const mob = document.getElementById('authMobBtn');
-
   if(user){
     const firstName = user.displayName ? user.displayName.split(' ')[0] : 'Account';
     if(btn){
       btn.textContent = '👤 '+firstName;
       btn.classList.add('signed-in');
       btn.title = 'Signed in as '+user.email+'. Click to sign out.';
-      // replace link behaviour with sign-out
       btn.removeAttribute('href');
       btn.onclick = e=>{
         e.preventDefault();
@@ -1847,24 +1951,11 @@ onAuthStateChanged(auth, user=>{
       };
     }
   } else {
-    if(btn){
-      btn.textContent = '🔑 Login';
-      btn.classList.remove('signed-in');
-      btn.href = 'login.html';
-      btn.title = '';
-      btn.onclick = null;
-    }
-    if(mob){
-      mob.textContent = '🔑 Login / My Account';
-      mob.href = 'login.html';
-      mob.onclick = ()=>{ document.getElementById('mob').classList.remove('open'); };
-    }
+    if(btn){ btn.textContent = '🔑 Login'; btn.classList.remove('signed-in'); btn.href = 'login.html'; btn.title = ''; btn.onclick = null; }
+    if(mob){ mob.textContent = '🔑 Login / My Account'; mob.href = 'login.html'; mob.onclick = ()=>{ document.getElementById('mob').classList.remove('open'); }; }
   }
 });
 
-// ─────────────────────────────────────────────
-// 3. FETCH FIREBASE PRODUCTS & MERGE WITH STATIC
-// ─────────────────────────────────────────────
 const CAT_ICON_FB = {
   'iot':'🌐','agriculture':'🌾','electrical':'⚡','gsm':'📡',
   'solar':'☀️','rfid':'🪪','motor':'⚙️','wireless':'📶',
@@ -1878,10 +1969,8 @@ const CAT_GLOW_FB = {
   '8051':'rgba(20,184,166,.15)','transformer':'rgba(239,68,68,.15)'
 };
 
-// Show skeleton cards while loading from Firebase
 function showSkeletons(n=4){
   const grid = document.getElementById('grid');
-  // Only add skeletons if the grid hasn't rendered yet
   if(grid && !grid.dataset.rendered){
     const sk = Array(n).fill(0).map(()=>`
       <div class="pcard-skeleton">
@@ -1889,12 +1978,10 @@ function showSkeletons(n=4){
         <div class="sk-line"></div>
         <div class="sk-line short"></div>
       </div>`).join('');
-    // Prepend skeletons before the existing static cards
     grid.insertAdjacentHTML('afterbegin', sk);
   }
 }
 
-// Build a Firebase product card HTML
 function buildFbCard(p, id){
   const catKey = (p.category||'other').toLowerCase()
     .replace(/\s+projects?/i,'').replace(/\s+/,'').replace(/\//,'').trim();
@@ -1904,7 +1991,6 @@ function buildFbCard(p, id){
     ? `https://www.youtube.com/watch?v=${p.youtubeId}`
     : 'https://www.youtube.com/@elexysbestproject';
   const priceStr = p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : '';
-  // Use custom WhatsApp message if set by admin, otherwise default
   const waText = p.whatsappMessage
     ? encodeURIComponent(p.whatsappMessage)
     : encodeURIComponent(`Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`);
@@ -1912,7 +1998,13 @@ function buildFbCard(p, id){
   const hasImg = !!p.imageUrl;
   const imgTag = hasImg ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
 
-  // Store product data for modal
+  // Tags for FB products — shown as clickable pills
+  const fbTags = p.tags || [];
+  const shownTags = fbTags.slice(0,3);
+  const tagsHtml = shownTags.length
+    ? `<div class="pcard-tags">${shownTags.map(t=>`<span class="ptag" onclick="filterByTag('${t}',event)" title="Filter by ${t}">${t}</span>`).join('')}</div>`
+    : '';
+
   const dataAttr = encodeURIComponent(JSON.stringify({
     name: p.name||'Unnamed Project',
     category: p.category||'',
@@ -1925,13 +2017,13 @@ function buildFbCard(p, id){
     youtubeId: p.youtubeId||'',
     imageUrl: p.imageUrl||'',
     whatsappMessage: p.whatsappMessage||'',
-    waLink
+    waLink,
+    tags: fbTags
   }));
 
   return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}" onclick="openProductDetail(this)" data-product="${dataAttr}">
     <div class="pcard-banner${hasImg?' has-img':''}">
       ${imgTag}
-      <span class="vid-tag">⚡ NEW</span>
       <span class="pcard-emo">${ico}</span>
       <span class="cat-tag">${(p.category||'').toUpperCase().slice(0,10)}</span>
     </div>
@@ -1940,6 +2032,7 @@ function buildFbCard(p, id){
       ${priceStr?`<span class="pcard-price">${priceStr}</span>`:''}
       ${p.description?`<div style="font-size:.72rem;color:var(--muted2);line-height:1.55;margin-top:2px">${p.description.slice(0,80)}…</div>`:''}
     </div>
+    ${tagsHtml}
     <div class="pcard-foot">
       <button class="btn-ask" onclick="event.stopPropagation();window.open('${waLink}','_blank')">💬 Ask on WhatsApp</button>
       <a class="btn-yt" href="${yt}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
@@ -1952,42 +2045,24 @@ async function loadFirebaseProducts(){
     showSkeletons(3);
     const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
     const snap  = await getDocs(q);
-
-    // Remove skeletons
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
-
-    if(snap.empty){
-      // No Firebase products — static ones already rendered, nothing to do
-      return;
-    }
-
+    if(snap.empty){ return; }
     const grid = document.getElementById('grid');
     if(!grid) return;
-
-    // Build Firebase product cards
     const fbCards = [];
     snap.forEach(d=>{ fbCards.push(buildFbCard(d.data(), d.id)); });
-
-    // Prepend Firebase products (newest first) before static cards
     grid.insertAdjacentHTML('afterbegin', fbCards.join(''));
-
-    // Update count badge in sidebar
     const staticCount = PRODUCTS.length;
     const fbCount     = fbCards.length;
     const totalCount  = staticCount + fbCount;
-    document.querySelectorAll('.sb-count').forEach(el=>{
-      el.textContent = totalCount;
-    });
-
+    document.querySelectorAll('.sb-count').forEach(el=>{ el.textContent = totalCount; });
     console.log(`✅ Loaded ${fbCount} Firebase products + ${staticCount} static products.`);
   }catch(e){
-    // Remove skeletons silently — static products already show
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
     console.warn('Firebase products load error:', e.message);
   }
 }
 
-// Kick off Firebase product load after static render
 loadFirebaseProducts();
 </script>
 
