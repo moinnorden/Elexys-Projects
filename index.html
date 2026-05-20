@@ -567,7 +567,8 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
 .pcard-banner img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
 }
-.pcard-banner img + .pcard-emo{display:none}
+.pcard-banner.has-img .pcard-emo{display:none}
+.pcard-banner.has-img::after{display:none}
 .pcard-banner::after{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 120%,var(--cat-glow,rgba(120,60,220,.2)) 0%,transparent 60%);
@@ -1231,7 +1232,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
           <div class="dp-title">📁 Professionally Designed Full Report</div>
           <p>Very well organised, colourful, easy-to-understand documentation — block diagrams, circuit diagrams, components lists, and full PPT — available for all projects.</p>
           <p>A professionally designed full project report file is included with every kit. Submission-ready from day one.</p>
-          <a class="btn-wa-hero" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20would%20like%20to%20know%20more%20about%20the%20project%20documentation%20you%20provide." target="_blank" style="display:inline-flex;margin-top:4px">💬 Ask About Docs</a>
         </div>
       </div>
     </section>
@@ -1251,7 +1251,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
         <div class="sup-card reveal"><div class="sup-ico">✉️</div><div class="sup-t">Gmail Support</div><p class="sup-d">Always available at elexys.projects@gmail.com for detailed queries and viva prep.</p></div>
         <div class="sup-card reveal"><div class="sup-ico">🎓</div><div class="sup-t">Student Training</div><p class="sup-d">Online training content on specific topics — ideal for viva and deeper understanding.</p></div>
         <div class="sup-card reveal"><div class="sup-ico">🌐</div><div class="sup-t">IoT Server Setup</div><p class="sup-d">Full assistance setting up IoT servers, cloud dashboards, and connectivity for IoT kits.</p></div>
-        <div class="sup-card reveal"><div class="sup-ico">📦</div><div class="sup-t">Free All India Courier</div><p class="sup-d">Order from any state — project kit couriered to your doorstep completely free.</p></div>
+        <div class="sup-card reveal"><div class="sup-ico">📦</div><div class="sup-t">Free All India Courier</div><p class="sup-d">India: 3–5 working days, free. International orders: 5–8 working days — contact us for shipping charges.</p></div>
       </div>
     </section>
 
@@ -1311,12 +1311,30 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
         <div class="stp reveal"><div class="sn">STEP 01</div><div class="si">📋</div><div class="st">Choose a Project</div><p class="sd">Find your project from our All-video catalog. Note the video number or title.</p></div>
         <div class="stp reveal"><div class="sn">STEP 02</div><div class="si">💬</div><div class="st">Ask Price</div><p class="sd">Tap the green "Ask Price" button — WhatsApp opens with a ready message. Just send!</p></div>
         <div class="stp reveal"><div class="sn">STEP 03</div><div class="si">💳</div><div class="st">Confirm & Pay</div><p class="sd">We confirm price. You pay — we begin assembly and testing immediately.</p></div>
-        <div class="stp reveal"><div class="sn">STEP 04</div><div class="si">📦</div><div class="st">Receive at Doorstep</div><p class="sd">Tested kit + 11-item docs couriered free to your address, all India.</p></div>
+        <div class="stp reveal"><div class="sn">STEP 04</div><div class="si">📦</div><div class="st">Receive at Doorstep</div><p class="sd">Tested kit + 11-item docs couriered to you. India: 3–5 working days free. International: 5–8 working days.</p></div>
         <div class="stp reveal"><div class="sn">STEP 05</div><div class="si">🎓</div><div class="st">Submit with Confidence</div><p class="sd">Use the PPT, report, and YouTube demo to present to your college panel.</p></div>
       </div>
-      <div class="courier-note">
-        <span style="font-size:1.3rem">🚚</span>
-        <span><strong style="color:#fff">All India Free Courier</strong> — Students can order from any state. Project kits delivered to your doorstep at no extra charge.</span>
+      <div class="courier-note" style="flex-direction:column;gap:12px;align-items:flex-start">
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="font-size:1.3rem">🚚</span>
+          <strong style="color:#fff">Free Courier — Delivery Times</strong>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;width:100%">
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:7px;padding:10px 16px;flex:1;min-width:200px">
+            <span style="font-size:1.2rem">🇮🇳</span>
+            <div>
+              <div style="font-size:.82rem;font-weight:700;color:#fff">India</div>
+              <div style="font-size:.75rem;color:var(--muted2)">3 – 5 working days · Free courier</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:7px;padding:10px 16px;flex:1;min-width:200px">
+            <span style="font-size:1.2rem">🌍</span>
+            <div>
+              <div style="font-size:.82rem;font-weight:700;color:#fff">International</div>
+              <div style="font-size:.75rem;color:var(--muted2)">5 – 8 working days · Contact us for charges</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1857,7 +1875,8 @@ function buildFbCard(p, id){
     ? encodeURIComponent(p.whatsappMessage)
     : encodeURIComponent(`Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`);
   const waLink = `https://wa.me/918796168099?text=${waText}`;
-  const imgTag = p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none'">` : '';
+  const hasImg = !!p.imageUrl;
+  const imgTag = hasImg ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
 
   // Store product data for modal
   const dataAttr = encodeURIComponent(JSON.stringify({
@@ -1876,7 +1895,7 @@ function buildFbCard(p, id){
   }));
 
   return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}" onclick="openProductDetail(this)" data-product="${dataAttr}">
-    <div class="pcard-banner">
+    <div class="pcard-banner${hasImg?' has-img':''}">
       ${imgTag}
       <span class="vid-tag">⚡ NEW</span>
       <span class="pcard-emo">${ico}</span>

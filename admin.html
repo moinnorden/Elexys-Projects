@@ -243,6 +243,7 @@ td{padding:.85rem 1rem;vertical-align:middle}
     <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
     <div class="nav-item" data-panel="products"><span class="nav-icon">🛒</span> Products</div>
     <div class="nav-item" data-panel="addProduct"><span class="nav-icon">➕</span> Add Product</div>
+    <div class="nav-item" data-panel="editProduct" id="navEditProduct" style="display:none"><span class="nav-icon">✏️</span> Edit Product</div>
     <div class="nav-item" data-panel="users"><span class="nav-icon">👥</span> Users / Students</div>
     <div class="nav-item" data-panel="enquiries"><span class="nav-icon">📩</span> Enquiries</div>
   </div>
@@ -389,6 +390,86 @@ td{padding:.85rem 1rem;vertical-align:middle}
       </div>
     </div>
 
+    <!-- ── EDIT PRODUCT ── -->
+    <div class="panel" id="panel-editProduct">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">✏️ Edit Product</div>
+          <button class="btn btn-sm" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="switchPanel('products')">← Back to Products</button>
+        </div>
+        <input type="hidden" id="eProductId"/>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Product / Project Name *</label>
+            <input type="text" id="eName" placeholder="e.g. IoT Smart Agriculture Kit"/>
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="eCategory">
+              <option value="">-- Select --</option>
+              <option>IoT Projects</option>
+              <option>Agriculture Projects</option>
+              <option>Electrical Projects</option>
+              <option>GSM Projects</option>
+              <option>Solar Projects</option>
+              <option>8051 Projects</option>
+              <option>RFID Projects</option>
+              <option>Wireless Energy</option>
+              <option>Motor / Robotics</option>
+              <option>Transformer Projects</option>
+              <option>Simulation Projects</option>
+              <option>Custom / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Price (₹) *</label>
+            <input type="number" id="ePrice" placeholder="e.g. 3500"/>
+          </div>
+          <div class="form-group">
+            <label>YouTube Video ID</label>
+            <input type="text" id="eYoutubeId" placeholder="e.g. dQw4w9WgXcQ"/>
+          </div>
+          <div class="form-group">
+            <label>Thumbnail Image URL</label>
+            <input type="url" id="eImage" placeholder="https://…/image.jpg (optional)"/>
+          </div>
+          <div class="form-group">
+            <label>Microcontroller / Platform</label>
+            <input type="text" id="ePlatform" placeholder="e.g. Arduino, ESP32, 8051"/>
+          </div>
+          <div class="form-group full">
+            <label>Short Description *</label>
+            <textarea id="eDesc" placeholder="Describe the project kit in 2–3 sentences…"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Delivery Time</label>
+            <input type="text" id="eDelivery" placeholder="e.g. 3–5 working days"/>
+          </div>
+          <div class="form-group">
+            <label>Stock Status</label>
+            <select id="eStock">
+              <option value="available">Available</option>
+              <option value="limited">Limited Stock</option>
+              <option value="out">Out of Stock</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Features (one per line)</label>
+            <textarea id="eFeatures" placeholder="IoT cloud dashboard&#10;Real-time monitoring&#10;Mobile app control"></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Custom WhatsApp Message (optional)</label>
+            <textarea id="eWhatsappMsg" placeholder="Leave blank to use default message with product name." style="min-height:100px"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:.8rem;margin-top:1.2rem;flex-wrap:wrap">
+          <button class="btn btn-primary" id="saveEditBtn">💾 Save Changes</button>
+          <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="switchPanel('products')">Cancel</button>
+        </div>
+        <div class="msg" id="editProductMsg"></div>
+      </div>
+    </div>
+
     <!-- ── USERS ── -->
     <div class="panel" id="panel-users">
       <div class="card">
@@ -456,6 +537,7 @@ import {
   doc,
   getDoc,
   deleteDoc,
+  updateDoc,
   orderBy,
   query,
   limit,
@@ -497,7 +579,7 @@ window.switchPanel = function(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
-  const titles={dashboard:'Dashboard',products:'Products',addProduct:'Add Product',users:'Users / Students',enquiries:'Enquiries'};
+  const titles={dashboard:'Dashboard',products:'Products',addProduct:'Add Product',editProduct:'Edit Product',users:'Users / Students',enquiries:'Enquiries'};
   document.getElementById('pageTitle').textContent = titles[name]||name;
   if(name==='products') loadProducts();
   if(name==='users') loadUsers();
@@ -612,7 +694,8 @@ async function loadProducts(){
           <div class="product-meta">${(p.description||'').slice(0,80)}…</div>
           ${waMsgPreview}
           <div class="product-actions">
-            ${p.youtubeId?`<a href="https://youtu.be/${p.youtubeId}" target="_blank" class="btn btn-sm" style="background:rgba(255,0,0,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)">▶ Video</a>`:''}
+            ${p.youtubeId?`<a href="https://www.youtube.com/watch?v=${p.youtubeId}" target="_blank" class="btn btn-sm" style="background:rgba(255,0,0,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)">▶ Video</a>`:''}
+            <button class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3)" onclick="editProduct('${id}')">✏️ Edit</button>
             <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')">🗑 Delete</button>
           </div>
         </div>`;
@@ -631,6 +714,67 @@ window.deleteProduct=async(id)=>{
   await deleteDoc(doc(db,'products',id));
   document.getElementById('pc-'+id)?.remove();
 };
+
+// ── EDIT PRODUCT ──────────────────────────────────
+window.editProduct=async(id)=>{
+  try{
+    const snap=await getDoc(doc(db,'products',id));
+    if(!snap.exists()){alert('Product not found.');return;}
+    const p=snap.data();
+    document.getElementById('eProductId').value=id;
+    document.getElementById('eName').value=p.name||'';
+    document.getElementById('eCategory').value=p.category||'';
+    document.getElementById('ePrice').value=p.price||'';
+    document.getElementById('eYoutubeId').value=p.youtubeId||'';
+    document.getElementById('eImage').value=p.imageUrl||'';
+    document.getElementById('ePlatform').value=p.platform||'';
+    document.getElementById('eDesc').value=p.description||'';
+    document.getElementById('eDelivery').value=p.delivery||'';
+    document.getElementById('eStock').value=p.stock||'available';
+    document.getElementById('eFeatures').value=(p.features||[]).join('\n');
+    document.getElementById('eWhatsappMsg').value=p.whatsappMessage||'';
+    // Show edit nav item and switch
+    document.getElementById('navEditProduct').style.display='flex';
+    switchPanel('editProduct');
+  }catch(e){alert('Error loading product: '+e.message);}
+};
+
+document.getElementById('saveEditBtn').addEventListener('click',async()=>{
+  const id   = document.getElementById('eProductId').value;
+  const name = document.getElementById('eName').value.trim();
+  const category = document.getElementById('eCategory').value;
+  const price    = document.getElementById('ePrice').value;
+  const desc     = document.getElementById('eDesc').value.trim();
+  if(!id){showMsg('editProductMsg','error','No product selected.');return;}
+  if(!name||!category||!price||!desc){showMsg('editProductMsg','error','Please fill in all required fields (*).');return;}
+  const btn=document.getElementById('saveEditBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
+  try{
+    const features=document.getElementById('eFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
+    await updateDoc(doc(db,'products',id),{
+      name,category,
+      price:Number(price),
+      description:desc,
+      youtubeId:document.getElementById('eYoutubeId').value.trim(),
+      imageUrl:document.getElementById('eImage').value.trim(),
+      platform:document.getElementById('ePlatform').value.trim(),
+      delivery:document.getElementById('eDelivery').value.trim(),
+      stock:document.getElementById('eStock').value,
+      features,
+      whatsappMessage:document.getElementById('eWhatsappMsg').value.trim(),
+    });
+    showMsg('editProductMsg','success','✅ Product updated successfully!');
+    btn.disabled=false;btn.innerHTML='💾 Save Changes';
+    // Hide edit nav after save, go back
+    setTimeout(()=>{
+      document.getElementById('navEditProduct').style.display='none';
+      switchPanel('products');
+    },1200);
+  }catch(e){
+    showMsg('editProductMsg','error','Error: '+e.message);
+    btn.disabled=false;btn.innerHTML='💾 Save Changes';
+  }
+});
 
 // ── ADD PRODUCT ───────────────────────────────────
 document.getElementById('addProductBtn').addEventListener('click',async()=>{
