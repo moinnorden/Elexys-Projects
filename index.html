@@ -552,6 +552,7 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
   background:radial-gradient(ellipse at 50% 0%,var(--cat-glow,rgba(120,60,220,.08)) 0%,transparent 60%);
   pointer-events:none;z-index:0;transition:opacity .25s;opacity:0;
 }
+.pcard{cursor:pointer}
 .pcard:hover{
   transform:translateY(-6px);
   box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 20px var(--cat-glow,rgba(120,60,220,.15));
@@ -559,10 +560,14 @@ h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-c
 }
 .pcard:hover::before{opacity:1}
 .pcard-banner{
-  height:130px;display:flex;align-items:center;justify-content:center;
+  height:160px;display:flex;align-items:center;justify-content:center;
   position:relative;overflow:hidden;z-index:1;
   background:linear-gradient(135deg,rgba(12,18,50,.9) 0%,rgba(4,6,26,.98) 100%);
 }
+.pcard-banner img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+}
+.pcard-banner img + .pcard-emo{display:none}
 .pcard-banner::after{
   content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 120%,var(--cat-glow,rgba(120,60,220,.2)) 0%,transparent 60%);
@@ -827,13 +832,80 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 .pcard-skeleton .sk-line{height:13px;border-radius:4px;background:rgba(120,60,220,.08);margin:14px 16px 6px}
 .pcard-skeleton .sk-line.short{width:55%;margin-top:0}
 
-/* Firebase product badge */
-.firebase-badge{
-  position:absolute;bottom:8px;left:8px;z-index:2;
-  font-family:'JetBrains Mono',monospace;font-size:.52rem;font-weight:600;
-  background:rgba(0,212,255,.12);color:var(--cyan);
-  border:1px solid rgba(0,212,255,.3);padding:2px 7px;border-radius:4px;letter-spacing:.5px;
+/* Product detail modal */
+.pd-overlay{
+  position:fixed;inset:0;z-index:800;background:rgba(2,4,16,.92);
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  backdrop-filter:blur(8px);
+  animation:fadeIn .2s ease;
 }
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.pd-box{
+  background:var(--card);border:1px solid var(--border-bright);border-radius:16px;
+  max-width:680px;width:100%;max-height:88vh;overflow-y:auto;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.pd-box::-webkit-scrollbar{width:3px}
+.pd-box::-webkit-scrollbar-thumb{background:var(--purple);border-radius:2px}
+.pd-close{
+  position:sticky;top:0;z-index:2;
+  display:flex;justify-content:flex-end;padding:12px 14px 0;
+  background:var(--card);
+}
+.pd-close-btn{
+  background:rgba(120,60,220,.15);border:1px solid rgba(120,60,220,.3);
+  color:var(--muted2);width:32px;height:32px;border-radius:6px;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s,color .2s;
+}
+.pd-close-btn:hover{background:rgba(120,60,220,.3);color:var(--white)}
+.pd-img{width:100%;height:220px;object-fit:cover;border-radius:10px 10px 0 0;display:block}
+.pd-img-placeholder{
+  width:100%;height:180px;background:rgba(120,60,220,.08);
+  display:flex;align-items:center;justify-content:center;font-size:4rem;
+  border-bottom:1px solid var(--border);
+}
+.pd-body{padding:20px 24px 28px}
+.pd-cat{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--purple2);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.pd-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;
+  color:var(--white);margin-bottom:10px;line-height:1.4}
+.pd-price{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;
+  color:var(--cyan);background:rgba(34,211,238,.08);
+  border:1px solid rgba(34,211,238,.2);border-radius:6px;
+  padding:5px 14px;display:inline-block;margin-bottom:14px}
+.pd-desc{font-size:.85rem;color:var(--muted2);line-height:1.75;margin-bottom:18px}
+.pd-features{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.pd-feature{display:flex;gap:8px;align-items:flex-start;font-size:.82rem;color:var(--txt)}
+.pd-feature-dot{color:var(--purple2);flex-shrink:0;margin-top:1px}
+.pd-info-row{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;
+}
+.pd-info-chip{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  background:rgba(120,60,220,.08);color:var(--muted2);
+  border:1px solid var(--border);padding:4px 10px;border-radius:4px;
+}
+.pd-actions{display:flex;gap:10px;flex-wrap:wrap}
+.pd-wa-btn{
+  flex:1;min-width:160px;
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.9rem;
+  background:var(--wa);color:#fff;
+  padding:12px 20px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:filter .2s,transform .15s;cursor:pointer;
+  box-shadow:0 4px 16px rgba(37,211,102,.25);
+}
+.pd-wa-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.pd-yt-btn{
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.9rem;
+  background:rgba(229,48,48,.15);color:#f87171;
+  border:1px solid rgba(248,113,113,.3);
+  padding:12px 20px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .2s,transform .15s;cursor:pointer;
+}
+.pd-yt-btn:hover{background:rgba(229,48,48,.25);transform:translateY(-1px)}
 .pcard-price{
   font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;
   color:var(--cyan);background:rgba(34,211,238,.08);
@@ -1501,6 +1573,56 @@ function waMsg(n,title){
   return encodeURIComponent(`Hi Prof. M.D. Sk,\n\nWhat is the price for:\n*Video ${String(n).padStart(3,'0')} — ${title}*\n\nPlease share kit price and availability. Thank you! 🙏`);
 }
 
+function openProductDetail(el){
+  const raw = el.getAttribute('data-product');
+  if(!raw) return;
+  const p = JSON.parse(decodeURIComponent(raw));
+
+  // Build features list
+  const featsHtml = (p.features && p.features.length)
+    ? `<div class="pd-features">${p.features.map(f=>`<div class="pd-feature"><span class="pd-feature-dot">▸</span>${f}</div>`).join('')}</div>`
+    : '';
+
+  // Build chips
+  const chips = [
+    p.platform && `Platform: ${p.platform}`,
+    p.delivery && `Delivery: ${p.delivery}`,
+    p.stock && `Stock: ${p.stock==='available'?'In Stock':p.stock==='limited'?'Limited Stock':'Out of Stock'}`
+  ].filter(Boolean).map(c=>`<span class="pd-info-chip">${c}</span>`).join('');
+
+  const yt = p.youtubeId
+    ? `https://www.youtube.com/watch?v=${p.youtubeId}`
+    : 'https://www.youtube.com/@elexysbestproject';
+
+  const priceHtml = p.price ? `<div class="pd-price">₹${Number(p.price).toLocaleString('en-IN')}</div>` : '';
+  const imgHtml = p.imageUrl
+    ? `<img class="pd-img" src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none'">`
+    : '';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pd-overlay';
+  overlay.innerHTML = `
+    <div class="pd-box">
+      <div class="pd-close"><button class="pd-close-btn" onclick="this.closest('.pd-overlay').remove()">✕</button></div>
+      ${imgHtml}
+      <div class="pd-body">
+        <div class="pd-cat">${p.category}</div>
+        <div class="pd-title">${p.name}</div>
+        ${priceHtml}
+        ${p.description ? `<div class="pd-desc">${p.description}</div>` : ''}
+        ${featsHtml}
+        ${chips ? `<div class="pd-info-row">${chips}</div>` : ''}
+        <div class="pd-actions">
+          <button class="pd-wa-btn" onclick="window.open('${p.waLink}','_blank')">💬 Ask on WhatsApp</button>
+          <a class="pd-yt-btn" href="${yt}" target="_blank">▶ Watch on YouTube</a>
+        </div>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+window.openProductDetail = openProductDetail;
+
 function render(){
   curQ = document.getElementById('srch').value.toLowerCase();
   const filtered = PRODUCTS.filter(p=>{
@@ -1519,7 +1641,12 @@ function render(){
     const glow = CAT_GLOW[p.cat]||'rgba(120,60,220,.15)';
     const pl = PLAYLISTS[p.cat]||'https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz';
     const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.title)}`;
-    return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both">
+    const dataProduct = encodeURIComponent(JSON.stringify({
+      name: p.title, category: p.cat, price:'', description:'',
+      features:[], platform:'', delivery:'Free All India Courier', stock:'available',
+      youtubeId:'', imageUrl:'', whatsappMessage:'', waLink: wl
+    }));
+    return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both" onclick="openProductDetail(this)" data-product="${dataProduct}">
       <div class="pcard-banner">
         <span class="vid-tag">VIDEO ${pad}</span>
         <span class="pcard-emo">${ico}</span>
@@ -1527,11 +1654,10 @@ function render(){
       </div>
       <div class="pcard-body">
         <div class="pcard-title">${p.title}</div>
-        <a class="pcard-yt" href="${pl}" target="_blank">▶ Watch on YouTube</a>
       </div>
       <div class="pcard-foot">
-        <button class="btn-ask" onclick="window.open('${wl}','_blank')">💬 Ask Price on WhatsApp</button>
-        <a class="btn-yt" href="${pl}" target="_blank">▶ YT</a>
+        <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')">💬 Ask Price on WhatsApp</button>
+        <a class="btn-yt" href="${pl}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
       </div>
     </div>`;
   }).join('');
@@ -1725,28 +1851,45 @@ function buildFbCard(p, id){
   const yt   = p.youtubeId
     ? `https://www.youtube.com/watch?v=${p.youtubeId}`
     : 'https://www.youtube.com/@elexysbestproject';
-  const priceStr = p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : null;
-  const waText = encodeURIComponent(
-    `Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`
-  );
+  const priceStr = p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : '';
+  // Use custom WhatsApp message if set by admin, otherwise default
+  const waText = p.whatsappMessage
+    ? encodeURIComponent(p.whatsappMessage)
+    : encodeURIComponent(`Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`);
   const waLink = `https://wa.me/918796168099?text=${waText}`;
+  const imgTag = p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none'">` : '';
 
-  return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}">
+  // Store product data for modal
+  const dataAttr = encodeURIComponent(JSON.stringify({
+    name: p.name||'Unnamed Project',
+    category: p.category||'',
+    price: p.price||'',
+    description: p.description||'',
+    features: p.features||[],
+    platform: p.platform||'',
+    delivery: p.delivery||'',
+    stock: p.stock||'available',
+    youtubeId: p.youtubeId||'',
+    imageUrl: p.imageUrl||'',
+    whatsappMessage: p.whatsappMessage||'',
+    waLink
+  }));
+
+  return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}" onclick="openProductDetail(this)" data-product="${dataAttr}">
     <div class="pcard-banner">
+      ${imgTag}
       <span class="vid-tag">⚡ NEW</span>
       <span class="pcard-emo">${ico}</span>
       <span class="cat-tag">${(p.category||'').toUpperCase().slice(0,10)}</span>
-      <span class="firebase-badge">FIREBASE</span>
     </div>
     <div class="pcard-body">
       <div class="pcard-title">${p.name||'Unnamed Project'}</div>
       ${priceStr?`<span class="pcard-price">${priceStr}</span>`:''}
       ${p.description?`<div style="font-size:.72rem;color:var(--muted2);line-height:1.55;margin-top:2px">${p.description.slice(0,80)}…</div>`:''}
-      <a class="pcard-yt" href="${yt}" target="_blank">▶ Watch on YouTube</a>
     </div>
     <div class="pcard-foot">
-      <button class="btn-ask" onclick="window.open('${waLink}','_blank')">💬 Ask Price on WhatsApp</button>
-      <a class="btn-yt" href="${yt}" target="_blank">▶ YT</a>
+      <button class="btn-ask" onclick="event.stopPropagation();window.open('${waLink}','_blank')">💬 Ask on WhatsApp</button>
+      <a class="btn-yt" href="${yt}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
     </div>
   </div>`;
 }
