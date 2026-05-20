@@ -101,9 +101,45 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 
 /* ── CARDS ── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.2rem;position:relative;overflow:hidden}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.6rem}
 .card-title{font-size:1rem;font-weight:600}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+
+/* ── SORT & FILTER BAR ── */
+.sort-bar{
+  display:flex;align-items:center;gap:.7rem;
+  flex-wrap:wrap;margin-bottom:1.2rem;
+  padding:.8rem 1rem;
+  background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.12);border-radius:10px;
+}
+.sort-bar label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.sort-select{
+  background:#0d1421;border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.82rem;
+  padding:.45rem .8rem;outline:none;cursor:pointer;
+  transition:border-color .2s;
+}
+.sort-select:focus{border-color:var(--accent)}
+.sort-select option{background:#111827}
+.sort-dir{
+  background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);
+  border-radius:8px;color:var(--accent);padding:.45rem .8rem;
+  cursor:pointer;font-size:.82rem;font-family:'Space Grotesk',sans-serif;
+  transition:background .2s;
+}
+.sort-dir:hover{background:rgba(0,212,255,.2)}
+.filter-cat{
+  background:#0d1421;border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.82rem;
+  padding:.45rem .8rem;outline:none;cursor:pointer;
+  transition:border-color .2s;
+}
+.filter-cat:focus{border-color:var(--accent)}
+.sort-count{
+  margin-left:auto;font-size:.78rem;color:var(--muted);
+  background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);
+  border-radius:6px;padding:.3rem .7rem;
+}
 
 /* ── FORM ── */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -124,6 +160,25 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 .form-group select:focus,
 .form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
 .form-group select option{background:#111827}
+/* Tags input with preview */
+.tags-input-wrap{position:relative}
+.tags-preview{
+  display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;min-height:28px;
+}
+.tag-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,212,255,.1);color:var(--accent);
+  border:1px solid rgba(0,212,255,.25);
+  padding:3px 9px 3px 10px;border-radius:5px;
+  font-size:.72rem;font-family:'Space Grotesk',sans-serif;
+}
+.tag-pill-x{
+  background:transparent;border:none;color:var(--muted);
+  cursor:pointer;font-size:.8rem;line-height:1;padding:0 1px;
+  transition:color .15s;
+}
+.tag-pill-x:hover{color:var(--red)}
+.tags-hint{font-size:.65rem;color:var(--muted);margin-top:4px}
 
 .btn{
   padding:.75rem 1.4rem;border:none;border-radius:10px;
@@ -154,6 +209,7 @@ td{padding:.85rem 1rem;vertical-align:middle}
 .badge-blue{background:rgba(0,212,255,.15);color:var(--accent)}
 .badge-green{background:rgba(16,185,129,.15);color:var(--green)}
 .badge-yellow{background:rgba(245,158,11,.15);color:var(--yellow)}
+.badge-red{background:rgba(244,63,94,.15);color:var(--red)}
 
 /* ── PRODUCT GRID ── */
 .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
@@ -173,7 +229,13 @@ td{padding:.85rem 1rem;vertical-align:middle}
 .product-name{font-weight:600;font-size:.92rem}
 .product-meta{font-size:.75rem;color:var(--muted)}
 .product-price{font-family:'Orbitron',sans-serif;color:var(--accent);font-size:1rem;font-weight:700}
-.product-actions{display:flex;gap:.5rem;margin-top:.3rem}
+.product-actions{display:flex;gap:.5rem;margin-top:.3rem;flex-wrap:wrap}
+/* Tags display in product card */
+.product-tags{display:flex;flex-wrap:wrap;gap:4px}
+.product-tag{
+  font-size:.62rem;background:rgba(124,58,237,.15);color:#a78bfa;
+  border:1px solid rgba(124,58,237,.25);padding:2px 7px;border-radius:4px;
+}
 
 /* ── MSG ── */
 .msg{padding:.7rem 1rem;border-radius:8px;font-size:.82rem;margin-top:.8rem;display:none}
@@ -309,6 +371,46 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <div class="card-title">⚡ All Products</div>
           <button class="btn btn-primary btn-sm" onclick="switchPanel('addProduct')">+ Add New</button>
         </div>
+
+        <!-- Sort & Filter Controls -->
+        <div class="sort-bar">
+          <label>Sort by</label>
+          <select class="sort-select" id="sortField" onchange="applySortFilter()">
+            <option value="createdAt">Date Added</option>
+            <option value="name">Name (A–Z)</option>
+            <option value="price">Price</option>
+            <option value="category">Category</option>
+          </select>
+          <button class="sort-dir" id="sortDirBtn" onclick="toggleSortDir()" title="Toggle sort direction">↓ Desc</button>
+
+          <label style="margin-left:.4rem">Category</label>
+          <select class="filter-cat" id="filterCat" onchange="applySortFilter()">
+            <option value="">All Categories</option>
+            <option>IoT Projects</option>
+            <option>Agriculture Projects</option>
+            <option>Electrical Projects</option>
+            <option>GSM Projects</option>
+            <option>Solar Projects</option>
+            <option>8051 Projects</option>
+            <option>RFID Projects</option>
+            <option>Wireless Energy</option>
+            <option>Motor / Robotics</option>
+            <option>Transformer Projects</option>
+            <option>Simulation Projects</option>
+            <option>Custom / Other</option>
+          </select>
+
+          <label style="margin-left:.4rem">Stock</label>
+          <select class="filter-cat" id="filterStock" onchange="applySortFilter()">
+            <option value="">All Stock</option>
+            <option value="available">In Stock</option>
+            <option value="limited">Limited</option>
+            <option value="out">Out of Stock</option>
+          </select>
+
+          <div class="sort-count" id="productCount">— products</div>
+        </div>
+
         <div class="products-grid" id="productsGrid">
           <p style="color:var(--muted);padding:.5rem">Loading products…</p>
         </div>
@@ -363,6 +465,16 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <div class="form-group full">
             <label>Short Description *</label>
             <textarea id="pDesc" placeholder="Describe the project kit in 2–3 sentences…"></textarea>
+          </div>
+          <!-- Tags Field -->
+          <div class="form-group full">
+            <label>Tags (keywords for search)</label>
+            <div class="tags-input-wrap">
+              <input type="text" id="pTagInput" placeholder="Type a tag and press Enter or comma… e.g. Arduino, IoT, Sensor"/>
+              <div class="tags-preview" id="pTagsPreview"></div>
+              <div class="tags-hint">💡 Press Enter or comma to add. Click × to remove. Tags help users search and filter products.</div>
+            </div>
+            <input type="hidden" id="pTagsData" value="[]"/>
           </div>
           <div class="form-group">
             <label>Delivery Time</label>
@@ -440,6 +552,16 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <div class="form-group full">
             <label>Short Description *</label>
             <textarea id="eDesc" placeholder="Describe the project kit in 2–3 sentences…"></textarea>
+          </div>
+          <!-- Tags Field -->
+          <div class="form-group full">
+            <label>Tags (keywords for search)</label>
+            <div class="tags-input-wrap">
+              <input type="text" id="eTagInput" placeholder="Type a tag and press Enter or comma… e.g. Arduino, IoT, Sensor"/>
+              <div class="tags-preview" id="eTagsPreview"></div>
+              <div class="tags-hint">💡 Press Enter or comma to add. Click × to remove. Tags help users search and filter products.</div>
+            </div>
+            <input type="hidden" id="eTagsData" value="[]"/>
           </div>
           <div class="form-group">
             <label>Delivery Time</label>
@@ -596,11 +718,9 @@ onAuthStateChanged(auth, user=>{
     document.getElementById('adminName').textContent = user.displayName||user.email;
     loadDashboard();
   } else if(user){
-    // Non-admin user — force sign out
     signOut(auth);
     showMsg('loginErrMsg','error','Access denied. Admin only.');
   }
-  // else overlay stays visible
 });
 
 // ── Admin login ───────────────────────────────────
@@ -613,7 +733,6 @@ adminLoginBtn.addEventListener('click', async()=>{
   adminLoginBtn.innerHTML='<span class="spinner"></span> Signing in…';
   try{
     await signInWithEmailAndPassword(auth,email,pass);
-    // onAuthStateChanged handles the rest
   }catch(e){
     const m={'auth/wrong-password':'Incorrect password.','auth/user-not-found':'Admin email not found.','auth/invalid-email':'Invalid email.'};
     showMsg('loginErrMsg','error',m[e.code]||e.message);
@@ -627,23 +746,14 @@ document.getElementById('logoutBtn').addEventListener('click',()=>signOut(auth).
 // ── DASHBOARD ─────────────────────────────────────
 async function loadDashboard(){
   try{
-    // visitor count
     const vstDoc = await getDoc(doc(db,'stats','visitors'));
     document.getElementById('statVisitors').textContent = vstDoc.exists() ? (vstDoc.data().count||0).toLocaleString() : '0';
-
-    // user count
     const usersSnap = await getCountFromServer(collection(db,'users'));
     document.getElementById('statUsers').textContent = usersSnap.data().count;
-
-    // product count
     const prodSnap = await getCountFromServer(collection(db,'products'));
     document.getElementById('statProducts').textContent = prodSnap.data().count;
-
-    // enquiry count
     const enqSnap = await getCountFromServer(collection(db,'enquiries'));
     document.getElementById('statEnquiries').textContent = enqSnap.data().count;
-
-    // recent users
     const q = query(collection(db,'users'),orderBy('registeredAt','desc'),limit(8));
     const snap = await getDocs(q);
     const tbody = document.getElementById('recentUsersBody');
@@ -663,43 +773,67 @@ async function loadDashboard(){
 }
 
 // ── PRODUCTS ──────────────────────────────────────
+let allProducts = [];
+let sortDir = 'desc'; // 'asc' | 'desc'
+
+window.toggleSortDir = function(){
+  sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+  document.getElementById('sortDirBtn').textContent = sortDir === 'desc' ? '↓ Desc' : '↑ Asc';
+  applySortFilter();
+};
+
+window.applySortFilter = function(){
+  const field  = document.getElementById('sortField').value;
+  const catF   = document.getElementById('filterCat').value.toLowerCase();
+  const stockF = document.getElementById('filterStock').value;
+
+  let filtered = [...allProducts];
+
+  // Category filter
+  if(catF) filtered = filtered.filter(p=>(p.category||'').toLowerCase()===catF);
+  // Stock filter
+  if(stockF) filtered = filtered.filter(p=>(p.stock||'available')===stockF);
+
+  // Sort
+  filtered.sort((a,b)=>{
+    let av, bv;
+    if(field==='name'){
+      av=(a.name||'').toLowerCase(); bv=(b.name||'').toLowerCase();
+      return sortDir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    } else if(field==='price'){
+      av=Number(a.price||0); bv=Number(b.price||0);
+      return sortDir==='asc' ? av-bv : bv-av;
+    } else if(field==='category'){
+      av=(a.category||'').toLowerCase(); bv=(b.category||'').toLowerCase();
+      return sortDir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    } else {
+      // createdAt — treat missing as epoch 0
+      av = a._createdMs||0; bv = b._createdMs||0;
+      return sortDir==='asc' ? av-bv : bv-av;
+    }
+  });
+
+  document.getElementById('productCount').textContent = `${filtered.length} product${filtered.length!==1?'s':''}`;
+  renderProductCards(filtered);
+};
+
 async function loadProducts(){
   const grid=document.getElementById('productsGrid');
   grid.innerHTML='<p style="color:var(--muted)">Loading…</p>';
   try{
     const snap=await getDocs(collection(db,'products'));
-    if(snap.empty){grid.innerHTML='<p style="color:var(--muted)">No products yet. Use "Add Product" to create one.</p>';return;}
-    grid.innerHTML='';
+    allProducts=[];
+    if(snap.empty){
+      grid.innerHTML='<p style="color:var(--muted)">No products yet. Use "Add Product" to create one.</p>';
+      document.getElementById('productCount').textContent='0 products';
+      return;
+    }
     snap.forEach(d=>{
-      const p=d.data();const id=d.id;
-      const thumb=p.imageUrl
-        ?`<img src="${p.imageUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.innerHTML='${getCategoryEmoji(p.category)}'">`
-        :`${getCategoryEmoji(p.category)}`;
-      const badge=p.stock==='out'?'badge-yellow':p.stock==='limited'?'badge-yellow':'badge-green';
-      const badgeLabel=p.stock==='out'?'Out of Stock':p.stock==='limited'?'Limited':'In Stock';
-      const waMsgPreview = p.whatsappMessage
-        ? `<div style="font-size:.7rem;color:var(--green);margin-top:.3rem;padding:.4rem .6rem;background:rgba(16,185,129,.07);border-radius:6px;border:1px solid rgba(16,185,129,.2)">💬 Custom WA msg set</div>`
-        : '';
-      grid.innerHTML+=`
-        <div class="product-card" id="pc-${id}">
-          <div class="product-thumb">${thumb}</div>
-          <div>
-            <div class="product-name">${p.name||'Unnamed'}</div>
-            <div class="product-meta">${p.category||''} ${p.platform?'· '+p.platform:''}</div>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div class="product-price">₹${Number(p.price||0).toLocaleString('en-IN')}</div>
-            <span class="badge ${badge}">${badgeLabel}</span>
-          </div>
-          <div class="product-meta">${(p.description||'').slice(0,80)}…</div>
-          ${waMsgPreview}
-          <div class="product-actions">
-            ${p.youtubeId?`<a href="https://www.youtube.com/watch?v=${p.youtubeId}" target="_blank" class="btn btn-sm" style="background:rgba(255,0,0,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)">▶ Video</a>`:''}
-            <button class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3)" onclick="editProduct('${id}')">✏️ Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')">🗑 Delete</button>
-          </div>
-        </div>`;
+      const data=d.data();
+      const ms = data.createdAt ? (data.createdAt.toDate ? data.createdAt.toDate().getTime() : new Date(data.createdAt).getTime()) : 0;
+      allProducts.push({id:d.id, _createdMs:ms, ...data});
     });
+    applySortFilter();
   }catch(e){grid.innerHTML='<p style="color:var(--red)">Error loading products.</p>'}
 }
 
@@ -709,11 +843,109 @@ function getCategoryEmoji(cat=''){
   return '📦';
 }
 
+function renderProductCards(products){
+  const grid=document.getElementById('productsGrid');
+  if(!products.length){
+    grid.innerHTML='<p style="color:var(--muted);padding:.5rem">No products match the current filters.</p>';
+    return;
+  }
+  grid.innerHTML='';
+  products.forEach(p=>{
+    const id=p.id;
+    const thumb=p.imageUrl
+      ?`<img src="${p.imageUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.parentElement.innerHTML='${getCategoryEmoji(p.category)}'">`
+      :`${getCategoryEmoji(p.category)}`;
+    const stockBadge = p.stock==='out'
+      ? '<span class="badge badge-red">Out of Stock</span>'
+      : p.stock==='limited'
+        ? '<span class="badge badge-yellow">Limited</span>'
+        : '<span class="badge badge-green">In Stock</span>';
+
+    // Tags display
+    const tags = p.tags||[];
+    const tagsHtml = tags.length
+      ? `<div class="product-tags">${tags.map(t=>`<span class="product-tag">${t}</span>`).join('')}</div>`
+      : '';
+
+    const waMsgPreview = p.whatsappMessage
+      ? `<div style="font-size:.7rem;color:var(--green);margin-top:.3rem;padding:.4rem .6rem;background:rgba(16,185,129,.07);border-radius:6px;border:1px solid rgba(16,185,129,.2)">💬 Custom WA msg set</div>`
+      : '';
+
+    grid.innerHTML+=`
+      <div class="product-card" id="pc-${id}">
+        <div class="product-thumb">${thumb}</div>
+        <div>
+          <div class="product-name">${p.name||'Unnamed'}</div>
+          <div class="product-meta">${p.category||''} ${p.platform?'· '+p.platform:''}</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="product-price">₹${Number(p.price||0).toLocaleString('en-IN')}</div>
+          ${stockBadge}
+        </div>
+        ${tagsHtml}
+        <div class="product-meta">${(p.description||'').slice(0,80)}${(p.description||'').length>80?'…':''}</div>
+        ${waMsgPreview}
+        <div class="product-actions">
+          ${p.youtubeId?`<a href="https://www.youtube.com/watch?v=${p.youtubeId}" target="_blank" class="btn btn-sm" style="background:rgba(255,0,0,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)">▶ Video</a>`:''}
+          <button class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3)" onclick="editProduct('${id}')">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')">🗑 Delete</button>
+        </div>
+      </div>`;
+  });
+}
+
 window.deleteProduct=async(id)=>{
   if(!confirm('Delete this product? This cannot be undone.'))return;
   await deleteDoc(doc(db,'products',id));
-  document.getElementById('pc-'+id)?.remove();
+  allProducts = allProducts.filter(p=>p.id!==id);
+  applySortFilter();
 };
+
+// ── TAG INPUT SYSTEM ──────────────────────────────
+function initTagInput(inputId, previewId, dataId, existingTags=[]){
+  const input   = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  const hidden  = document.getElementById(dataId);
+  let tags = [...existingTags];
+
+  function syncHidden(){ hidden.value = JSON.stringify(tags); }
+  function renderPills(){
+    preview.innerHTML = tags.map((t,i)=>
+      `<span class="tag-pill">${t}<button class="tag-pill-x" onclick="removeTag_${dataId}(${i})">×</button></span>`
+    ).join('');
+    syncHidden();
+  }
+  // Expose remove function globally
+  window[`removeTag_${dataId}`] = (i)=>{ tags.splice(i,1); renderPills(); };
+
+  function addTag(raw){
+    const tag = raw.trim().replace(/,+$/,'').trim();
+    if(tag && !tags.includes(tag) && tags.length < 20){
+      tags.push(tag);
+      renderPills();
+    }
+  }
+
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'||e.key===','){ e.preventDefault(); addTag(input.value); input.value=''; }
+    else if(e.key==='Backspace' && input.value==='' && tags.length){ tags.pop(); renderPills(); }
+  });
+  input.addEventListener('blur', ()=>{ if(input.value.trim()){ addTag(input.value); input.value=''; } });
+
+  renderPills();
+
+  // Return API to reset/load tags
+  return {
+    setTags: (newTags)=>{ tags=[...newTags]; renderPills(); },
+    getTags: ()=>[...tags],
+    clear: ()=>{ tags=[]; renderPills(); }
+  };
+}
+
+const addTagCtrl  = initTagInput('pTagInput','pTagsPreview','pTagsData',[]);
+const editTagCtrl = initTagInput('eTagInput','eTagsPreview','eTagsData',[]);
+window._addTagCtrl = addTagCtrl;
+window._editTagCtrl = editTagCtrl;
 
 // ── EDIT PRODUCT ──────────────────────────────────
 window.editProduct=async(id)=>{
@@ -733,7 +965,8 @@ window.editProduct=async(id)=>{
     document.getElementById('eStock').value=p.stock||'available';
     document.getElementById('eFeatures').value=(p.features||[]).join('\n');
     document.getElementById('eWhatsappMsg').value=p.whatsappMessage||'';
-    // Show edit nav item and switch
+    // Load existing tags
+    editTagCtrl.setTags(p.tags||[]);
     document.getElementById('navEditProduct').style.display='flex';
     switchPanel('editProduct');
   }catch(e){alert('Error loading product: '+e.message);}
@@ -751,6 +984,7 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features=document.getElementById('eFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
+    const tags = editTagCtrl.getTags();
     await updateDoc(doc(db,'products',id),{
       name,category,
       price:Number(price),
@@ -761,11 +995,11 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
       delivery:document.getElementById('eDelivery').value.trim(),
       stock:document.getElementById('eStock').value,
       features,
+      tags,
       whatsappMessage:document.getElementById('eWhatsappMsg').value.trim(),
     });
     showMsg('editProductMsg','success','✅ Product updated successfully!');
     btn.disabled=false;btn.innerHTML='💾 Save Changes';
-    // Hide edit nav after save, go back
     setTimeout(()=>{
       document.getElementById('navEditProduct').style.display='none';
       switchPanel('products');
@@ -787,6 +1021,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features = document.getElementById('pFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
+    const tags = addTagCtrl.getTags();
     await addDoc(collection(db,'products'),{
       name,
       category,
@@ -798,17 +1033,17 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
       delivery:     document.getElementById('pDelivery').value.trim(),
       stock:        document.getElementById('pStock').value,
       features,
+      tags,
       whatsappMessage: document.getElementById('pWhatsappMsg').value.trim(),
       createdAt: serverTimestamp(),
       addedBy: auth.currentUser?.email||'admin'
     });
     showMsg('productMsg','success','✅ Product saved to Firebase successfully!');
-    // clear form
     ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg'].forEach(id=>{document.getElementById(id).value=''});
     document.getElementById('pCategory').value='';
     document.getElementById('pStock').value='available';
+    addTagCtrl.clear();
     btn.disabled=false;btn.innerHTML='⚡ Save Product to Firebase';
-    // update stat
     loadDashboard();
   }catch(e){
     showMsg('productMsg','error','Error: '+e.message);
