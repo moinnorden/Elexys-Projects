@@ -50,6 +50,98 @@
   --side-w: 230px;
   --radius: 10px;
 }
+
+/* ═══════════════════════════════════════════
+   LIGHT MODE OVERRIDES
+═══════════════════════════════════════════ */
+body.light{
+  --bg:        #f0f2fc;
+  --bg2:       #e8ebf8;
+  --surface:   #e2e6f6;
+  --card:      #ffffff;
+  --card2:     #f5f6ff;
+
+  --border:        rgba(100,80,200,.18);
+  --border-bright: rgba(100,80,200,.35);
+  --glow-purple:   rgba(120,60,220,.12);
+  --glow-blue:     rgba(40,120,255,.10);
+
+  --white:  #0d0f2e;
+  --txt:    #1e2245;
+  --muted:  #7075a0;
+  --muted2: #5560a0;
+
+  --grad: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+}
+body.light .topnav{
+  background:rgba(240,242,252,.96);
+  border-bottom:1px solid rgba(100,80,200,.2);
+}
+body.light .nav-logo .el,
+body.light .nav-logo .ys{color:#0d0f2e}
+body.light .section{background:transparent}
+body.light .sidebar{background:rgba(235,238,252,.97);border-right:1px solid rgba(100,80,200,.15)}
+body.light .sb-a{color:#3040a0}
+body.light .sb-a:hover,body.light .sb-a.on{background:rgba(100,80,200,.1);color:#5533cc}
+body.light .pcard{background:var(--card);border-color:rgba(100,80,200,.2);box-shadow:0 4px 18px rgba(80,60,180,.08)}
+body.light .pcard:hover{box-shadow:0 8px 30px rgba(80,60,180,.18)}
+body.light .pcard-banner{background:linear-gradient(135deg,#ede9fe 0%,#dde4ff 100%)}
+body.light .pcard-title{color:#0d0f2e}
+body.light .pcard-price{background:rgba(34,211,238,.1);color:#0e7490}
+body.light .btn-ask{background:rgba(37,211,102,.15);color:#15803d;border-color:rgba(37,211,102,.35)}
+body.light .btn-ask:hover{background:rgba(37,211,102,.25)}
+body.light .kpi-n{color:#5533cc}
+body.light .kpi-l{color:#5560a0}
+body.light .sec-eye{color:#6d28d9}
+body.light h1,body.light h2,body.light h3{color:#0d0f2e}
+body.light .sec-sub{color:#5560a0}
+body.light .sup-card{background:#fff;border-color:rgba(100,80,200,.18)}
+body.light .sup-t{color:#0d0f2e}
+body.light .sup-d{color:#5560a0}
+body.light .sup-ico{background:rgba(100,80,200,.1)}
+body.light .stp{background:#fff;border-color:rgba(100,80,200,.18)}
+body.light .st{color:#0d0f2e}
+body.light .sd{color:#5560a0}
+body.light .sn{color:#7c3ce8}
+body.light .courier-note{background:rgba(100,80,200,.06);border-color:rgba(100,80,200,.2)}
+body.light .doc-panel{background:#fff;border-color:rgba(100,80,200,.18)}
+body.light .dp-title{color:#0d0f2e}
+body.light .yt-ch{background:#fff;border-color:rgba(100,80,200,.18)}
+body.light .yt-ch:hover{border-color:var(--yt-red);box-shadow:0 4px 18px rgba(229,48,48,.1)}
+body.light .form-group input,
+body.light .form-group textarea,
+body.light .form-group select{background:#f5f6ff;border-color:rgba(100,80,200,.25);color:#0d0f2e}
+body.light .form-group input:focus,
+body.light .form-group textarea:focus{border-color:#7c3ce8;background:#fff}
+body.light .ftr{background:#e2e6f6;border-top:1px solid rgba(100,80,200,.15)}
+body.light .ftr-copy{color:#7075a0}
+body.light .mob-draw{background:rgba(240,242,252,.99)}
+body.light .mob-draw a{color:#1e2245;border-bottom-color:rgba(100,80,200,.1)}
+body.light .cat-pill{background:#fff;border-color:rgba(100,80,200,.2);color:#3040a0}
+body.light .cat-pill.active,body.light .cat-pill:hover{background:rgba(100,80,200,.12);border-color:#7c3ce8;color:#5533cc}
+body.light .pd-box{background:#fff;border-color:rgba(100,80,200,.25)}
+body.light .pd-close{background:#fff}
+body.light .pd-title{color:#0d0f2e}
+body.light .pd-cat{color:#7c3ce8}
+body.light .pd-desc{color:#5560a0}
+body.light .pd-feature{color:#1e2245}
+body.light .pd-info-chip{background:rgba(100,80,200,.07);color:#5560a0}
+body.light .pd-overlay{background:rgba(200,205,240,.7)}
+body.light .circuit-bg,.light .dot-grid{opacity:.06}
+
+/* Theme toggle button */
+#themeToggle{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(120,60,220,.12);
+  border:1px solid rgba(120,60,220,.3);
+  color:var(--muted2);cursor:pointer;
+  font-size:1.1rem;
+  transition:background .2s,transform .2s,border-color .2s;
+  flex-shrink:0;
+}
+#themeToggle:hover{background:rgba(120,60,220,.22);border-color:var(--purple2);transform:rotate(20deg)}
+body.light #themeToggle{background:rgba(100,80,200,.1);border-color:rgba(100,80,200,.3)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:15px}
 body{
@@ -981,6 +1073,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <a class="nav-a" href="#contact">Contact</a>
   </div>
   <div class="nav-right">
+    <button id="themeToggle" onclick="toggleTheme()" title="Toggle Day / Night mode">🌙</button>
     <a id="authNavBtn" class="btn-login-nav" href="login.html">🔑 Login</a>
     <a class="btn-wa-nav" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20enquire%20about%20an%20Elexys%20project%20kit." target="_blank">💬 WhatsApp</a>
     <button class="ham" onclick="toggleDraw()"><span></span><span></span><span></span></button>
@@ -1701,6 +1794,20 @@ function sbFilter(cat,btn){
 }
 
 function toggleDraw(){document.getElementById('mob').classList.toggle('open')}
+
+// ── THEME TOGGLE ──────────────────────────────────
+function applyTheme(mode){
+  const isLight = mode === 'light';
+  document.body.classList.toggle('light', isLight);
+  const btn = document.getElementById('themeToggle');
+  if(btn){ btn.textContent = isLight ? '🌙' : '☀️'; btn.title = isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'; }
+  localStorage.setItem('elexys-theme', mode);
+}
+function toggleTheme(){
+  applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+}
+// Apply saved theme on load
+(function(){ applyTheme(localStorage.getItem('elexys-theme') || 'dark'); })();
 function cd(){document.getElementById('mob').classList.remove('open')}
 
 function subForm(e){
