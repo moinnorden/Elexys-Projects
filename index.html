@@ -2070,8 +2070,8 @@ async function loadFirebaseProducts(){
   try{
     showSkeletons(3);
      //const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
-    //const q = query(collection(db,'products'));
-    query(collection(db,'products'))
+    const q = query(collection(db,'products'));
+    //query(collection(db,'products'))
 
 
     const snap  = await getDocs(q);
