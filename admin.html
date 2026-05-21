@@ -381,11 +381,6 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <textarea id="pFeatures" placeholder="IoT cloud dashboard&#10;Real-time monitoring&#10;Mobile app control"></textarea>
           </div>
           <div class="form-group full">
-            <label>Search Tags <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(comma-separated — used for search & filter on website)</span></label>
-            <input type="text" id="pTags" placeholder="e.g. IoT, Arduino, ESP32, Water Level, Monitoring"/>
-            <div style="font-size:.68rem;color:var(--muted);margin-top:3px">Tags appear as clickable pills on product cards and enable keyword search. Use the main category name as first tag.</div>
-          </div>
-          <div class="form-group full">
             <label>Custom WhatsApp Message (optional)</label>
             <textarea id="pWhatsappMsg" placeholder="Hi Prof. M.D. Sk,&#10;&#10;I am interested in this project kit. Please share price and availability. Thank you! 🙏&#10;&#10;Leave blank to use the default message with product name." style="min-height:100px"></textarea>
           </div>
@@ -461,11 +456,6 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <div class="form-group full">
             <label>Features (one per line)</label>
             <textarea id="eFeatures" placeholder="IoT cloud dashboard&#10;Real-time monitoring&#10;Mobile app control"></textarea>
-          </div>
-          <div class="form-group full">
-            <label>Search Tags <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(comma-separated — used for search & filter on website)</span></label>
-            <input type="text" id="eTags" placeholder="e.g. IoT, Arduino, ESP32, Water Level, Monitoring"/>
-            <div style="font-size:.68rem;color:var(--muted);margin-top:3px">Tags appear as clickable pills on product cards and enable keyword search. Use the main category name as first tag.</div>
           </div>
           <div class="form-group full">
             <label>Custom WhatsApp Message (optional)</label>
@@ -702,7 +692,6 @@ async function loadProducts(){
             <span class="badge ${badge}">${badgeLabel}</span>
           </div>
           <div class="product-meta">${(p.description||'').slice(0,80)}…</div>
-          ${p.tags&&p.tags.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${p.tags.slice(0,4).map(t=>`<span style="font-size:.6rem;background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.25);padding:1px 6px;border-radius:4px">${t}</span>`).join('')}</div>`:''}
           ${waMsgPreview}
           <div class="product-actions">
             ${p.youtubeId?`<a href="https://www.youtube.com/watch?v=${p.youtubeId}" target="_blank" class="btn btn-sm" style="background:rgba(255,0,0,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)">▶ Video</a>`:''}
@@ -743,7 +732,6 @@ window.editProduct=async(id)=>{
     document.getElementById('eDelivery').value=p.delivery||'';
     document.getElementById('eStock').value=p.stock||'available';
     document.getElementById('eFeatures').value=(p.features||[]).join('\n');
-    document.getElementById('eTags').value=(p.tags||[]).join(', ');
     document.getElementById('eWhatsappMsg').value=p.whatsappMessage||'';
     // Show edit nav item and switch
     document.getElementById('navEditProduct').style.display='flex';
@@ -763,7 +751,6 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features=document.getElementById('eFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
-    const tags=document.getElementById('eTags').value.split(',').map(t=>t.trim()).filter(Boolean);
     await updateDoc(doc(db,'products',id),{
       name,category,
       price:Number(price),
@@ -774,7 +761,6 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
       delivery:document.getElementById('eDelivery').value.trim(),
       stock:document.getElementById('eStock').value,
       features,
-      tags,
       whatsappMessage:document.getElementById('eWhatsappMsg').value.trim(),
     });
     showMsg('editProductMsg','success','✅ Product updated successfully!');
@@ -801,7 +787,6 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features = document.getElementById('pFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
-    const tags = document.getElementById('pTags').value.split(',').map(t=>t.trim()).filter(Boolean);
     await addDoc(collection(db,'products'),{
       name,
       category,
@@ -813,14 +798,13 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
       delivery:     document.getElementById('pDelivery').value.trim(),
       stock:        document.getElementById('pStock').value,
       features,
-      tags,
       whatsappMessage: document.getElementById('pWhatsappMsg').value.trim(),
       createdAt: serverTimestamp(),
       addedBy: auth.currentUser?.email||'admin'
     });
     showMsg('productMsg','success','✅ Product saved to Firebase successfully!');
     // clear form
-    ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pTags','pWhatsappMsg'].forEach(id=>{document.getElementById(id).value=''});
+    ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg'].forEach(id=>{document.getElementById(id).value=''});
     document.getElementById('pCategory').value='';
     document.getElementById('pStock').value='available';
     btn.disabled=false;btn.innerHTML='⚡ Save Product to Firebase';
