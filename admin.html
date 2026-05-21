@@ -784,12 +784,145 @@ window.switchPanel = function(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   document.querySelector(`[data-panel="${name}"]`)?.classList.add('active');
-  const titles={dashboard:'Dashboard',products:'Products',addProduct:'Add Product',editProduct:'Edit Product',users:'Users / Students',enquiries:'Enquiries'};
+  const titles={dashboard:'Dashboard',products:'Products',addProduct:'Add Product',editProduct:'Edit Product',categories:'Categories',users:'Users / Students',enquiries:'Enquiries'};
   document.getElementById('pageTitle').textContent = titles[name]||name;
   if(name==='products') loadProducts();
+  if(name==='categories') loadCategories();
   if(name==='users') loadUsers();
   if(name==='enquiries') loadEnquiries();
 };
+
+// ── CATEGORIES ────────────────────────────────────
+let allCategories = [];
+
+async function loadCategories(){
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = '<p style="color:var(--muted)">Loading categories…</p>';
+  try{
+    const snap = await getDocs(collection(db,'categories'));
+    allCategories = [];
+    if(snap.empty){
+      // Show default built-in list if no custom categories exist yet
+      grid.innerHTML = '<p style="color:var(--muted);font-size:.82rem">No custom categories yet. Click <strong>+ Add Category</strong> to create one. Default categories are used in Add/Edit Product dropdowns.</p>';
+      return;
+    }
+    snap.forEach(d => allCategories.push({id:d.id, ...d.data()}));
+    renderCatGrid();
+  }catch(e){
+    grid.innerHTML = '<p style="color:var(--red)">Error loading categories: '+e.message+'</p>';
+  }
+}
+
+function renderCatGrid(){
+  const grid = document.getElementById('catGrid');
+  if(!allCategories.length){
+    grid.innerHTML = '<p style="color:var(--muted);font-size:.82rem">No categories yet. Click + Add Category.</p>';
+    return;
+  }
+  grid.innerHTML = allCategories.map(c=>`
+    <div style="background:#0d1117;border:1px solid var(--border);border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:.5rem">
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <span style="font-size:1.5rem">${c.emoji||'📦'}</span>
+        <div>
+          <div style="font-weight:600;font-size:.9rem">${c.name||'Unnamed'}</div>
+          ${c.description?`<div style="font-size:.72rem;color:var(--muted)">${c.description}</div>`:''}
+        </div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-top:.3rem">
+        <button class="btn btn-sm" style="background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3)" onclick="openEditCatModal('${c.id}')">✏️ Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteCat('${c.id}')">🗑 Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+window.openAddCatModal = function(){
+  document.getElementById('catModalTitle').textContent = 'Add Category';
+  document.getElementById('catEditId').value = '';
+  document.getElementById('catName').value = '';
+  document.getElementById('catEmoji').value = '';
+  document.getElementById('catDesc').value = '';
+  const modal = document.getElementById('catModal');
+  modal.style.display = 'flex';
+};
+
+window.openEditCatModal = function(id){
+  const cat = allCategories.find(c=>c.id===id);
+  if(!cat) return;
+  document.getElementById('catModalTitle').textContent = 'Edit Category';
+  document.getElementById('catEditId').value = id;
+  document.getElementById('catName').value = cat.name||'';
+  document.getElementById('catEmoji').value = cat.emoji||'';
+  document.getElementById('catDesc').value = cat.description||'';
+  const modal = document.getElementById('catModal');
+  modal.style.display = 'flex';
+};
+
+window.closeCatModal = function(){
+  document.getElementById('catModal').style.display = 'none';
+};
+
+window.saveCat = async function(){
+  const name = document.getElementById('catName').value.trim();
+  const emoji = document.getElementById('catEmoji').value.trim();
+  const desc = document.getElementById('catDesc').value.trim();
+  const editId = document.getElementById('catEditId').value;
+  if(!name){ showMsg('catModalMsg','error','Category name is required.'); return; }
+
+  const btn = document.getElementById('catSaveBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…';
+
+  try{
+    const catData = { name, emoji: emoji||'📦', description: desc };
+    if(editId){
+      await updateDoc(doc(db,'categories',editId), catData);
+      showMsg('catModalMsg','success','✅ Category updated!');
+    } else {
+      catData.createdAt = serverTimestamp();
+      await addDoc(collection(db,'categories'), catData);
+      showMsg('catModalMsg','success','✅ Category added!');
+    }
+    btn.disabled = false; btn.innerHTML = 'Save Category';
+    setTimeout(()=>{ closeCatModal(); loadCategories(); populateCategoryDropdowns(); }, 1000);
+  }catch(e){
+    showMsg('catModalMsg','error','Error: '+e.message);
+    btn.disabled = false; btn.innerHTML = 'Save Category';
+  }
+};
+
+window.deleteCat = async function(id){
+  if(!confirm('Delete this category? Products using it will not be affected.')) return;
+  try{
+    await deleteDoc(doc(db,'categories',id));
+    allCategories = allCategories.filter(c=>c.id!==id);
+    renderCatGrid();
+    showMsg('catMsg','success','Category deleted.');
+    populateCategoryDropdowns();
+  }catch(e){
+    showMsg('catMsg','error','Error: '+e.message);
+  }
+};
+
+// Populate Add/Edit Product category dropdowns with Firestore categories
+async function populateCategoryDropdowns(){
+  try{
+    const snap = await getDocs(collection(db,'categories'));
+    if(snap.empty) return; // keep hardcoded defaults if no custom categories
+    const opts = ['<option value="">-- Select --</option>'];
+    snap.forEach(d=>{ const c=d.data(); opts.push(`<option value="${c.name}">${c.emoji||''} ${c.name}</option>`); });
+    const html = opts.join('');
+    ['pCategory','eCategory'].forEach(id=>{
+      const sel = document.getElementById(id);
+      if(sel) sel.innerHTML = html;
+    });
+    // Also update filter dropdown in products panel
+    const filterCat = document.getElementById('filterCat');
+    if(filterCat){
+      const filterOpts = ['<option value="">All Categories</option>'];
+      snap.forEach(d=>{ const c=d.data(); filterOpts.push(`<option value="${c.name.toLowerCase()}">${c.name}</option>`); });
+      filterCat.innerHTML = filterOpts.join('');
+    }
+  }catch(e){ console.warn('Could not load categories for dropdowns:', e.message); }
+}
 document.querySelectorAll('.nav-item').forEach(n=>{
   n.addEventListener('click',()=>switchPanel(n.dataset.panel));
 });
@@ -800,6 +933,7 @@ onAuthStateChanged(auth, user=>{
     document.getElementById('loginOverlay').style.display='none';
     document.getElementById('adminName').textContent = user.displayName||user.email;
     loadDashboard();
+    populateCategoryDropdowns();
   } else if(user){
     signOut(auth);
     showMsg('loginErrMsg','error','Access denied. Admin only.');
