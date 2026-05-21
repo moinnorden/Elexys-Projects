@@ -1149,17 +1149,27 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
     <a class="sb-a" href="#contact"><span class="sb-ico">✉️</span>Contact</a>
     <div class="sb-div"></div>
     <div class="sb-lbl">Categories</div>
-    <button class="sb-a" onclick="sbFilter('all',this)"><span class="sb-ico">📂</span>All Videos</button>
+    <button class="sb-a" onclick="sbFilter('all',this)"><span class="sb-ico">📂</span>All Projects</button>
     <button class="sb-a" onclick="sbFilter('iot',this)"><span class="sb-ico">🌐</span>IoT</button>
+    <button class="sb-a" onclick="sbFilter('arduino',this)"><span class="sb-ico">♾️</span>Arduino</button>
+    <button class="sb-a" onclick="sbFilter('esp32',this)"><span class="sb-ico">📶</span>ESP32</button>
     <button class="sb-a" onclick="sbFilter('agriculture',this)"><span class="sb-ico">🌾</span>Agriculture</button>
     <button class="sb-a" onclick="sbFilter('electrical',this)"><span class="sb-ico">⚡</span>Electrical</button>
     <button class="sb-a" onclick="sbFilter('gsm',this)"><span class="sb-ico">📡</span>GSM</button>
     <button class="sb-a" onclick="sbFilter('solar',this)"><span class="sb-ico">☀️</span>Solar</button>
     <button class="sb-a" onclick="sbFilter('rfid',this)"><span class="sb-ico">🪪</span>RFID</button>
     <button class="sb-a" onclick="sbFilter('motor',this)"><span class="sb-ico">⚙️</span>Motor</button>
-    <button class="sb-a" onclick="sbFilter('wireless',this)"><span class="sb-ico">📶</span>Wireless</button>
+    <button class="sb-a" onclick="sbFilter('robotics',this)"><span class="sb-ico">🤖</span>Robotics</button>
+    <button class="sb-a" onclick="sbFilter('wireless',this)"><span class="sb-ico">📶</span>Wireless Energy</button>
     <button class="sb-a" onclick="sbFilter('8051',this)"><span class="sb-ico">🔬</span>8051</button>
     <button class="sb-a" onclick="sbFilter('transformer',this)"><span class="sb-ico">🔧</span>Transformer</button>
+    <button class="sb-a" onclick="sbFilter('powerelectronics',this)"><span class="sb-ico">⚡</span>Power Electronics</button>
+    <button class="sb-a" onclick="sbFilter('plc',this)"><span class="sb-ico">🖥️</span>PLC</button>
+    <button class="sb-a" onclick="sbFilter('simulation',this)"><span class="sb-ico">📊</span>Simulation</button>
+    <button class="sb-a" onclick="sbFilter('embedded',this)"><span class="sb-ico">💻</span>Embedded</button>
+    <button class="sb-a" onclick="sbFilter('automation',this)"><span class="sb-ico">🏭</span>Automation</button>
+    <button class="sb-a" onclick="sbFilter('pcb',this)"><span class="sb-ico">🔌</span>PCB Design</button>
+    <button class="sb-a" onclick="sbFilter('mechatronics',this)"><span class="sb-ico">⚙️</span>Mechatronics</button>
     <div class="sb-div"></div>
     <div class="sb-lbl">Follow Us</div>
     <div class="sb-socials">
@@ -1301,15 +1311,25 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
       <div class="filter-bar" id="fbar">
         <button class="fbt on" onclick="fCat('all',this)">All</button>
         <button class="fbt" onclick="fCat('iot',this)">🌐 IoT</button>
+        <button class="fbt" onclick="fCat('arduino',this)">♾️ Arduino</button>
+        <button class="fbt" onclick="fCat('esp32',this)">📶 ESP32</button>
         <button class="fbt" onclick="fCat('agriculture',this)">🌾 Agriculture</button>
         <button class="fbt" onclick="fCat('electrical',this)">⚡ Electrical</button>
         <button class="fbt" onclick="fCat('gsm',this)">📡 GSM</button>
         <button class="fbt" onclick="fCat('solar',this)">☀️ Solar</button>
         <button class="fbt" onclick="fCat('rfid',this)">🪪 RFID</button>
         <button class="fbt" onclick="fCat('motor',this)">⚙️ Motor</button>
+        <button class="fbt" onclick="fCat('robotics',this)">🤖 Robotics</button>
         <button class="fbt" onclick="fCat('wireless',this)">📶 Wireless</button>
         <button class="fbt" onclick="fCat('8051',this)">🔬 8051</button>
         <button class="fbt" onclick="fCat('transformer',this)">🔧 Transformer</button>
+        <button class="fbt" onclick="fCat('powerelectronics',this)">⚡ Power Elec.</button>
+        <button class="fbt" onclick="fCat('plc',this)">🖥️ PLC</button>
+        <button class="fbt" onclick="fCat('simulation',this)">📊 Simulation</button>
+        <button class="fbt" onclick="fCat('embedded',this)">💻 Embedded</button>
+        <button class="fbt" onclick="fCat('automation',this)">🏭 Automation</button>
+        <button class="fbt" onclick="fCat('pcb',this)">🔌 PCB</button>
+        <button class="fbt" onclick="fCat('mechatronics',this)">⚙️ Mechatronics</button>
       </div>
       <div class="search-row">
         <div class="search-box">
@@ -1619,8 +1639,63 @@ const PLAYLISTS = {
   '8051':'https://www.youtube.com/playlist?list=PLUOZuetJJhTOy9lwMRrz6xZotZIvt2Qyn',
   transformer:'https://www.youtube.com/playlist?list=PLUOZuetJJhTOyXBVIVHCqrtZwn0ztnlqa',
 };
-const CAT_ICON={iot:'🌐',agriculture:'🌾',electrical:'⚡',gsm:'📡',solar:'☀️',rfid:'🪪',motor:'⚙️',wireless:'📶','8051':'🔬',transformer:'🔧'};
-const CAT_GLOW={iot:'rgba(0,194,168,.18)',agriculture:'rgba(80,200,60,.15)',electrical:'rgba(220,160,30,.18)',gsm:'rgba(0,140,220,.15)',solar:'rgba(255,200,0,.15)',rfid:'rgba(180,60,255,.18)',motor:'rgba(255,120,40,.16)',wireless:'rgba(0,200,255,.15)','8051':'rgba(255,60,60,.15)',transformer:'rgba(160,140,255,.15)'};
+// ── Expanded category maps (covers all admin categories) ──
+const CAT_ICON={
+  iot:'🌐', agriculture:'🌾', electrical:'⚡', gsm:'📡', solar:'☀️',
+  rfid:'🪪', motor:'⚙️', wireless:'📶', '8051':'🔬', transformer:'🔧',
+  robotics:'🤖', arduino:'♾️', esp32:'📶', raspberrypi:'🍓',
+  powerelectronics:'⚡', plc:'🖥️', matlab:'📊', simulation:'🖥️',
+  pcb:'🔌', mechatronics:'⚙️', embedded:'💻', python:'🐍',
+  communication:'📡', microcontroller:'🔬', automation:'🏭', other:'📦', custom:'📦'
+};
+const CAT_GLOW={
+  iot:'rgba(0,194,168,.18)', agriculture:'rgba(80,200,60,.15)',
+  electrical:'rgba(220,160,30,.18)', gsm:'rgba(0,140,220,.15)',
+  solar:'rgba(255,200,0,.15)', rfid:'rgba(180,60,255,.18)',
+  motor:'rgba(255,120,40,.16)', wireless:'rgba(0,200,255,.15)',
+  '8051':'rgba(255,60,60,.15)', transformer:'rgba(160,140,255,.15)',
+  robotics:'rgba(0,200,120,.18)', arduino:'rgba(0,180,160,.18)',
+  esp32:'rgba(40,200,200,.18)', raspberrypi:'rgba(220,60,60,.15)',
+  powerelectronics:'rgba(250,200,0,.15)', plc:'rgba(100,180,255,.15)',
+  matlab:'rgba(200,80,0,.15)', simulation:'rgba(100,120,255,.15)',
+  pcb:'rgba(0,180,80,.15)', mechatronics:'rgba(200,100,20,.15)',
+  embedded:'rgba(100,60,220,.18)', automation:'rgba(0,200,180,.15)',
+  other:'rgba(120,60,220,.15)', custom:'rgba(120,60,220,.15)'
+};
+
+// Normalise any category string → short key used in CAT_ICON/CAT_GLOW
+function getCatKey(cat){
+  const s = (cat||'other').toLowerCase()
+    .replace(/\s+projects?/i,'').replace(/\s+/g,'').replace(/[\/\-]/g,'').trim();
+  // remap common variants
+  if(s==='motorroboticsprojects'||s==='motorrobotics'||s==='motor') return 'motor';
+  if(s==='wirelessenergy'||s==='wireless') return 'wireless';
+  if(s==='powerelectronics') return 'powerelectronics';
+  if(s==='raspberrypi') return 'raspberrypi';
+  if(s==='customother'||s==='other'||s==='custom') return 'other';
+  if(s==='iotprojects'||s==='iot') return 'iot';
+  if(s==='agricultureprojects'||s==='agriculture') return 'agriculture';
+  if(s==='electricalprojects'||s==='electrical') return 'electrical';
+  if(s==='gsmprojects'||s==='gsm') return 'gsm';
+  if(s==='solarprojects'||s==='solar') return 'solar';
+  if(s==='rfidprojects'||s==='rfid') return 'rfid';
+  if(s==='8051projects'||s==='8051') return '8051';
+  if(s==='transformerprojects'||s==='transformer') return 'transformer';
+  if(s==='simulationprojects'||s==='simulation') return 'simulation';
+  if(s==='roboticsprojects'||s==='robotics') return 'robotics';
+  if(s==='arduinoprojects'||s==='arduino') return 'arduino';
+  if(s==='esp32projects'||s==='esp32') return 'esp32';
+  if(s==='plcprojects'||s==='plc') return 'plc';
+  if(s==='matlabprojects'||s==='matlab') return 'matlab';
+  if(s==='pcbdesign'||s==='pcb') return 'pcb';
+  if(s==='mechatronicsprojects'||s==='mechatronics') return 'mechatronics';
+  if(s==='embeddedprojects'||s==='embedded') return 'embedded';
+  if(s==='automationprojects'||s==='automation') return 'automation';
+  if(s==='communicationprojects'||s==='communication') return 'communication';
+  if(s==='pythonprojects'||s==='python') return 'python';
+  return s || 'other';
+}
+window.getCatKey = getCatKey;
 
 const PRODUCTS=[
   {n:11,cat:'solar',tags:['Solar','Battery Charging','Charger'],title:'Solar Panel Based Battery Charging System'},
@@ -1628,6 +1703,7 @@ const PRODUCTS=[
 ];
 
 // Unified array: holds both static + Firebase products for search/filter
+// EXPOSED on window so the ES module script can update it
 let ALL_PRODUCTS = [...PRODUCTS.map(p=>({
   _type:'static', _id: p.n,
   name: p.title, cat: p.cat, category: p.cat,
@@ -1635,7 +1711,10 @@ let ALL_PRODUCTS = [...PRODUCTS.map(p=>({
   platform:'', delivery:'Free All India Courier', stock:'available',
   youtubeId:'', imageUrl:'', whatsappMessage:'', n: p.n
 }))];
+window.__getAllProducts  = ()=>ALL_PRODUCTS;
+window.__setAllProducts = (arr)=>{ ALL_PRODUCTS=arr; };
 let FB_LOADED = false;
+window.__setFbLoaded = (v)=>{ FB_LOADED=v; };
 
 let curCat='all', curQ='';
 
@@ -1708,11 +1787,6 @@ function openProductDetail(el){
   document.body.appendChild(overlay);
 }
 window.openProductDetail = openProductDetail;
-
-function getCatKey(cat){
-  return (cat||'other').toLowerCase()
-    .replace(/\s+projects?/i,'').replace(/\s+/g,'').replace(/\//g,'').trim();
-}
 
 function render(){
   curQ = document.getElementById('srch').value.toLowerCase().trim();
@@ -1835,6 +1909,7 @@ function initReveal(){
 })();
 
 render(); // render static products first
+window.render = render;
 initReveal();
 </script>
 <script type="module">
@@ -1908,14 +1983,21 @@ onAuthStateChanged(auth, user=>{
 const CAT_ICON_FB = {
   'iot':'🌐','agriculture':'🌾','electrical':'⚡','gsm':'📡',
   'solar':'☀️','rfid':'🪪','motor':'⚙️','wireless':'📶',
-  '8051':'🔬','transformer':'🔧','simulation':'🖥️','custom':'📦','other':'📦'
+  '8051':'🔬','transformer':'🔧','simulation':'🖥️','robotics':'🤖',
+  'arduino':'♾️','esp32':'📶','raspberrypi':'🍓','powerelectronics':'⚡',
+  'plc':'🖥️','matlab':'📊','pcb':'🔌','mechatronics':'⚙️',
+  'embedded':'💻','automation':'🏭','custom':'📦','other':'📦'
 };
 const CAT_GLOW_FB = {
   'iot':'rgba(34,211,238,.15)','agriculture':'rgba(34,197,94,.15)',
   'electrical':'rgba(250,204,21,.15)','gsm':'rgba(168,85,247,.15)',
   'solar':'rgba(251,146,60,.15)','rfid':'rgba(99,102,241,.15)',
   'motor':'rgba(34,211,238,.12)','wireless':'rgba(236,72,153,.15)',
-  '8051':'rgba(20,184,166,.15)','transformer':'rgba(239,68,68,.15)'
+  '8051':'rgba(20,184,166,.15)','transformer':'rgba(239,68,68,.15)',
+  'simulation':'rgba(100,120,255,.15)','robotics':'rgba(0,200,120,.18)',
+  'arduino':'rgba(0,180,160,.18)','esp32':'rgba(40,200,200,.18)',
+  'powerelectronics':'rgba(250,200,0,.15)','automation':'rgba(0,200,180,.15)',
+  'other':'rgba(120,60,220,.15)','custom':'rgba(120,60,220,.15)'
 };
 
 function showSkeletons(n=4){
@@ -1932,7 +2014,7 @@ function showSkeletons(n=4){
 }
 
 function buildFbCard(p, id){
-  const catKey = getCatKey(p.category||'other');
+  const catKey = window.getCatKey(p.category||'other');
   const ico  = CAT_ICON_FB[catKey] || '📦';
   const glow = CAT_GLOW_FB[catKey] || 'rgba(120,60,220,.15)';
   const yt   = p.youtubeId
@@ -1993,13 +2075,14 @@ async function loadFirebaseProducts(){
     const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
     const snap  = await getDocs(q);
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
-    if(snap.empty){ FB_LOADED=true; render(); return; }
+    if(snap.empty){ window.__setFbLoaded(true); window.render(); return; }
 
-    // Add Firebase products to the unified ALL_PRODUCTS array
+    // Add Firebase products to the unified ALL_PRODUCTS array (via window bridge)
+    const STATIC = window.__getAllProducts().filter(p=>p._type==='static');
     const fbEntries = [];
     snap.forEach(d=>{
       const data = d.data();
-      const catKey = getCatKey(data.category||'other');
+      const catKey = window.getCatKey(data.category||'other');
       fbEntries.push({
         _type:'fb', _fbId: d.id,
         name: data.name||'Unnamed Project',
@@ -2019,24 +2102,17 @@ async function loadFirebaseProducts(){
     });
 
     // Prepend Firebase products so they show first
-    ALL_PRODUCTS = [...fbEntries, ...PRODUCTS.map(p=>({
-      _type:'static', _id: p.n,
-      name: p.title, cat: p.cat, category: p.cat,
-      tags: p.tags||[], price:'', description:'', features:[],
-      platform:'', delivery:'Free All India Courier', stock:'available',
-      youtubeId:'', imageUrl:'', whatsappMessage:'', n: p.n
-    }))];
+    window.__setAllProducts([...fbEntries, ...STATIC]);
+    window.__setFbLoaded(true);
+    window.render(); // re-render with full unified dataset
 
-    FB_LOADED = true;
-    render(); // re-render with full unified dataset
-
-    const totalCount = ALL_PRODUCTS.length;
+    const totalCount = window.__getAllProducts().length;
     document.querySelectorAll('.sb-count').forEach(el=>{ el.textContent = totalCount; });
-    console.log(`✅ Loaded ${fbEntries.length} Firebase + ${PRODUCTS.length} static products.`);
+    console.log(`✅ Loaded ${fbEntries.length} Firebase + ${STATIC.length} static products.`);
   }catch(e){
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
-    FB_LOADED = true;
-    render();
+    window.__setFbLoaded(true);
+    window.render();
     console.warn('Firebase products load error:', e.message);
   }
 }

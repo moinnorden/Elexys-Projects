@@ -306,6 +306,7 @@ td{padding:.85rem 1rem;vertical-align:middle}
     <div class="nav-item" data-panel="products"><span class="nav-icon">🛒</span> Products</div>
     <div class="nav-item" data-panel="addProduct"><span class="nav-icon">➕</span> Add Product</div>
     <div class="nav-item" data-panel="editProduct" id="navEditProduct" style="display:none"><span class="nav-icon">✏️</span> Edit Product</div>
+    <div class="nav-item" data-panel="categories"><span class="nav-icon">🏷️</span> Categories</div>
     <div class="nav-item" data-panel="users"><span class="nav-icon">👥</span> Users / Students</div>
     <div class="nav-item" data-panel="enquiries"><span class="nav-icon">📩</span> Enquiries</div>
   </div>
@@ -387,16 +388,29 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <select class="filter-cat" id="filterCat" onchange="applySortFilter()">
             <option value="">All Categories</option>
             <option>IoT Projects</option>
+            <option>Arduino Projects</option>
+            <option>ESP32 Projects</option>
+            <option>Raspberry Pi Projects</option>
             <option>Agriculture Projects</option>
             <option>Electrical Projects</option>
             <option>GSM Projects</option>
             <option>Solar Projects</option>
-            <option>8051 Projects</option>
             <option>RFID Projects</option>
-            <option>Wireless Energy</option>
             <option>Motor / Robotics</option>
+            <option>Robotics Projects</option>
+            <option>Wireless Energy</option>
+            <option>8051 Projects</option>
             <option>Transformer Projects</option>
+            <option>Power Electronics</option>
+            <option>PLC Projects</option>
+            <option>MATLAB / Simulation</option>
             <option>Simulation Projects</option>
+            <option>PCB Design</option>
+            <option>Mechatronics Projects</option>
+            <option>Embedded Systems</option>
+            <option>Automation Projects</option>
+            <option>Communication Projects</option>
+            <option>Python Projects</option>
             <option>Custom / Other</option>
           </select>
 
@@ -433,16 +447,29 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <select id="pCategory">
               <option value="">-- Select --</option>
               <option>IoT Projects</option>
+              <option>Arduino Projects</option>
+              <option>ESP32 Projects</option>
+              <option>Raspberry Pi Projects</option>
               <option>Agriculture Projects</option>
               <option>Electrical Projects</option>
               <option>GSM Projects</option>
               <option>Solar Projects</option>
-              <option>8051 Projects</option>
               <option>RFID Projects</option>
-              <option>Wireless Energy</option>
               <option>Motor / Robotics</option>
+              <option>Robotics Projects</option>
+              <option>Wireless Energy</option>
+              <option>8051 Projects</option>
               <option>Transformer Projects</option>
+              <option>Power Electronics</option>
+              <option>PLC Projects</option>
+              <option>MATLAB / Simulation</option>
               <option>Simulation Projects</option>
+              <option>PCB Design</option>
+              <option>Mechatronics Projects</option>
+              <option>Embedded Systems</option>
+              <option>Automation Projects</option>
+              <option>Communication Projects</option>
+              <option>Python Projects</option>
               <option>Custom / Other</option>
             </select>
           </div>
@@ -520,16 +547,29 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <select id="eCategory">
               <option value="">-- Select --</option>
               <option>IoT Projects</option>
+              <option>Arduino Projects</option>
+              <option>ESP32 Projects</option>
+              <option>Raspberry Pi Projects</option>
               <option>Agriculture Projects</option>
               <option>Electrical Projects</option>
               <option>GSM Projects</option>
               <option>Solar Projects</option>
-              <option>8051 Projects</option>
               <option>RFID Projects</option>
-              <option>Wireless Energy</option>
               <option>Motor / Robotics</option>
+              <option>Robotics Projects</option>
+              <option>Wireless Energy</option>
+              <option>8051 Projects</option>
               <option>Transformer Projects</option>
+              <option>Power Electronics</option>
+              <option>PLC Projects</option>
+              <option>MATLAB / Simulation</option>
               <option>Simulation Projects</option>
+              <option>PCB Design</option>
+              <option>Mechatronics Projects</option>
+              <option>Embedded Systems</option>
+              <option>Automation Projects</option>
+              <option>Communication Projects</option>
+              <option>Python Projects</option>
               <option>Custom / Other</option>
             </select>
           </div>
@@ -589,6 +629,49 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="switchPanel('products')">Cancel</button>
         </div>
         <div class="msg" id="editProductMsg"></div>
+      </div>
+    </div>
+
+    <!-- ── CATEGORIES ── -->
+    <div class="panel" id="panel-categories">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏷️ Manage Categories</div>
+          <button class="btn btn-primary btn-sm" onclick="openAddCatModal()">+ Add Category</button>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:1.2rem">
+          These categories appear in the Add / Edit Product dropdowns and on the main website filter bar. Drag to reorder (coming soon).
+        </p>
+        <div id="catGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.8rem">
+          <p style="color:var(--muted)">Loading categories…</p>
+        </div>
+        <div class="msg" id="catMsg"></div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Category Modal -->
+    <div id="catModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center">
+      <div style="background:#111827;border:1px solid #1e2d45;border-radius:16px;padding:2rem;width:100%;max-width:440px;position:relative">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);border-radius:16px 16px 0 0"></div>
+        <div style="font-size:1rem;font-weight:700;margin-bottom:1.2rem;color:var(--text)" id="catModalTitle">Add Category</div>
+        <input type="hidden" id="catEditId"/>
+        <div class="form-group" style="margin-bottom:.9rem">
+          <label>Category Name *</label>
+          <input type="text" id="catName" placeholder="e.g. Arduino Projects"/>
+        </div>
+        <div class="form-group" style="margin-bottom:.9rem">
+          <label>Emoji Icon</label>
+          <input type="text" id="catEmoji" placeholder="e.g. ♾️  (paste emoji)"/>
+        </div>
+        <div class="form-group" style="margin-bottom:1.2rem">
+          <label>Description (optional)</label>
+          <input type="text" id="catDesc" placeholder="e.g. Arduino-based project kits"/>
+        </div>
+        <div style="display:flex;gap:.7rem">
+          <button class="btn btn-primary" style="flex:1;justify-content:center" id="catSaveBtn" onclick="saveCat()">Save Category</button>
+          <button class="btn" style="background:transparent;border:1px solid var(--border);color:var(--muted)" onclick="closeCatModal()">Cancel</button>
+        </div>
+        <div class="msg" id="catModalMsg"></div>
       </div>
     </div>
 
