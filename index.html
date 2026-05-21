@@ -731,9 +731,9 @@ body.light .ptag:hover{background:rgba(100,80,200,.2);color:#5533cc;border-color
   padding:10px 16px 16px;display:flex;gap:7px;position:relative;z-index:1;
 }
 .btn-ask{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
-  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.4px;
-  background:var(--wa);color:#fff;padding:9px 10px;border-radius:6px;
+  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  font-family:'Exo 2',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.3px;
+  background:var(--wa);color:#fff;padding:7px 8px;border-radius:6px;
   transition:filter .18s,transform .15s;white-space:nowrap;
 }
 .btn-ask:hover{filter:brightness(1.12);transform:translateY(-1px)}
@@ -1623,8 +1623,19 @@ const CAT_ICON={iot:'🌐',agriculture:'🌾',electrical:'⚡',gsm:'📡',solar:
 const CAT_GLOW={iot:'rgba(0,194,168,.18)',agriculture:'rgba(80,200,60,.15)',electrical:'rgba(220,160,30,.18)',gsm:'rgba(0,140,220,.15)',solar:'rgba(255,200,0,.15)',rfid:'rgba(180,60,255,.18)',motor:'rgba(255,120,40,.16)',wireless:'rgba(0,200,255,.15)','8051':'rgba(255,60,60,.15)',transformer:'rgba(160,140,255,.15)'};
 
 const PRODUCTS=[
-  
+  {n:11,cat:'solar',tags:['Solar','Battery Charging','Charger'],title:'Solar Panel Based Battery Charging System'},
+  {n:12,cat:'iot',tags:['IoT','Water Level','Monitoring'],title:'IoT Smart Water Level Monitoring System'},
 ];
+
+// Unified array: holds both static + Firebase products for search/filter
+let ALL_PRODUCTS = [...PRODUCTS.map(p=>({
+  _type:'static', _id: p.n,
+  name: p.title, cat: p.cat, category: p.cat,
+  tags: p.tags||[], price:'', description:'', features:[],
+  platform:'', delivery:'Free All India Courier', stock:'available',
+  youtubeId:'', imageUrl:'', whatsappMessage:'', n: p.n
+}))];
+let FB_LOADED = false;
 
 let curCat='all', curQ='';
 
@@ -1698,16 +1709,26 @@ function openProductDetail(el){
 }
 window.openProductDetail = openProductDetail;
 
+function getCatKey(cat){
+  return (cat||'other').toLowerCase()
+    .replace(/\s+projects?/i,'').replace(/\s+/g,'').replace(/\//g,'').trim();
+}
+
 function render(){
   curQ = document.getElementById('srch').value.toLowerCase().trim();
-  const filtered = PRODUCTS.filter(p=>{
-    const cok = curCat==='all'||p.cat===curCat;
-    const tagMatch = p.tags && p.tags.some(t=>t.toLowerCase().includes(curQ));
+  const filtered = ALL_PRODUCTS.filter(p=>{
+    const catKey = p.cat || getCatKey(p.category||'');
+    const cok = curCat==='all' || catKey===curCat || (p.category||'').toLowerCase().includes(curCat);
+    const tags = p.tags||[];
+    const tagMatch = tags.some(t=>t.toLowerCase().includes(curQ));
+    const nameStr = (p.name||p.title||'').toLowerCase();
+    const descStr = (p.description||'').toLowerCase();
     const qok = !curQ
-      || p.title.toLowerCase().includes(curQ)
-      || String(p.n).includes(curQ)
-      || String(p.n).padStart(3,'0').includes(curQ)
-      || (p.cat && p.cat.toLowerCase().includes(curQ))
+      || nameStr.includes(curQ)
+      || descStr.includes(curQ)
+      || (p.n && (String(p.n).includes(curQ)||String(p.n).padStart(3,'0').includes(curQ)))
+      || catKey.includes(curQ)
+      || (p.category||'').toLowerCase().includes(curQ)
       || tagMatch;
     return cok&&qok;
   });
@@ -1717,17 +1738,18 @@ function render(){
     return;
   }
   grid.innerHTML = filtered.map((p,i)=>{
+    if(p._type==='fb') return buildFbCard(p, p._fbId);
+    // static product card
     const ico = CAT_ICON[p.cat]||'🔧';
     const glow = CAT_GLOW[p.cat]||'rgba(120,60,220,.15)';
     const pl = PLAYLISTS[p.cat]||'https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz';
-    const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.title)}`;
-    // Tags HTML — max 3 shown on card
+    const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.name||p.title)}`;
     const shownTags = (p.tags||[]).slice(0,3);
     const tagsHtml = shownTags.length
       ? `<div class="pcard-tags">${shownTags.map(t=>`<span class="ptag" onclick="filterByTag('${t}',event)" title="Filter by ${t}">${t}</span>`).join('')}</div>`
       : '';
     const dataProduct = encodeURIComponent(JSON.stringify({
-      name: p.title, category: p.cat, price:'', description:'',
+      name: p.name||p.title, category: p.cat, price:'', description:'',
       features:[], platform:'', delivery:'Free All India Courier', stock:'available',
       youtubeId:'', imageUrl:'', whatsappMessage:'', waLink: wl,
       tags: p.tags||[]
@@ -1738,11 +1760,11 @@ function render(){
         <span class="cat-tag">${p.cat.toUpperCase()}</span>
       </div>
       <div class="pcard-body">
-        <div class="pcard-title">${p.title}</div>
+        <div class="pcard-title">${p.name||p.title}</div>
       </div>
       ${tagsHtml}
       <div class="pcard-foot">
-        <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')">💬 Ask Price on WhatsApp</button>
+        <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')">💬 Ask on WhatsApp</button>
         <a class="btn-yt" href="${pl}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
       </div>
     </div>`;
@@ -1812,7 +1834,7 @@ function initReveal(){
   ids.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el)});
 })();
 
-render();
+render(); // render static products first
 initReveal();
 </script>
 <script type="module">
@@ -1910,8 +1932,7 @@ function showSkeletons(n=4){
 }
 
 function buildFbCard(p, id){
-  const catKey = (p.category||'other').toLowerCase()
-    .replace(/\s+projects?/i,'').replace(/\s+/,'').replace(/\//,'').trim();
+  const catKey = getCatKey(p.category||'other');
   const ico  = CAT_ICON_FB[catKey] || '📦';
   const glow = CAT_GLOW_FB[catKey] || 'rgba(120,60,220,.15)';
   const yt   = p.youtubeId
@@ -1925,7 +1946,6 @@ function buildFbCard(p, id){
   const hasImg = !!p.imageUrl;
   const imgTag = hasImg ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
 
-  // Tags for FB products — shown as clickable pills
   const fbTags = p.tags || [];
   const shownTags = fbTags.slice(0,3);
   const tagsHtml = shownTags.length
@@ -1973,19 +1993,50 @@ async function loadFirebaseProducts(){
     const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
     const snap  = await getDocs(q);
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
-    if(snap.empty){ return; }
-    const grid = document.getElementById('grid');
-    if(!grid) return;
-    const fbCards = [];
-    snap.forEach(d=>{ fbCards.push(buildFbCard(d.data(), d.id)); });
-    grid.insertAdjacentHTML('afterbegin', fbCards.join(''));
-    const staticCount = PRODUCTS.length;
-    const fbCount     = fbCards.length;
-    const totalCount  = staticCount + fbCount;
+    if(snap.empty){ FB_LOADED=true; render(); return; }
+
+    // Add Firebase products to the unified ALL_PRODUCTS array
+    const fbEntries = [];
+    snap.forEach(d=>{
+      const data = d.data();
+      const catKey = getCatKey(data.category||'other');
+      fbEntries.push({
+        _type:'fb', _fbId: d.id,
+        name: data.name||'Unnamed Project',
+        cat: catKey,
+        category: data.category||'',
+        tags: data.tags||[],
+        price: data.price||'',
+        description: data.description||'',
+        features: data.features||[],
+        platform: data.platform||'',
+        delivery: data.delivery||'',
+        stock: data.stock||'available',
+        youtubeId: data.youtubeId||'',
+        imageUrl: data.imageUrl||'',
+        whatsappMessage: data.whatsappMessage||''
+      });
+    });
+
+    // Prepend Firebase products so they show first
+    ALL_PRODUCTS = [...fbEntries, ...PRODUCTS.map(p=>({
+      _type:'static', _id: p.n,
+      name: p.title, cat: p.cat, category: p.cat,
+      tags: p.tags||[], price:'', description:'', features:[],
+      platform:'', delivery:'Free All India Courier', stock:'available',
+      youtubeId:'', imageUrl:'', whatsappMessage:'', n: p.n
+    }))];
+
+    FB_LOADED = true;
+    render(); // re-render with full unified dataset
+
+    const totalCount = ALL_PRODUCTS.length;
     document.querySelectorAll('.sb-count').forEach(el=>{ el.textContent = totalCount; });
-    console.log(`✅ Loaded ${fbCount} Firebase products + ${staticCount} static products.`);
+    console.log(`✅ Loaded ${fbEntries.length} Firebase + ${PRODUCTS.length} static products.`);
   }catch(e){
     document.querySelectorAll('.pcard-skeleton').forEach(el=>el.remove());
+    FB_LOADED = true;
+    render();
     console.warn('Firebase products load error:', e.message);
   }
 }
