@@ -2010,7 +2010,7 @@ function showSkeletons(n=4){
   }
 }
 
-function buildFbCard(p, id){
+window.buildFbCard=function(p, id){
   const catKey = window.getCatKey(p.category||'other');
   const ico  = CAT_ICON_FB[catKey] || '📦';
   const glow = CAT_GLOW_FB[catKey] || 'rgba(120,60,220,.15)';
@@ -2069,8 +2069,8 @@ function buildFbCard(p, id){
 async function loadFirebaseProducts(){
   try{
     showSkeletons(3);
-     //const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
-    const q = query(collection(db,'products'));
+    // const q     = query(collection(db,'products'), orderBy('createdAt','desc'));
+     const q = query(collection(db,'products'));
     //query(collection(db,'products'))
 
 
