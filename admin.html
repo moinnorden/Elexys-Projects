@@ -230,11 +230,12 @@ td{padding:.85rem 1rem;vertical-align:middle}
 .product-meta{font-size:.75rem;color:var(--muted)}
 .product-price{font-family:'Orbitron',sans-serif;color:var(--accent);font-size:1rem;font-weight:700}
 .product-actions{display:flex;gap:.5rem;margin-top:.3rem;flex-wrap:wrap}
-/* Tags display in product card */
-.product-tags{display:flex;flex-wrap:wrap;gap:4px}
-.product-tag{
-  font-size:.62rem;background:rgba(124,58,237,.15);color:#a78bfa;
-  border:1px solid rgba(124,58,237,.25);padding:2px 7px;border-radius:4px;
+/* ── Product Code badge ── */
+.product-code{
+  font-size:.62rem;background:rgba(0,212,255,.12);color:var(--accent);
+  border:1px solid rgba(0,212,255,.25);padding:2px 8px;border-radius:4px;
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em;
+  display:inline-block;
 }
 
 /* ── MSG ── */
@@ -493,15 +494,10 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <label>Short Description *</label>
             <textarea id="pDesc" placeholder="Describe the project kit in 2–3 sentences…"></textarea>
           </div>
-          <!-- Tags Field -->
-          <div class="form-group full">
-            <label>Tags (keywords for search)</label>
-            <div class="tags-input-wrap">
-              <input type="text" id="pTagInput" placeholder="Type a tag and press Enter or comma… e.g. Arduino, IoT, Sensor"/>
-              <div class="tags-preview" id="pTagsPreview"></div>
-              <div class="tags-hint">💡 Press Enter or comma to add. Click × to remove. Tags help users search and filter products.</div>
-            </div>
-            <input type="hidden" id="pTagsData" value="[]"/>
+          <!-- Product Code Field -->
+          <div class="form-group">
+            <label>Product Code</label>
+            <input type="text" id="pProductCode" placeholder="e.g. ELX-IOT-001"/>
           </div>
           <div class="form-group">
             <label>Delivery Time</label>
@@ -593,15 +589,10 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <label>Short Description *</label>
             <textarea id="eDesc" placeholder="Describe the project kit in 2–3 sentences…"></textarea>
           </div>
-          <!-- Tags Field -->
-          <div class="form-group full">
-            <label>Tags (keywords for search)</label>
-            <div class="tags-input-wrap">
-              <input type="text" id="eTagInput" placeholder="Type a tag and press Enter or comma… e.g. Arduino, IoT, Sensor"/>
-              <div class="tags-preview" id="eTagsPreview"></div>
-              <div class="tags-hint">💡 Press Enter or comma to add. Click × to remove. Tags help users search and filter products.</div>
-            </div>
-            <input type="hidden" id="eTagsData" value="[]"/>
+          <!-- Product Code Field -->
+          <div class="form-group">
+            <label>Product Code</label>
+            <input type="text" id="eProductCode" placeholder="e.g. ELX-IOT-001"/>
           </div>
           <div class="form-group">
             <label>Delivery Time</label>
@@ -1078,10 +1069,9 @@ function renderProductCards(products){
         ? '<span class="badge badge-yellow">Limited</span>'
         : '<span class="badge badge-green">In Stock</span>';
 
-    // Tags display
-    const tags = p.tags||[];
-    const tagsHtml = tags.length
-      ? `<div class="product-tags">${tags.map(t=>`<span class="product-tag">${t}</span>`).join('')}</div>`
+    // Product Code display
+    const codeHtml = p.productCode
+      ? `<div><span class="product-code">🔖 ${p.productCode}</span></div>`
       : '';
 
     const waMsgPreview = p.whatsappMessage
@@ -1099,7 +1089,7 @@ function renderProductCards(products){
           <div class="product-price">₹${Number(p.price||0).toLocaleString('en-IN')}</div>
           ${stockBadge}
         </div>
-        ${tagsHtml}
+        ${codeHtml}
         <div class="product-meta">${(p.description||'').slice(0,80)}${(p.description||'').length>80?'…':''}</div>
         ${waMsgPreview}
         <div class="product-actions">
@@ -1118,51 +1108,6 @@ window.deleteProduct=async(id)=>{
   applySortFilter();
 };
 
-// ── TAG INPUT SYSTEM ──────────────────────────────
-function initTagInput(inputId, previewId, dataId, existingTags=[]){
-  const input   = document.getElementById(inputId);
-  const preview = document.getElementById(previewId);
-  const hidden  = document.getElementById(dataId);
-  let tags = [...existingTags];
-
-  function syncHidden(){ hidden.value = JSON.stringify(tags); }
-  function renderPills(){
-    preview.innerHTML = tags.map((t,i)=>
-      `<span class="tag-pill">${t}<button class="tag-pill-x" onclick="removeTag_${dataId}(${i})">×</button></span>`
-    ).join('');
-    syncHidden();
-  }
-  // Expose remove function globally
-  window[`removeTag_${dataId}`] = (i)=>{ tags.splice(i,1); renderPills(); };
-
-  function addTag(raw){
-    const tag = raw.trim().replace(/,+$/,'').trim();
-    if(tag && !tags.includes(tag) && tags.length < 20){
-      tags.push(tag);
-      renderPills();
-    }
-  }
-
-  input.addEventListener('keydown', e=>{
-    if(e.key==='Enter'||e.key===','){ e.preventDefault(); addTag(input.value); input.value=''; }
-    else if(e.key==='Backspace' && input.value==='' && tags.length){ tags.pop(); renderPills(); }
-  });
-  input.addEventListener('blur', ()=>{ if(input.value.trim()){ addTag(input.value); input.value=''; } });
-
-  renderPills();
-
-  // Return API to reset/load tags
-  return {
-    setTags: (newTags)=>{ tags=[...newTags]; renderPills(); },
-    getTags: ()=>[...tags],
-    clear: ()=>{ tags=[]; renderPills(); }
-  };
-}
-
-const addTagCtrl  = initTagInput('pTagInput','pTagsPreview','pTagsData',[]);
-const editTagCtrl = initTagInput('eTagInput','eTagsPreview','eTagsData',[]);
-window._addTagCtrl = addTagCtrl;
-window._editTagCtrl = editTagCtrl;
 
 // ── EDIT PRODUCT ──────────────────────────────────
 window.editProduct=async(id)=>{
@@ -1182,8 +1127,7 @@ window.editProduct=async(id)=>{
     document.getElementById('eStock').value=p.stock||'available';
     document.getElementById('eFeatures').value=(p.features||[]).join('\n');
     document.getElementById('eWhatsappMsg').value=p.whatsappMessage||'';
-    // Load existing tags
-    editTagCtrl.setTags(p.tags||[]);
+    document.getElementById('eProductCode').value=p.productCode||'';
     document.getElementById('navEditProduct').style.display='flex';
     switchPanel('editProduct');
   }catch(e){alert('Error loading product: '+e.message);}
@@ -1201,7 +1145,7 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features=document.getElementById('eFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
-    const tags = editTagCtrl.getTags();
+    const productCode = document.getElementById('eProductCode').value.trim();
     await updateDoc(doc(db,'products',id),{
       name,category,
       price:Number(price),
@@ -1212,7 +1156,7 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
       delivery:document.getElementById('eDelivery').value.trim(),
       stock:document.getElementById('eStock').value,
       features,
-      tags,
+      productCode,
       whatsappMessage:document.getElementById('eWhatsappMsg').value.trim(),
     });
     showMsg('editProductMsg','success','✅ Product updated successfully!');
@@ -1238,7 +1182,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving…';
   try{
     const features = document.getElementById('pFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
-    const tags = addTagCtrl.getTags();
+    const productCode = document.getElementById('pProductCode').value.trim();
     await addDoc(collection(db,'products'),{
       name,
       category,
@@ -1250,16 +1194,15 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
       delivery:     document.getElementById('pDelivery').value.trim(),
       stock:        document.getElementById('pStock').value,
       features,
-      tags,
+      productCode,
       whatsappMessage: document.getElementById('pWhatsappMsg').value.trim(),
       createdAt: serverTimestamp(),
       addedBy: auth.currentUser?.email||'admin'
     });
     showMsg('productMsg','success','✅ Product saved to Firebase successfully!');
-    ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg'].forEach(id=>{document.getElementById(id).value=''});
+    ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg','pProductCode'].forEach(id=>{document.getElementById(id).value=''});
     document.getElementById('pCategory').value='';
     document.getElementById('pStock').value='available';
-    addTagCtrl.clear();
     btn.disabled=false;btn.innerHTML='⚡ Save Product to Firebase';
     loadDashboard();
   }catch(e){
