@@ -4,11 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Elexys Technologies — Embedded Systems | Robotics | IoT | Innovation</title>
-
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="shortcut icon" href="favicon.png">
-<link rel="apple-touch-icon" href="favicon.png">
-   
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════
@@ -1074,6 +1069,99 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
 .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .reveal.on{opacity:1;transform:none}
 
+/* ═══════════════════════════════════════════
+   UI/UX PRO MAX — ACCESSIBILITY & INTERACTION
+═══════════════════════════════════════════ */
+
+/* Skip to main content link (keyboard accessibility) */
+.skip-link{
+  position:absolute;top:-100px;left:16px;z-index:9999;
+  background:var(--purple);color:#fff;
+  padding:10px 18px;border-radius:6px;
+  font-family:'Exo 2',sans-serif;font-size:.9rem;font-weight:700;
+  transition:top .2s;text-decoration:none;
+}
+.skip-link:focus{top:10px;outline:3px solid var(--cyan);outline-offset:2px}
+
+/* Visible focus rings for keyboard navigation */
+:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:2px;
+  border-radius:4px;
+}
+/* Remove focus ring for mouse users but keep for keyboard */
+:focus:not(:focus-visible){outline:none}
+
+/* Ensure all interactive elements are ≥44px touch target */
+.fbt{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
+.btn-ask{min-height:44px}
+.btn-yt{min-height:44px}
+.btn-primary,.btn-wa-hero,.btn-ghost-hero{min-height:44px}
+.pd-wa-btn,.pd-yt-btn{min-height:48px}
+.btn-sub{min-height:48px}
+.fwa{width:56px;height:56px} /* slightly larger for easier tap */
+
+/* Cursor pointer on all clickable elements */
+.sb-a[role="button"],.fbt,.btn-ask,.btn-yt,.fbt,.pcard,.tc,.ptag,.svc{cursor:pointer}
+
+/* Toast notification */
+#toast{
+  position:fixed;bottom:90px;right:22px;z-index:900;
+  background:var(--card);border:1px solid var(--border-bright);
+  border-radius:10px;padding:14px 18px;
+  font-family:'Exo 2',sans-serif;font-size:.84rem;color:var(--txt);
+  box-shadow:0 8px 28px rgba(0,0,0,.5);
+  display:flex;align-items:center;gap:10px;
+  transform:translateY(20px);opacity:0;
+  transition:transform .3s ease,opacity .3s ease;
+  pointer-events:none;max-width:300px;
+}
+#toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+#toast.success{border-color:rgba(37,211,102,.5)}
+#toast.error{border-color:rgba(239,68,68,.5)}
+#toast-icon{font-size:1.1rem;flex-shrink:0}
+
+/* Form error states */
+.fg input.err,.fg select.err,.fg textarea.err{
+  border-color:rgba(239,68,68,.7) !important;
+}
+.fg .err-msg{
+  font-size:.65rem;color:#f87171;margin-top:2px;
+  display:none;
+}
+.fg.has-err .err-msg{display:block}
+
+/* Submit button loading state */
+.btn-sub[data-loading]{
+  opacity:.7;cursor:not-allowed;pointer-events:none;
+}
+.btn-sub[data-loading]::after{
+  content:'';display:inline-block;width:12px;height:12px;
+  border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;
+  margin-left:8px;vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Active nav link indicator */
+.nav-a.active{color:var(--cyan)}
+.sb-a.active{color:var(--cyan);background:rgba(34,211,238,.06);border-left-color:var(--cyan)}
+
+/* Improved modal focus trap indicator */
+.pd-box:focus{outline:none}
+
+/* Respect prefers-reduced-motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .reveal{opacity:1;transform:none}
+  .dot-grid::before{animation:none}
+  .scan{animation:none}
+}
+
 /* Responsive */
 @media(max-width:1100px){
   .sidebar{display:none}.nav-links{display:none}.ham{display:flex}
@@ -1101,6 +1189,15 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
 </head>
 <body>
 
+<!-- Skip to main content (keyboard accessibility) -->
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- Toast notification -->
+<div id="toast" role="status" aria-live="polite" aria-atomic="true">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg">Message sent!</span>
+</div>
+
 <!-- Background FX -->
 <div class="circuit-bg"></div>
 <div class="dot-grid"></div>
@@ -1108,33 +1205,35 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
 <div class="corner-br"></div>
 
 <!-- Float WA -->
-<a class="fwa" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20enquire%20about%20a%20project%20kit." target="_blank" title="WhatsApp">💬</a>
+<a class="fwa" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20enquire%20about%20a%20project%20kit." target="_blank" rel="noopener" title="Chat on WhatsApp" aria-label="Chat with us on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
 
 <!-- ═══ NAV ═══ -->
-<nav class="topnav">
-  <div class="nav-logo">
+<nav class="topnav" role="navigation" aria-label="Main navigation">
+  <div class="nav-logo" aria-label="Elexys Technologies home">
     <span class="el">ELE</span><span class="ex">X</span><span class="ys">YS</span>
     <span class="sub">Technologies</span>
   </div>
-  <div class="nav-links">
-    <a class="nav-a" href="#about">About</a>
-    <a class="nav-a" href="#products">Products</a>
-    <a class="nav-a" href="#docs">Docs</a>
-    <a class="nav-a" href="#support">Support</a>
-    <a class="nav-a" href="#youtube">YouTube</a>
-    <a class="nav-a" href="#order">Order</a>
-    <a class="nav-a" href="#contact">Contact</a>
+  <div class="nav-links" role="menubar">
+    <a class="nav-a" href="#about" role="menuitem">About</a>
+    <a class="nav-a" href="#products" role="menuitem">Products</a>
+    <a class="nav-a" href="#docs" role="menuitem">Docs</a>
+    <a class="nav-a" href="#support" role="menuitem">Support</a>
+    <a class="nav-a" href="#youtube" role="menuitem">YouTube</a>
+    <a class="nav-a" href="#order" role="menuitem">Order</a>
+    <a class="nav-a" href="#contact" role="menuitem">Contact</a>
   </div>
   <div class="nav-right">
-    <button id="themeToggle" onclick="toggleTheme()" title="Toggle Day / Night mode">🌙</button>
+    <button id="themeToggle" onclick="toggleTheme()" title="Toggle Day / Night mode" aria-label="Toggle day/night mode">🌙</button>
     <a id="authNavBtn" class="btn-login-nav" href="login.html">🔑 Login</a>
-    <a class="btn-wa-nav" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20enquire%20about%20an%20Elexys%20project%20kit." target="_blank">💬 WhatsApp</a>
-    <button class="ham" onclick="toggleDraw()"><span></span><span></span><span></span></button>
+    <a class="btn-wa-nav" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20enquire%20about%20an%20Elexys%20project%20kit." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
+    <button class="ham" onclick="toggleDraw()" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mob"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
 <!-- Mobile Drawer -->
-<div class="mob-draw" id="mob">
+<div class="mob-draw" id="mob" role="dialog" aria-label="Navigation menu" aria-modal="true">
   <a href="#about" onclick="cd()">About</a>
   <a href="#products" onclick="cd()">Products / Projects</a>
   <a href="#docs" onclick="cd()">Documentation</a>
@@ -1143,14 +1242,14 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
   <a href="#order" onclick="cd()">How to Order</a>
   <a href="#contact" onclick="cd()">Contact</a>
   <a id="authMobBtn" href="login.html" onclick="cd()" style="color:var(--cyan)">🔑 Login / My Account</a>
-  <a class="mob-wa" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20order%20an%20Elexys%20project%20kit." target="_blank" onclick="cd()">💬 WhatsApp Us Now</a>
+  <a class="mob-wa" href="https://wa.me/918796168099?text=Hi%2C%20I%20want%20to%20order%20an%20Elexys%20project%20kit." target="_blank" rel="noopener" onclick="cd()">💬 WhatsApp Us Now</a>
 </div>
 
 <!-- ═══ APP ═══ -->
 <div class="app">
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="Category navigation and links">
     <div class="sb-lbl">Navigation</div>
     <a class="sb-a" href="#hero"><span class="sb-ico">🏠</span>Home</a>
     <a class="sb-a" href="#about"><span class="sb-ico">👨‍🏫</span>About</a>
@@ -1197,7 +1296,7 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
   </aside>
 
   <!-- MAIN -->
-  <main class="main">
+  <main class="main" id="main-content" tabindex="-1">
 
     <!-- ═══ HERO ═══ -->
     <section id="hero">
@@ -1552,16 +1651,27 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
           <a class="btn-wa-hero" href="https://wa.me/918796168099?text=Hi%20Prof.%20M.D.%20Sk%2C%20I%20want%20to%20order%20a%20project%20kit." target="_blank" style="justify-content:center;margin-top:2px">💬 Open WhatsApp Now</a>
         </div>
         <div class="reveal">
-          <form class="cf" onsubmit="subForm(event)">
+          <form class="cf" onsubmit="subForm(event)" novalidate aria-label="Project enquiry form">
             <div class="fr">
-              <div class="fg"><label>Your Name</label><input type="text" placeholder="Full name" required/></div>
-              <div class="fg"><label>WhatsApp / Phone</label><input type="tel" placeholder="+91 XXXXX XXXXX" required/></div>
+              <div class="fg" id="fg-name">
+                <label for="cf-name">Your Name <span aria-hidden="true" style="color:#f87171">*</span></label>
+                <input type="text" id="cf-name" name="name" placeholder="Full name" required autocomplete="name" aria-required="true"/>
+                <span class="err-msg" id="err-name" role="alert">Please enter your name</span>
+              </div>
+              <div class="fg" id="fg-phone">
+                <label for="cf-phone">WhatsApp / Phone <span aria-hidden="true" style="color:#f87171">*</span></label>
+                <input type="tel" id="cf-phone" name="phone" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" aria-required="true"/>
+                <span class="err-msg" id="err-phone" role="alert">Please enter your phone number</span>
+              </div>
             </div>
-            <div class="fg"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
+            <div class="fg">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" placeholder="your@email.com" autocomplete="email"/>
+            </div>
             <div class="fr">
               <div class="fg">
-                <label>Branch</label>
-                <select>
+                <label for="cf-branch">Branch</label>
+                <select id="cf-branch" name="branch" autocomplete="off">
                   <option value="">-- Select --</option>
                   <option>Electrical Engineering</option>
                   <option>Electronics Engineering</option>
@@ -1576,8 +1686,8 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
                 </select>
               </div>
               <div class="fg">
-                <label>Project Category</label>
-                <select>
+                <label for="cf-category">Project Category</label>
+                <select id="cf-category" name="category" autocomplete="off">
                   <option value="">-- Select --</option>
                   <option>IoT Projects</option>
                   <option>Agriculture Projects</option>
@@ -1594,8 +1704,11 @@ body.light .pcard-code{background:rgba(100,80,200,.08);color:#7c3ce8;border-colo
                 </select>
               </div>
             </div>
-            <div class="fg"><label>Message / Project Details</label><textarea placeholder="Describe your requirement, submission deadline, YouTube video link, or any details…"></textarea></div>
-            <button type="submit" class="btn-sub">SEND ENQUIRY →</button>
+            <div class="fg">
+              <label for="cf-msg">Message / Project Details</label>
+              <textarea id="cf-msg" name="message" placeholder="Describe your requirement, submission deadline, YouTube video link, or any details…"></textarea>
+            </div>
+            <button type="submit" class="btn-sub" id="submitBtn">SEND ENQUIRY →</button>
           </form>
         </div>
       </div>
@@ -1788,9 +1901,12 @@ function openProductDetail(el){
 
   const overlay = document.createElement('div');
   overlay.className = 'pd-overlay';
+  overlay.setAttribute('role','dialog');
+  overlay.setAttribute('aria-modal','true');
+  overlay.setAttribute('aria-label', p.name || 'Product details');
   overlay.innerHTML = `
-    <div class="pd-box">
-      <div class="pd-close"><button class="pd-close-btn" onclick="this.closest('.pd-overlay').remove()">✕</button></div>
+    <div class="pd-box" tabindex="-1">
+      <div class="pd-close"><button class="pd-close-btn" aria-label="Close product details" onclick="this.closest('.pd-overlay').remove()">✕</button></div>
       ${imgHtml}
       <div class="pd-body">
         <div class="pd-cat">${p.category}</div>
@@ -1801,13 +1917,19 @@ function openProductDetail(el){
         ${featsHtml}
         ${chips ? `<div class="pd-info-row">${chips}</div>` : ''}
         <div class="pd-actions">
-          <button class="pd-wa-btn" onclick="window.open('${p.waLink}','_blank')">💬 Ask on WhatsApp</button>
-          <a class="pd-yt-btn" href="${yt}" target="_blank">▶ Watch on YouTube</a>
+          <button class="pd-wa-btn" onclick="window.open('${p.waLink}','_blank')" aria-label="Ask price on WhatsApp for ${p.name}">💬 Ask on WhatsApp</button>
+          <a class="pd-yt-btn" href="${yt}" target="_blank" rel="noopener" aria-label="Watch ${p.name} on YouTube">▶ Watch on YouTube</a>
         </div>
       </div>
     </div>`;
   overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+  // ESC key closes modal
+  const handleEsc = e=>{ if(e.key==='Escape'){ overlay.remove(); document.removeEventListener('keydown',handleEsc); } };
+  document.addEventListener('keydown', handleEsc);
+  // Focus the close button when modal opens
   document.body.appendChild(overlay);
+  const closeBtn = overlay.querySelector('.pd-close-btn');
+  if(closeBtn) setTimeout(()=>closeBtn.focus(), 50);
 }
 window.openProductDetail = openProductDetail;
 
@@ -1853,7 +1975,12 @@ function render(){
 
   const grid = document.getElementById('grid');
   if(!filtered.length){
-    grid.innerHTML='<div class="empty-g">No projects found. Try a different search or category.</div>';
+    grid.innerHTML=`<div class="empty-g" role="status" aria-live="polite">
+      <div style="font-size:2.5rem;margin-bottom:12px">🔍</div>
+      <div style="font-size:.95rem;font-weight:700;color:var(--muted2);margin-bottom:6px">No projects found</div>
+      <div style="font-size:.78rem;color:var(--muted)">Try a different search term or select "All" category</div>
+      <button onclick="fCat('all',document.querySelector('.fbt'));document.getElementById('srch').value=''" style="margin-top:14px;padding:8px 18px;background:var(--grad);color:#fff;border:none;border-radius:6px;font-family:'Exo 2',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer">Clear filters</button>
+    </div>`;
     return;
   }
   grid.innerHTML = filtered.map((p,i)=>{
@@ -1869,9 +1996,9 @@ function render(){
       youtubeId:'', imageUrl:'', whatsappMessage:'', waLink: wl,
       productCode: p.productCode||''
     }));
-    return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both" onclick="openProductDetail(this)" data-product="${dataProduct}">
+    return `<div class="pcard" style="--cat-glow:${glow};animation-delay:${(i%24)*.03}s;animation:fadeUp .4s ease both" onclick="openProductDetail(this)" data-product="${dataProduct}" tabindex="0" role="button" aria-label="View details for ${(p.name||p.title||'').replace(/"/g,'&quot;')}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductDetail(this)}">
       <div class="pcard-banner">
-        <span class="pcard-emo">${ico}</span>
+        <span class="pcard-emo" aria-hidden="true">${ico}</span>
         <span class="cat-tag">${p.cat.toUpperCase()}</span>
       </div>
       <div class="pcard-body">
@@ -1879,8 +2006,8 @@ function render(){
         ${p.productCode ? `<span class="pcard-code">🔖 ${p.productCode}</span>` : ''}
       </div>
       <div class="pcard-foot">
-        <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')">💬 Ask on WhatsApp</button>
-        <a class="btn-yt" href="${pl}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
+        <button class="btn-ask" onclick="event.stopPropagation();window.open('${wl}','_blank')" aria-label="Ask price for ${(p.name||p.title||'').replace(/"/g,'&quot;')} on WhatsApp">💬 Ask on WhatsApp</button>
+        <a class="btn-yt" href="${pl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="Watch ${p.cat} projects on YouTube">▶ YT</a>
       </div>
     </div>`;
   }).join('');
@@ -1905,26 +2032,90 @@ function sbFilter(cat,btn){
   document.getElementById('products').scrollIntoView({behavior:'smooth'});
 }
 
-function toggleDraw(){document.getElementById('mob').classList.toggle('open')}
+function toggleDraw(){
+  const mob = document.getElementById('mob');
+  const ham = document.querySelector('.ham');
+  const isOpen = mob.classList.toggle('open');
+  if(ham) ham.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  if(isOpen){ // focus first link in drawer
+    const first = mob.querySelector('a');
+    if(first) setTimeout(()=>first.focus(),50);
+  }
+}
 
 /* ── THEME TOGGLE ── */
 function applyTheme(mode){
   const isLight = mode === 'light';
   document.body.classList.toggle('light', isLight);
   const btn = document.getElementById('themeToggle');
-  if(btn){ btn.textContent = isLight ? '🌙' : '☀️'; btn.title = isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'; }
+  if(btn){
+    btn.textContent = isLight ? '🌙' : '☀️';
+    btn.title = isLight ? 'Switch to Night Mode' : 'Switch to Day Mode';
+    btn.setAttribute('aria-label', isLight ? 'Switch to night mode' : 'Switch to day mode');
+  }
   localStorage.setItem('elexys-theme', mode);
 }
 function toggleTheme(){
   applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
 }
 (function(){ applyTheme(localStorage.getItem('elexys-theme') || 'dark'); })();
-function cd(){document.getElementById('mob').classList.remove('open')}
+function cd(){
+  document.getElementById('mob').classList.remove('open');
+  const ham = document.querySelector('.ham');
+  if(ham) ham.setAttribute('aria-expanded','false');
+}
 
+/* ── TOAST ── */
+let _toastTimer;
+function showToast(msg, type='success', duration=4500){
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  const msgEl = document.getElementById('toast-msg');
+  if(!toast) return;
+  icon.textContent = type==='success' ? '✅' : type==='error' ? '❌' : 'ℹ️';
+  msgEl.textContent = msg;
+  toast.className = 'show ' + type;
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(()=>{ toast.className = ''; }, duration);
+}
+
+/* ── FORM VALIDATION & SUBMISSION ── */
 function subForm(e){
   e.preventDefault();
-  alert('✅ Enquiry sent!\n\nWe will contact you on WhatsApp shortly.\n\nOr message us directly:\n+91 87961 68099');
-  e.target.reset();
+  const form = e.target;
+  const nameEl = document.getElementById('cf-name');
+  const phoneEl = document.getElementById('cf-phone');
+  const fgName = document.getElementById('fg-name');
+  const fgPhone = document.getElementById('fg-phone');
+
+  // Clear previous errors
+  [fgName, fgPhone].forEach(fg => { if(fg) fg.classList.remove('has-err'); });
+  [nameEl, phoneEl].forEach(el => { if(el) el.classList.remove('err'); });
+
+  let valid = true;
+  if(nameEl && !nameEl.value.trim()){
+    fgName.classList.add('has-err');
+    nameEl.classList.add('err');
+    nameEl.focus();
+    valid = false;
+  }
+  if(phoneEl && !phoneEl.value.trim()){
+    fgPhone.classList.add('has-err');
+    phoneEl.classList.add('err');
+    if(valid) phoneEl.focus();
+    valid = false;
+  }
+  if(!valid){ showToast('Please fill in required fields.','error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  if(btn) btn.setAttribute('data-loading','1');
+
+  // Simulate sending (Firebase integration can be added here)
+  setTimeout(()=>{
+    if(btn) btn.removeAttribute('data-loading');
+    showToast('✅ Enquiry sent! We\'ll contact you on WhatsApp shortly.','success',5000);
+    form.reset();
+  }, 800);
 }
 
 /* Reveal */
@@ -2086,10 +2277,10 @@ window.buildFbCard=function(p, id){
     productCode: p.productCode||''
   }));
 
-  return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}" onclick="openProductDetail(this)" data-product="${dataAttr}">
+  return `<div class="pcard" style="--cat-glow:${glow};animation:fadeUp .4s ease both" data-fbid="${id}" onclick="openProductDetail(this)" data-product="${dataAttr}" tabindex="0" role="button" aria-label="View details for ${p.name||'Project'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductDetail(this)}">
     <div class="pcard-banner${hasImg?' has-img':''}">
       ${imgTag}
-      <span class="pcard-emo">${ico}</span>
+      <span class="pcard-emo" aria-hidden="true">${ico}</span>
       <span class="cat-tag">${(p.category||'').toUpperCase().slice(0,10)}</span>
     </div>
     <div class="pcard-body">
@@ -2101,8 +2292,8 @@ window.buildFbCard=function(p, id){
       ${p.description?`<div style="font-size:.72rem;color:var(--muted2);line-height:1.55;margin-top:2px">${p.description.slice(0,80)}…</div>`:''}
     </div>
     <div class="pcard-foot">
-      <button class="btn-ask" onclick="event.stopPropagation();window.open('${waLink}','_blank')">💬 Ask on WhatsApp</button>
-      <a class="btn-yt" href="${yt}" target="_blank" onclick="event.stopPropagation()">▶ YT</a>
+      <button class="btn-ask" onclick="event.stopPropagation();window.open('${waLink}','_blank')" aria-label="Ask price for ${p.name||'this project'} on WhatsApp">💬 Ask on WhatsApp</button>
+      <a class="btn-yt" href="${yt}" target="_blank" rel="noopener" onclick="event.stopPropagation()" aria-label="Watch on YouTube">▶ YT</a>
     </div>
   </div>`;
 }
