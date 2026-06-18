@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB0QM9K3BD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KB0QM9K3BD');
-</script>
-
-   
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Elexys Technologies — Embedded Systems | Robotics | IoT | Innovation</title>
@@ -2058,8 +2046,9 @@ window.__setFbLoaded = (v)=>{ FB_LOADED=v; };
 
 let curCat='all', curQ='';
 
-function waMsg(n,title){
-  return encodeURIComponent(`Hi Prof. M.D. Sk,\n\nWhat is the price for:\n*Video ${String(n).padStart(3,'0')} — ${title}*\n\nPlease share kit price and availability. Thank you! 🙏`);
+function waMsg(n,title,cat,code){
+  const codeLine = code ? `\n🔖 Product Code: ${code}` : '';
+  return encodeURIComponent(`Hi Prof. M.D. Sk,\n\nWhat is the price for:\n*Video ${String(n).padStart(3,'0')} — ${title}*${codeLine}\n💰 Price: Please share\n\nKindly confirm kit price and availability. Thank you! 🙏`);
 }
 
 /* ── Tag click: filter by tag text in search ── */
@@ -2193,7 +2182,7 @@ function render(){
     const ico = CAT_ICON[p.cat]||'🔧';
     const glow = CAT_GLOW[p.cat]||'rgba(120,60,220,.15)';
     const pl = PLAYLISTS[p.cat]||'https://youtube.com/playlist?list=PLUOZuetJJhTP6xQgCrbhH7uAgovU_9_yz';
-    const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.name||p.title)}`;
+    const wl = `https://wa.me/${WA}?text=${waMsg(p.n,p.name||p.title,p.cat,p.productCode)}`;
     const dataProduct = encodeURIComponent(JSON.stringify({
       name: p.name||p.title, category: p.cat, price:'', description:'',
       features:[], platform:'', delivery:'Free All India Courier', stock:'available',
@@ -2460,7 +2449,7 @@ window.buildFbCard=function(p, id){
   const codeStr = p.productCode ? `<span class="pcard-code">🔖 ${p.productCode}</span>` : '';
   const waText = p.whatsappMessage
     ? encodeURIComponent(p.whatsappMessage)
-    : encodeURIComponent(`Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n\nPlease share the kit price and availability. Thank you! 🙏`);
+    : encodeURIComponent(`Hi Prof. M.D. Sk,\n\nI am interested in:\n*${p.name}*\n${p.productCode ? `🔖 Product Code: ${p.productCode}\n` : ''}💰 Price: ${p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : 'Please share price'}\n\nKindly confirm availability. Thank you! 🙏`);
   const waLink = `https://wa.me/918796168099?text=${waText}`;
   const hasImg = !!p.imageUrl;
   const imgTag = hasImg ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
