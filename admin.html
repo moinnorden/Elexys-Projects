@@ -486,6 +486,10 @@ td{padding:.85rem 1rem;vertical-align:middle}
             <label>Thumbnail Image URL</label>
             <input type="url" id="pImage" placeholder="https://…/image.jpg (optional)"/>
           </div>
+          <div class="form-group full">
+            <label>Detail Page Images (one URL per line, .png/.jpg)</label>
+            <textarea id="pDetailImages" placeholder="https://…/photo1.jpg&#10;https://…/photo2.png&#10;https://…/photo3.jpg" style="min-height:80px"></textarea>
+          </div>
           <div class="form-group">
             <label>Microcontroller / Platform</label>
             <input type="text" id="pPlatform" placeholder="e.g. Arduino, ESP32, 8051"/>
@@ -580,6 +584,10 @@ td{padding:.85rem 1rem;vertical-align:middle}
           <div class="form-group">
             <label>Thumbnail Image URL</label>
             <input type="url" id="eImage" placeholder="https://…/image.jpg (optional)"/>
+          </div>
+          <div class="form-group full">
+            <label>Detail Page Images (one URL per line, .png/.jpg)</label>
+            <textarea id="eDetailImages" placeholder="https://…/photo1.jpg&#10;https://…/photo2.png&#10;https://…/photo3.jpg" style="min-height:80px"></textarea>
           </div>
           <div class="form-group">
             <label>Microcontroller / Platform</label>
@@ -1121,6 +1129,7 @@ window.editProduct=async(id)=>{
     document.getElementById('ePrice').value=p.price||'';
     document.getElementById('eYoutubeId').value=p.youtubeId||'';
     document.getElementById('eImage').value=p.imageUrl||'';
+    document.getElementById('eDetailImages').value=(p.detailImages||[]).join('\n');
     document.getElementById('ePlatform').value=p.platform||'';
     document.getElementById('eDesc').value=p.description||'';
     document.getElementById('eDelivery').value=p.delivery||'';
@@ -1146,12 +1155,14 @@ document.getElementById('saveEditBtn').addEventListener('click',async()=>{
   try{
     const features=document.getElementById('eFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
     const productCode = document.getElementById('eProductCode').value.trim();
+    const detailImages = document.getElementById('eDetailImages').value.split('\n').map(u=>u.trim()).filter(Boolean);
     await updateDoc(doc(db,'products',id),{
       name,category,
       price:Number(price),
       description:desc,
       youtubeId:document.getElementById('eYoutubeId').value.trim(),
       imageUrl:document.getElementById('eImage').value.trim(),
+      detailImages,
       platform:document.getElementById('ePlatform').value.trim(),
       delivery:document.getElementById('eDelivery').value.trim(),
       stock:document.getElementById('eStock').value,
@@ -1183,6 +1194,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
   try{
     const features = document.getElementById('pFeatures').value.split('\n').map(f=>f.trim()).filter(Boolean);
     const productCode = document.getElementById('pProductCode').value.trim();
+    const detailImages = document.getElementById('pDetailImages').value.split('\n').map(u=>u.trim()).filter(Boolean);
     await addDoc(collection(db,'products'),{
       name,
       category,
@@ -1190,6 +1202,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
       description: desc,
       youtubeId:    document.getElementById('pYoutubeId').value.trim(),
       imageUrl:     document.getElementById('pImage').value.trim(),
+      detailImages,
       platform:     document.getElementById('pPlatform').value.trim(),
       delivery:     document.getElementById('pDelivery').value.trim(),
       stock:        document.getElementById('pStock').value,
@@ -1200,7 +1213,7 @@ document.getElementById('addProductBtn').addEventListener('click',async()=>{
       addedBy: auth.currentUser?.email||'admin'
     });
     showMsg('productMsg','success','✅ Product saved to Firebase successfully!');
-    ['pName','pPrice','pYoutubeId','pImage','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg','pProductCode'].forEach(id=>{document.getElementById(id).value=''});
+    ['pName','pPrice','pYoutubeId','pImage','pDetailImages','pPlatform','pDesc','pDelivery','pFeatures','pWhatsappMsg','pProductCode'].forEach(id=>{document.getElementById(id).value=''});
     document.getElementById('pCategory').value='';
     document.getElementById('pStock').value='available';
     btn.disabled=false;btn.innerHTML='⚡ Save Product to Firebase';

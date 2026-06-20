@@ -1191,6 +1191,23 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
   display:flex;align-items:center;justify-content:center;font-size:4rem;
   border-bottom:1px solid var(--border);
 }
+.pd-gallery{
+  display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;
+  padding-bottom:4px;scrollbar-width:thin;
+}
+.pd-gallery::-webkit-scrollbar{height:5px}
+.pd-gallery::-webkit-scrollbar-thumb{background:var(--purple);border-radius:3px}
+.pd-gallery img{
+  width:84px;height:84px;object-fit:cover;border-radius:8px;flex-shrink:0;
+  border:1px solid var(--border);cursor:pointer;transition:transform .15s,border-color .15s;
+}
+.pd-gallery img:hover{transform:scale(1.05);border-color:var(--purple2)}
+.pd-lightbox{
+  position:fixed;inset:0;background:rgba(5,5,10,.92);z-index:9999;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  animation:fadeIn .15s ease;cursor:zoom-out;
+}
+.pd-lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:8px}
 .pd-body{padding:20px 24px 28px}
 .pd-cat{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--purple2);
   letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
@@ -2072,6 +2089,10 @@ function openProductDetail(el){
     ? `<div class="pd-features">${p.features.map(f=>`<div class="pd-feature"><span class="pd-feature-dot">▸</span>${f}</div>`).join('')}</div>`
     : '';
 
+  const galleryHtml = (p.detailImages && p.detailImages.length)
+    ? `<div class="pd-gallery">${p.detailImages.map(src=>`<img src="${src}" alt="${p.name}" loading="lazy" onclick="openLightbox('${src.replace(/'/g,"\\'")}')" onerror="this.remove()">`).join('')}</div>`
+    : '';
+
   const chips = [
     p.platform && `Platform: ${p.platform}`,
     p.delivery && `Delivery: ${p.delivery}`,
@@ -2107,6 +2128,7 @@ function openProductDetail(el){
         ${priceHtml}
         ${codeHtml}
         ${p.description ? `<div class="pd-desc">${p.description}</div>` : ''}
+        ${galleryHtml}
         ${featsHtml}
         ${chips ? `<div class="pd-info-row">${chips}</div>` : ''}
         <div class="pd-actions">
@@ -2125,6 +2147,17 @@ function openProductDetail(el){
   if(closeBtn) setTimeout(()=>closeBtn.focus(), 50);
 }
 window.openProductDetail = openProductDetail;
+
+function openLightbox(src){
+  const box = document.createElement('div');
+  box.className = 'pd-lightbox';
+  box.innerHTML = `<img src="${src}" alt="Product image">`;
+  box.addEventListener('click', ()=>box.remove());
+  const escHandler = e=>{ if(e.key==='Escape'){ box.remove(); document.removeEventListener('keydown',escHandler); } };
+  document.addEventListener('keydown', escHandler);
+  document.body.appendChild(box);
+}
+window.openLightbox = openLightbox;
 
 function render(){
   curQ = document.getElementById('srch').value.toLowerCase().trim();
@@ -2465,6 +2498,7 @@ window.buildFbCard=function(p, id){
     stock: p.stock||'available',
     youtubeId: p.youtubeId||'',
     imageUrl: p.imageUrl||'',
+    detailImages: p.detailImages||[],
     whatsappMessage: p.whatsappMessage||'',
     waLink,
     productCode: p.productCode||''
