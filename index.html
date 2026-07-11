@@ -403,11 +403,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   pointer-events:none;
 }
 .scan{
-  position:absolute;left:0;right:0;height:1px;
+  position:absolute;left:0;right:0;top:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(120,60,220,.4),transparent);
   animation:scanMove 8s linear infinite;pointer-events:none;
+  will-change:transform;
 }
-@keyframes scanMove{0%{top:0}100%{top:100%}}
+@keyframes scanMove{0%{transform:translateY(0)}100%{transform:translateY(100vh)}}
 
 .hero-inner{
   position:relative;z-index:1;width:100%;
@@ -451,32 +452,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 }
 
 @keyframes glowPulse{
-  0%,100%{text-shadow:
-    1px 1px 0 rgba(200,170,255,.9),
-    2px 2px 0 rgba(170,120,255,.8),
-    3px 3px 0 rgba(140,80,240,.7),
-    4px 4px 0 rgba(110,50,210,.6),
-    5px 5px 0 rgba(85,30,180,.55),
-    6px 6px 0 rgba(65,15,155,.5),
-    7px 7px 0 rgba(45,5,130,.4),
-    8px 8px 0 rgba(30,0,110,.3),
-    9px 9px 18px rgba(0,0,0,.7),
-    0 0 40px rgba(160,80,255,.4),
-    0 0 80px rgba(120,60,220,.2);
-  }
-  50%{text-shadow:
-    1px 1px 0 rgba(220,190,255,.95),
-    2px 2px 0 rgba(190,140,255,.85),
-    3px 3px 0 rgba(160,100,255,.75),
-    4px 4px 0 rgba(130,65,230,.65),
-    5px 5px 0 rgba(100,40,200,.6),
-    6px 6px 0 rgba(75,20,170,.55),
-    7px 7px 0 rgba(55,8,145,.45),
-    8px 8px 0 rgba(35,0,120,.35),
-    9px 9px 20px rgba(0,0,0,.75),
-    0 0 60px rgba(180,100,255,.6),
-    0 0 100px rgba(140,80,255,.35);
-  }
+  0%,100%{ opacity:1; filter:drop-shadow(0 0 22px rgba(160,80,255,.35)); }
+  50%{ opacity:1; filter:drop-shadow(0 0 34px rgba(180,100,255,.55)); }
 }
 
 @keyframes brandFloat{
@@ -515,6 +492,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .hero-brand .letter-3d.wh-l{
   color:#ffffff;
   animation:glowPulse 4s ease-in-out 1.5s infinite;
+  will-change:filter;
   text-shadow:
     1px 1px 0 rgba(200,170,255,.9),
     2px 2px 0 rgba(170,120,255,.8),
@@ -2631,46 +2609,13 @@ loadFirebaseProducts();
     }
   }, subDelay);
 
-  /* ── Mouse parallax: gentle 3D tilt ── */
-  let rafId = null;
-  let targetRX = 3, targetRY = -2;
-  let currentRX = 3, currentRY = -2;
-
-  function lerp(a, b, t){ return a + (b - a) * t; }
-
-  function tick(){
-    currentRX = lerp(currentRX, targetRX, 0.06);
-    currentRY = lerp(currentRY, targetRY, 0.06);
-    if(brand){
-      brand.style.transform =
-        `perspective(1200px) rotateX(${currentRX.toFixed(2)}deg) rotateY(${currentRY.toFixed(2)}deg)`;
-    }
-    rafId = requestAnimationFrame(tick);
-  }
-
-  document.addEventListener('mousemove', e => {
-    const cx = window.innerWidth  / 2;
-    const cy = window.innerHeight / 2;
-    const dx = (e.clientX - cx) / cx; /* -1 to 1 */
-    const dy = (e.clientY - cy) / cy;
-    targetRY =  dx * 6;   /* max ±6deg Y */
-    targetRX = -dy * 4;   /* max ±4deg X */
-  });
-
-  document.addEventListener('mouseleave', () => {
-    targetRX = 3;
-    targetRY = -2;
-  });
-
-  tick();
-
-  /* ── Touch support ── */
-  document.addEventListener('touchmove', e => {
-    const t = e.touches[0];
-    const cx = window.innerWidth  / 2;
-    const cy = window.innerHeight / 2;
-    targetRY = ((t.clientX - cx) / cx) * 5;
-    targetRX = -((t.clientY - cy) / cy) * 3;
-  }, { passive: true });
+  /* Note: the gentle 3D tilt/float is handled entirely by the
+     "brandFloat" CSS animation on .hero-brand — that's compositor-only
+     and stays smooth on its own. A JS requestAnimationFrame loop used
+     to also write brand.style.transform on every single frame forever,
+     which fought the CSS animation for the same property and was the
+     main cause of stutter. Removed so there's only one owner of the
+     transform, and no infinite per-frame JS work running in the
+     background. */
 })();
 </script>
